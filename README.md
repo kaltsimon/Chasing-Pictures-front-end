@@ -5,4 +5,4 @@ This is the repository for the *front end* code for the *Chasing Pictures* proje
 TODO
 
 ## License
-TODO
+See LICENSE.md.
