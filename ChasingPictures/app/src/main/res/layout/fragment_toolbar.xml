@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="de.fu_berlin.cdv.chasingpictures.Toolbar"
+    android:theme="@style/Toolbar">
+
+    <Button
+        android:layout_weight="0.4"
+        android:text="@string/toolbar.help_button_label"
+        android:id="@+id/help_button"
+        style="@style/ToolbarButton"/>
+
+    <Button
+        android:layout_weight="0.2"
+        android:id="@+id/camera_button"
+        android:text="Camera"
+        style="@style/ToolbarButton"/>
+
+    <Button
+        android:layout_weight="0.4"
+        android:text="Distance"
+        android:id="@+id/distance_view"
+        style="@style/ToolbarButton"/>
+
+</LinearLayout>

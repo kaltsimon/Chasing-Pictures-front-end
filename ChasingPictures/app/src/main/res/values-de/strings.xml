@@ -3,4 +3,7 @@
     <string name="app_name">Chasing Pictures</string>
     <string name="action_settings">Einstellungen</string>
     <string name="hello_world">Hallo, Welt!</string>
+    <string name="toolbar.help_button_label">Hilfe</string>
+    <string name="toolbar.camera_button_label">Kamera</string>
+    <string name="toolbar.distance_label">Distanz</string>
 </resources>

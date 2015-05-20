@@ -3,4 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="toolbar.help_button_label">Help</string>
+    <string name="toolbar.camera_button_label">Camera</string>
+    <string name="toolbar.distance_label">Distance</string>
 </resources>
