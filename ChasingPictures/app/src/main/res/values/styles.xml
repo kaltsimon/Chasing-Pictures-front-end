@@ -28,7 +28,6 @@
         <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginBottom">5dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:ems">12</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
@@ -36,4 +35,13 @@
         <item name="android:background">@color/button_color</item>
     </style>
 
+    <style name="Vertical.TextField">
+        <item name="android:ems">@integer/standard_textinput_ems</item>
+    </style>
+
+    <style name="Vertical.Heading">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/main_theme_color</item>
+    </style>
 </resources>

@@ -13,17 +13,23 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         >
+
+        <TextView
+            style="@style/Vertical.Heading"
+            android:text="@string/login_prompt"/>
         <Button
             style="@style/Vertical.Button"
             android:text="@string/login_button"
             android:id="@+id/button_login"
-            android:onClick="showLoginForm"/>
+            android:onClick="showLoginForm"
+            android:ems="@integer/standard_textinput_ems"/>
 
         <Button
             style="@style/Vertical.Button"
             android:text="@string/register_button"
             android:id="@+id/button_register"
-            android:onClick="showRegisterForm" />
+            android:onClick="showRegisterForm"
+            android:ems="@integer/standard_textinput_ems" />
     </LinearLayout>
 
 

@@ -13,6 +13,11 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
 
+        <TextView
+            style="@style/Vertical.Heading"
+            android:text="@string/title_activity_register"
+            android:id="@+id/heading" />
+
         <EditText
             style="@style/Vertical"
             android:inputType="textEmailAddress"
@@ -20,13 +25,13 @@
             android:hint="@string/hint_email"/>
 
         <EditText
-            style="@style/Vertical"
+            style="@style/Vertical.TextField"
             android:inputType="textEmailAddress"
             android:id="@+id/LoginRepeatEmailAddress"
             android:hint="@string/hint_email_repeat"/>
 
         <EditText
-            style="@style/Vertical"
+            style="@style/Vertical.TextField"
             android:inputType="textPassword"
             android:id="@+id/LoginPassword"
             android:hint="@string/hint_password"/>

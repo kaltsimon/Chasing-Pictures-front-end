@@ -9,4 +9,7 @@
     <string name="hint_password">Password</string>
     <string name="hint_email">yourname@example.com</string>
     <string name="hint_email_repeat">Repeat Email</string>
+    <string name="title_activity_login_form">Log in</string>
+    <string name="title_activity_register">Register</string>
+    <string name="login_prompt">Please log in...</string>
 </resources>
