@@ -1,25 +1,28 @@
 package de.fu_berlin.cdv.chasingpictures;
 
-import android.content.Intent;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 
-public class MainActivity extends AppCompatActivity {
+public class Register extends AppCompatActivity {
+
+    private static final String TAG = "RegisterForm";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_register, menu);
         return true;
     }
 
@@ -38,8 +41,17 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void showLoginPage(View view) {
-        Intent intent = new Intent(this, LoginPage.class);
-        startActivity(intent);
+    public void doRegister(View view) {
+        // TODO: register user AKA send request to backend
+        boolean registerResult = true;
+
+        if (registerResult) {
+            Log.d(TAG, "Registration successful, returning...");
+            setResult(RESULT_OK);
+            finish();
+        } else {
+            // TODO: Show message about login failure
+            Log.d(TAG, "Registration failed...");
+        }
     }
 }

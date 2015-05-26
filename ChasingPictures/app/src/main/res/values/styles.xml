@@ -5,4 +5,35 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <color name="main_theme_color">@android:color/holo_green_dark</color>
+    <color name="button_color">@android:color/holo_green_light</color>
+
+    <style name="Toolbar">
+        <item name="android:background">@color/main_theme_color</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:background">@color/button_color</item>
+    </style>
+
+    <style name="ToolbarButton">
+        <item name="android:background">@color/button_color</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="Vertical">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:ems">12</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Vertical.Button">
+        <item name="android:background">@color/button_color</item>
+    </style>
+
 </resources>
