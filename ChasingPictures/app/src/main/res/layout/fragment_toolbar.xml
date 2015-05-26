@@ -14,12 +14,12 @@
     <Button
         android:layout_weight="0.2"
         android:id="@+id/camera_button"
-        android:text="Camera"
+        android:text="@string/toolbar.camera_button_label"
         style="@style/ToolbarButton"/>
 
     <Button
         android:layout_weight="0.4"
-        android:text="Distance"
+        android:text="@string/toolbar.distance_label"
         android:id="@+id/distance_view"
         style="@style/ToolbarButton"/>
 
