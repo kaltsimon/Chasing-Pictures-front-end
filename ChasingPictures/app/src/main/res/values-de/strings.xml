@@ -3,4 +3,13 @@
     <string name="app_name">Chasing Pictures</string>
     <string name="action_settings">Einstellungen</string>
     <string name="hello_world">Hallo, Welt!</string>
+    <string name="login_button">Einloggen</string>
+    <string name="title_activity_login">Einloggen</string>
+    <string name="register_button">Registrieren</string>
+    <string name="hint_password">Passwort</string>
+    <string name="hint_email">sie@beispiel.de</string>
+    <string name="hint_email_repeat">Email wiederholen</string>
+    <string name="title_activity_login_form">Einloggen</string>
+    <string name="title_activity_register">Registrieren</string>
+    <string name="login_prompt">Bitte einloggen...</string>
 </resources>
