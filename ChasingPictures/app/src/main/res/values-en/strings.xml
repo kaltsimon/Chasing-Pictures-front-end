@@ -12,4 +12,7 @@
     <string name="title_activity_login_form">Log in</string>
     <string name="title_activity_register">Register</string>
     <string name="login_prompt">Please log in...</string>
+    <string name="toolbar.camera_button_label">Camera</string>
+    <string name="toolbar.help_button_label">Help</string>
+    <string name="toolbar.distance_label">Distance</string>
 </resources>

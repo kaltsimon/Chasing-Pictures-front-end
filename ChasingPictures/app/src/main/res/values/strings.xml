@@ -12,4 +12,8 @@
     <string name="hint_email">yourname@example.com</string>
     <string name="hint_email_repeat">Repeat Email</string>
     <string name="login_prompt">Please log in...</string>
+    <string name="toolbar.camera_button_label">Camera</string>
+    <string name="toolbar.distance_label">Distance</string>
+    <string name="toolbar.help_button_label">Help</string>
+    <string name="title_activity_maps">Maps</string>
 </resources>
