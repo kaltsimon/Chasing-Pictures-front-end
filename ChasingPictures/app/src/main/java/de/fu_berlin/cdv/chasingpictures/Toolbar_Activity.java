@@ -3,13 +3,14 @@ package de.fu_berlin.cdv.chasingpictures;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 
-public class MainActivity extends Activity{
+public class Toolbar_Activity extends Activity implements Toolbar.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,11 @@ public class MainActivity extends Activity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
     public void toNext(View view){

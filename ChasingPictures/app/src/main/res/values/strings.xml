@@ -6,4 +6,6 @@
     <string name="toolbar.help_button_label">Help</string>
     <string name="toolbar.camera_button_label">Camera</string>
     <string name="toolbar.distance_label">Distance</string>
+    <string name="title_activity_maps">Maps</string>
+    <string name="title_activity_toolbar_">Toolbar_Activity</string>
 </resources>
