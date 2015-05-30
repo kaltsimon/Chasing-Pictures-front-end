@@ -3,8 +3,13 @@ package de.fu_berlin.cdv.chasingpictures;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
 
 
 public class Register extends Activity {
@@ -25,16 +30,35 @@ public class Register extends Activity {
     }
 
     public void doRegister(View view) {
-        // TODO: register user AKA send request to backend
-        boolean registerResult = true;
+        Toast errorMsg;
 
-        if (registerResult) {
-            Log.d(TAG, "Registration successful, returning...");
-            setResult(RESULT_OK);
-            finish();
-        } else {
-            // TODO: Show message about login failure
-            Log.d(TAG, "Registration failed...");
+        String email = ((EditText) findViewById(R.id.LoginEmailAddress)).getText().toString();
+        String confirmEmail = ((EditText) findViewById(R.id.LoginRepeatEmailAddress)).getText().toString();
+        String password = ((EditText) findViewById(R.id.LoginPassword)).getText().toString();
+
+        // Check if E-Mail address is valid
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            errorMsg = Toast.makeText(this, R.string.invalid_email, Toast.LENGTH_SHORT);
+            errorMsg.show();
+            return;
         }
+
+        if (!email.equals(confirmEmail)) {
+            errorMsg = Toast.makeText(this, R.string.email_does_not_match, Toast.LENGTH_SHORT);
+            errorMsg.show();
+            return;
+        }
+
+        // Ensure that password is not empty
+        if (password.isEmpty()) {
+            errorMsg = Toast.makeText(this, R.string.empty_password, Toast.LENGTH_SHORT);
+            errorMsg.show();
+            return;
+        }
+
+        // TODO: salt & hash password?!
+
+        LoginRegistrationRequest registrationRequest = new LoginRegistrationRequest(email, password);
+        // TODO: send request
     }
 }
