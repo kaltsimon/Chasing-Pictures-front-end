@@ -14,7 +14,7 @@ import android.widget.Toast;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import de.fu_berlin.cdv.chasingpictures.api.LoginRequest;
+import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
 import de.fu_berlin.cdv.chasingpictures.api.LoginResult;
 
 
@@ -44,6 +44,7 @@ public class LoginForm extends Activity {
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             errorMsg = Toast.makeText(this, R.string.invalid_email, Toast.LENGTH_SHORT);
             errorMsg.show();
+            // TODO: highlight email field?
             return;
         }
 
@@ -53,21 +54,22 @@ public class LoginForm extends Activity {
         if (password.isEmpty()) {
             errorMsg = Toast.makeText(this, R.string.empty_password, Toast.LENGTH_SHORT);
             errorMsg.show();
+            // TODO: highlight password field?
             return;
         }
 
         // TODO: salt & hash password?!
 
 
-        LoginRequest loginRequest = new LoginRequest(email, password);
+        LoginRegistrationRequest loginRequest = new LoginRegistrationRequest(email, password);
         LoginRequestTask loginRequestTask = new LoginRequestTask();
         loginRequestTask.execute(loginRequest);
     }
 
-    private class LoginRequestTask extends AsyncTask<LoginRequest, Void, LoginResult> {
+    private class LoginRequestTask extends AsyncTask<LoginRegistrationRequest, Void, LoginResult> {
 
         @Override
-        protected LoginResult doInBackground(LoginRequest... params) {
+        protected LoginResult doInBackground(LoginRegistrationRequest... params) {
             if (params.length != 0) {
                 try {
                     Resources res = getResources();

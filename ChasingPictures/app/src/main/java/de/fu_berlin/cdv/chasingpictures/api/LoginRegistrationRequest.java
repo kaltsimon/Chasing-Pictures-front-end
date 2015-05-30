@@ -1,21 +1,20 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
 /**
- * Created by Simon on 27.05.15.
+ * Data class for login and registration requests.
+ * Used for automatic serialization to JSON.
+ * @author Simon Kalt
  */
-public class LoginRequest {
+public class LoginRegistrationRequest {
     private String email;
     private String password;
 
     /**
-     * This constructor is used for autmatic construction
-     * from JSON.
+     * This constructor is used for automatic construction from JSON.
      */
-    public LoginRequest() {
+    public LoginRegistrationRequest() {}
 
-    }
-
-    public LoginRequest(String email, String password) {
+    public LoginRegistrationRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }
@@ -38,7 +37,7 @@ public class LoginRequest {
 
     @Override
     public String toString() {
-        return "LoginRequest{" +
+        return "LoginRegistrationRequest{" +
                 "email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';
