@@ -5,17 +5,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import java.net.URI;
 
 import de.fu_berlin.cdv.chasingpictures.api.LoginRequest;
 import de.fu_berlin.cdv.chasingpictures.api.LoginResult;
@@ -54,10 +53,26 @@ public class LoginForm extends AppCompatActivity {
     }
 
     public void doLogin(View view) {
-        // TODO: log in user AKA send request to backend
+        Toast errorMsg;
 
         String email = ((EditText) findViewById(R.id.LoginEmailAddress)).getText().toString();
-        String password = ((EditText) findViewById(R.id.LoginEmailAddress)).getText().toString();
+
+        // Check if E-Mail address is valid
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            errorMsg = Toast.makeText(this, R.string.invalid_email, Toast.LENGTH_SHORT);
+            errorMsg.show();
+            return;
+        }
+
+        String password = ((EditText) findViewById(R.id.LoginPassword)).getText().toString();
+
+        // Check if password is not empty
+        if (password.isEmpty()) {
+            errorMsg = Toast.makeText(this, R.string.empty_password, Toast.LENGTH_SHORT);
+            errorMsg.show();
+            return;
+        }
+
         // TODO: salt & hash password?!
 
 
@@ -75,16 +90,9 @@ public class LoginForm extends AppCompatActivity {
                     Resources res = getResources();
                     final String url = res.getString(R.string.api_main) + res.getString(R.string.api_login);
                     RestTemplate restTemplate = new RestTemplate();
-                    // Currently results in crash!
-                    /*
+
                     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
                     return restTemplate.postForObject(url, params[0], LoginResult.class);
-                    */
-
-                    return new LoginResult(true, "Dummy!");
-                } catch (HttpClientErrorException e) {
-
-                    Log.e(TAG, e.getResponseBodyAsString(), e);
                 }
                 catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
@@ -95,16 +103,26 @@ public class LoginForm extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(LoginResult loginResult) {
+            Log.d(TAG, "Received result from API:");
+            Log.d(TAG, loginResult.toString());
+
+            // DUMMY
+            loginResult.setSuccessful(true);
+
+            Toast notification;
+
             if (loginResult.isSuccessful()) {
-                Log.d(TAG, "Login successful, returning...");
-                // TODO: Show "login successful" message (or do it in the parent view?)
+                notification = Toast.makeText(getApplicationContext(), R.string.login_success, Toast.LENGTH_SHORT);
+                notification.show();
+
+                // Return to previous view
                 setResult(RESULT_OK);
                 finish();
             } else {
-                Log.e(TAG, loginResult.getMessage());
-                // TODO: Show message about login failure
-                Log.d(TAG, "Login failed...");
+                notification = Toast.makeText(getApplicationContext(), R.string.login_fail, Toast.LENGTH_SHORT);
+                notification.show();
             }
+
         }
     }
 }
