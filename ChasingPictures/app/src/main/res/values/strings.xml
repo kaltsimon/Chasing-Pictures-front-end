@@ -16,4 +16,7 @@
     <string name="toolbar.distance_label">Distance</string>
     <string name="toolbar.help_button_label">Help</string>
     <string name="title_activity_maps">Maps</string>
+    <string name="invalid_email">That is not a valid email address.</string>
+    <string name="login_success">Login successful.</string>
+    <string name="login_fail">Login failed.</string>
 </resources>

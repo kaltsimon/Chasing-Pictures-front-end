@@ -15,4 +15,7 @@
     <string name="toolbar.camera_button_label">Camera</string>
     <string name="toolbar.help_button_label">Help</string>
     <string name="toolbar.distance_label">Distance</string>
+    <string name="invalid_email">That is not a valid email address.</string>
+    <string name="login_success">Login successful.</string>
+    <string name="login_fail">Login failed.</string>
 </resources>
