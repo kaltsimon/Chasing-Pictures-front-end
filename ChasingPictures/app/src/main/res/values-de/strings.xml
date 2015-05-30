@@ -11,7 +11,7 @@
     <string name="hint_email_repeat">Email wiederholen</string>
     <string name="title_activity_login_form">Einloggen</string>
     <string name="title_activity_register">Registrieren</string>
-    <string name="login_prompt">Bitte einloggen...</string>
+    <string name="login_prompt">Bitte einloggen…</string>
     <string name="toolbar.help_button_label">Hilfe</string>
     <string name="toolbar.camera_button_label">Kamera</string>
     <string name="toolbar.distance_label">Distanz</string>
@@ -19,4 +19,6 @@
     <string name="login_success">Log-In erfolgreich.</string>
     <string name="login_fail">Log-in fehlgeschlagen.</string>
     <string name="empty_password">Passwort kann nicht leer sein.</string>
+    <string name="registration_success">Erfolgreich registriert.</string>
+    <string name="registration_fail">Registrierung fehlgeschlagen.</string>
 </resources>
