@@ -7,6 +7,13 @@ public class LoginRequest {
     private String email;
     private String password;
 
+    /**
+     * This constructor is used for autmatic construction
+     * from JSON.
+     */
+    public LoginRequest() {
+
+    }
 
     public LoginRequest(String email, String password) {
         this.email = email;
@@ -27,5 +34,13 @@ public class LoginRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginRequest{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
