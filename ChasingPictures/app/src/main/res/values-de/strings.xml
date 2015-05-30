@@ -15,7 +15,8 @@
     <string name="toolbar.help_button_label">Hilfe</string>
     <string name="toolbar.camera_button_label">Kamera</string>
     <string name="toolbar.distance_label">Distanz</string>
-    <string name="invalid_email">That is not a valid email address.</string>
+    <string name="invalid_email">Die eingegebene E-Mail Adresse ist nicht gültig.</string>
     <string name="login_success">Log-In erfolgreich.</string>
     <string name="login_fail">Log-in fehlgeschlagen.</string>
+    <string name="empty_password">Passwort kann nicht leer sein.</string>
 </resources>
