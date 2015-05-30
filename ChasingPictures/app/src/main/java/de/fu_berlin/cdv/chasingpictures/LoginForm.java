@@ -36,32 +36,32 @@ public class LoginForm extends Activity {
     }
 
     public void doLogin(View view) {
-        Toast errorMsg;
+        Resources res = getResources();
 
-        String email = ((EditText) findViewById(R.id.LoginEmailAddress)).getText().toString();
+        // Retrieve text fields
+        EditText email = (EditText) findViewById(R.id.LoginEmailAddress);
+        EditText password = (EditText) findViewById(R.id.LoginPassword);
+
+        // Retrieve contents
+        String emailString = email.getText().toString();
+        String passwordString = password.getText().toString();
 
         // Check if E-Mail address is valid
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            errorMsg = Toast.makeText(this, R.string.invalid_email, Toast.LENGTH_SHORT);
-            errorMsg.show();
-            // TODO: highlight email field?
+        if (!Patterns.EMAIL_ADDRESS.matcher(emailString).matches()) {
+            email.setError(res.getString(R.string.invalid_email));
             return;
         }
 
-        String password = ((EditText) findViewById(R.id.LoginPassword)).getText().toString();
-
         // Check if password is not empty
-        if (password.isEmpty()) {
-            errorMsg = Toast.makeText(this, R.string.empty_password, Toast.LENGTH_SHORT);
-            errorMsg.show();
-            // TODO: highlight password field?
+        if (passwordString.isEmpty()) {
+            password.setError(res.getString(R.string.empty_password));
             return;
         }
 
         // TODO: salt & hash password?!
 
 
-        LoginRegistrationRequest loginRequest = new LoginRegistrationRequest(email, password);
+        LoginRegistrationRequest loginRequest = new LoginRegistrationRequest(emailString, passwordString);
         LoginRequestTask loginRequestTask = new LoginRequestTask();
         loginRequestTask.execute(loginRequest);
     }

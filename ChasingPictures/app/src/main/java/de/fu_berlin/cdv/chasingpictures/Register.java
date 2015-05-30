@@ -1,6 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,35 +37,39 @@ public class Register extends Activity {
     }
 
     public void doRegister(View view) {
-        Toast errorMsg;
+        Resources res = getResources();
 
-        String email = ((EditText) findViewById(R.id.LoginEmailAddress)).getText().toString();
-        String confirmEmail = ((EditText) findViewById(R.id.LoginRepeatEmailAddress)).getText().toString();
-        String password = ((EditText) findViewById(R.id.LoginPassword)).getText().toString();
+        // Retrieve text fields
+        EditText email = (EditText) findViewById(R.id.LoginEmailAddress);
+        EditText confirmEmail = (EditText) findViewById(R.id.LoginRepeatEmailAddress);
+        EditText password = (EditText) findViewById(R.id.LoginPassword);
+
+        // Retrieve contents
+        String emailString = email.getText().toString();
+        String confirmEmailString = confirmEmail.getText().toString();
+        String passwordString = password.getText().toString();
 
         // Check if E-Mail address is valid
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            errorMsg = Toast.makeText(this, R.string.invalid_email, Toast.LENGTH_SHORT);
-            errorMsg.show();
+        if (!Patterns.EMAIL_ADDRESS.matcher(emailString).matches()) {
+            email.setError(res.getString(R.string.invalid_email));
             return;
         }
 
-        if (!email.equals(confirmEmail)) {
-            errorMsg = Toast.makeText(this, R.string.email_does_not_match, Toast.LENGTH_SHORT);
-            errorMsg.show();
+        // Check if the entered email adresses are the same
+        if (!emailString.equals(confirmEmailString)) {
+            confirmEmail.setError(res.getString(R.string.email_does_not_match));
             return;
         }
 
         // Ensure that password is not empty
-        if (password.isEmpty()) {
-            errorMsg = Toast.makeText(this, R.string.empty_password, Toast.LENGTH_SHORT);
-            errorMsg.show();
+        if (passwordString.isEmpty()) {
+            password.setError(res.getString(R.string.empty_password));
             return;
         }
 
         // TODO: salt & hash password?!
 
-        LoginRegistrationRequest registrationRequest = new LoginRegistrationRequest(email, password);
+        LoginRegistrationRequest registrationRequest = new LoginRegistrationRequest(emailString, passwordString);
         RegistrationRequestTask requestTask = new RegistrationRequestTask();
         requestTask.execute(registrationRequest);
     }
@@ -117,4 +122,19 @@ public class Register extends Activity {
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         return restTemplate;
     }
+
+    /*
+    private static <T> T buildAndPostRestTemplate(int[] urlComponentIds, Resources resources, Class<T> resultClass) {
+        StringBuilder url_sb = new StringBuilder(100);
+        for (int componentId : urlComponentIds) {
+            url_sb.append(resources.getString(componentId));
+        }
+
+        RestTemplate restTemplate = buildJSONRestTemplate();
+
+
+
+        return restTemplate;
+    }
+    */
 }
