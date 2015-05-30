@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="api_main" translatable="false">http://192.168.178.35:8080/</string>
+    <string name="api_main" translatable="false">http://chasing-pictures.herokuapp.com/</string>
     <string name="api_login" translatable="false">login</string>
+    <string name="api_register" translatable="false">register</string>
 </resources>
