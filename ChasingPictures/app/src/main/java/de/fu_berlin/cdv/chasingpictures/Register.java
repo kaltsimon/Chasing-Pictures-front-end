@@ -25,6 +25,7 @@ import java.util.Map;
 import de.fu_berlin.cdv.chasingpictures.api.ApiErrors;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
 import de.fu_berlin.cdv.chasingpictures.api.RegistrationApiResult;
+import de.fu_berlin.cdv.chasingpictures.api.Util;
 
 
 public class Register extends Activity {
@@ -87,7 +88,7 @@ public class Register extends Activity {
             if (params.length != 0) {
                 try {
                     final String url = getString(R.string.api_url) + getString(R.string.api_path_register);
-                    RestTemplate restTemplate = buildJSONRestTemplate();
+                    RestTemplate restTemplate = Util.buildJSONRestTemplate();
                     restTemplate.setErrorHandler(new RegistrationResponseErrorHandler());
                     return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(params[0], null), RegistrationApiResult.class);
                 }
@@ -123,16 +124,6 @@ public class Register extends Activity {
                 notification.show();
             }
         }
-    }
-
-    /**
-     * Builds a basic JSON rest template for sending requests.
-     * @return A RestTemplate with a {@see org.springframework.http.converter.json.Jackson2HttpMessageConverter} attached.
-     */
-    private static RestTemplate buildJSONRestTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-        return restTemplate;
     }
 
     private class RegistrationResponseErrorHandler extends DefaultResponseErrorHandler {
