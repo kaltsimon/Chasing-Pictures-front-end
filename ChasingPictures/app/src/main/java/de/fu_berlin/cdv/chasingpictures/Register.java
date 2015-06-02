@@ -1,7 +1,6 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,11 +10,21 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import de.fu_berlin.cdv.chasingpictures.api.ApiErrors;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
-import de.fu_berlin.cdv.chasingpictures.api.LoginResult;
+import de.fu_berlin.cdv.chasingpictures.api.RegistrationApiResult;
 
 
 public class Register extends Activity {
@@ -71,16 +80,16 @@ public class Register extends Activity {
         requestTask.execute(registrationRequest);
     }
 
-    private class RegistrationRequestTask extends AsyncTask<LoginRegistrationRequest, Void, LoginResult> {
+    private class RegistrationRequestTask extends AsyncTask<LoginRegistrationRequest, Void, ResponseEntity<RegistrationApiResult>> {
 
         @Override
-        protected LoginResult doInBackground(LoginRegistrationRequest... params) {
+        protected ResponseEntity<RegistrationApiResult> doInBackground(LoginRegistrationRequest... params) {
             if (params.length != 0) {
                 try {
-                    Resources res = getResources();
-                    final String url = res.getString(R.string.api_main) + res.getString(R.string.api_register);
+                    final String url = getString(R.string.api_url) + getString(R.string.api_path_register);
                     RestTemplate restTemplate = buildJSONRestTemplate();
-                    return restTemplate.postForObject(url, params[0], LoginResult.class);
+                    restTemplate.setErrorHandler(new RegistrationResponseErrorHandler());
+                    return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(params[0], null), RegistrationApiResult.class);
                 }
                 catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
@@ -90,21 +99,27 @@ public class Register extends Activity {
         }
 
         @Override
-        protected void onPostExecute(LoginResult registrationResult) {
-            // DUMMY
-            registrationResult.setSuccessful(true);
-
-            Toast notification;
-
-            if (registrationResult.isSuccessful()) {
-                notification = Toast.makeText(getApplicationContext(), R.string.registration_success, Toast.LENGTH_SHORT);
-                notification.show();
-
-                // Return to previous view
+        protected void onPostExecute(ResponseEntity<RegistrationApiResult> responseEntity) {
+            RegistrationApiResult apiResult = responseEntity.getBody();
+            if (apiResult.isSuccessful()) {
+                responseEntity.getHeaders().get(getString(R.string.api_header_accessToken)).get(0);
                 setResult(RESULT_OK);
                 finish();
             } else {
-                notification = Toast.makeText(getApplicationContext(), R.string.registration_fail, Toast.LENGTH_SHORT);
+                final ApiErrors errors = apiResult.getErrors();
+                if (!errors.getErrorMessages().isEmpty()) {
+                    for (Map.Entry<String, List<String>> entry : errors.getErrorMessages().entrySet()) {
+                        String key = entry.getKey();
+                        if (key.equals(getString(R.string.api_error_email))) {
+                            ((EditText) findViewById(R.id.LoginEmailAddress)).setError(entry.getValue().get(0));
+                        } else if (key.equals(getString(R.string.api_error_password))) {
+                            ((EditText) findViewById(R.id.LoginPassword)).setError(entry.getValue().get(0));
+                        } else if (key.equals(getString(R.string.api_error_username))) {
+                            ((EditText) findViewById(R.id.LoginUsername)).setError(entry.getValue().get(0));
+                        }
+                    }
+                }
+                Toast notification = Toast.makeText(getApplicationContext(), R.string.registration_fail, Toast.LENGTH_SHORT);
                 notification.show();
             }
         }
@@ -120,18 +135,14 @@ public class Register extends Activity {
         return restTemplate;
     }
 
-    /*
-    private static <T> T buildAndPostRestTemplate(int[] urlComponentIds, Resources resources, Class<T> resultClass) {
-        StringBuilder url_sb = new StringBuilder(100);
-        for (int componentId : urlComponentIds) {
-            url_sb.append(resources.getString(componentId));
+    private class RegistrationResponseErrorHandler extends DefaultResponseErrorHandler {
+        public void handleError(ClientHttpResponse response) throws IOException {
+            if (response.getStatusCode().value() == 403) {
+                // Registration was denied,
+                // do nothing and return.
+                return;
+            }
+            super.handleError(response);
         }
-
-        RestTemplate restTemplate = buildJSONRestTemplate();
-
-
-
-        return restTemplate;
     }
-    */
 }

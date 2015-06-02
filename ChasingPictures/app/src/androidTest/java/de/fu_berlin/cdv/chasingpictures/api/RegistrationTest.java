@@ -5,26 +5,18 @@ import android.app.Application;
 import android.content.res.Resources;
 import android.test.ApplicationTestCase;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.DefaultResponseErrorHandler;
-import org.springframework.web.client.RequestCallback;
-import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.R;
 
@@ -46,7 +38,7 @@ public class RegistrationTest extends ApplicationTestCase<Application> {
     @Override
     public void setUp() throws Exception {
         res = mContext.getResources();
-        apiURL = res.getString(R.string.api_main) + res.getString(R.string.api_register);
+        apiURL = res.getString(R.string.api_url) + res.getString(R.string.api_path_register);
         restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         responseErrorHandler = new ResponseErrorHandler();

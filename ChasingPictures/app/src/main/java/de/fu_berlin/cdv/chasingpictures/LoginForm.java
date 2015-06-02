@@ -36,8 +36,6 @@ public class LoginForm extends Activity {
     }
 
     public void doLogin(View view) {
-        Resources res = getResources();
-
         // Retrieve text fields
         EditText email = (EditText) findViewById(R.id.LoginEmailAddress);
         EditText password = (EditText) findViewById(R.id.LoginPassword);
@@ -72,8 +70,7 @@ public class LoginForm extends Activity {
         protected LoginResult doInBackground(LoginRegistrationRequest... params) {
             if (params.length != 0) {
                 try {
-                    Resources res = getResources();
-                    final String url = res.getString(R.string.api_main) + res.getString(R.string.api_login);
+                    final String url = getString(R.string.api_url) + getString(R.string.api_path_login);
                     RestTemplate restTemplate = new RestTemplate();
 
                     restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
