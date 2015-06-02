@@ -10,7 +10,7 @@
     <string name="register_button">Register</string>
     <string name="hint_password">Password</string>
     <string name="hint_email">yourname@example.com</string>
-    <string name="hint_email_repeat">Repeat Email</string>
+    <string name="hint_username">Username</string>
     <string name="login_prompt">Please log in…</string>
     <string name="toolbar.camera_button_label">Camera</string>
     <string name="toolbar.distance_label">Distance</string>
@@ -20,7 +20,7 @@
     <string name="login_success">Login successful.</string>
     <string name="login_fail">Login failed.</string>
     <string name="empty_password">Password cannot be empty.</string>
-    <string name="email_does_not_match">Email addresses do not match.</string>
+    <string name="register.invalid_username">This name is invalid.</string>
     <string name="registration_success">Successfully registered.</string>
     <string name="registration_fail">Registration failed.</string>
 </resources>

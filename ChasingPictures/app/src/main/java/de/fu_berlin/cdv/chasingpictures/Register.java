@@ -1,7 +1,6 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,23 +40,23 @@ public class Register extends Activity {
 
         // Retrieve text fields
         EditText email = (EditText) findViewById(R.id.LoginEmailAddress);
-        EditText confirmEmail = (EditText) findViewById(R.id.LoginRepeatEmailAddress);
+        EditText username = (EditText) findViewById(R.id.LoginUsername);
         EditText password = (EditText) findViewById(R.id.LoginPassword);
 
         // Retrieve contents
         String emailString = email.getText().toString();
-        String confirmEmailString = confirmEmail.getText().toString();
+        String usernameString = username.getText().toString();
         String passwordString = password.getText().toString();
+
+        // Check if username is valid
+        if (usernameString.isEmpty()) {
+            username.setError(res.getString(R.string.register_invalid_username));
+            return;
+        }
 
         // Check if E-Mail address is valid
         if (!Patterns.EMAIL_ADDRESS.matcher(emailString).matches()) {
             email.setError(res.getString(R.string.invalid_email));
-            return;
-        }
-
-        // Check if the entered email adresses are the same
-        if (!emailString.equals(confirmEmailString)) {
-            confirmEmail.setError(res.getString(R.string.email_does_not_match));
             return;
         }
 
@@ -69,7 +68,7 @@ public class Register extends Activity {
 
         // TODO: salt & hash password?!
 
-        LoginRegistrationRequest registrationRequest = new LoginRegistrationRequest(emailString, passwordString);
+        LoginRegistrationRequest registrationRequest = new LoginRegistrationRequest(usernameString, emailString, passwordString);
         RegistrationRequestTask requestTask = new RegistrationRequestTask();
         requestTask.execute(registrationRequest);
     }

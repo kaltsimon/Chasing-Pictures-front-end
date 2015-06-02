@@ -14,16 +14,16 @@
         android:id="@+id/heading" />
 
     <EditText
+        style="@style/Vertical.TextField"
+        android:inputType="text"
+        android:id="@+id/LoginUsername"
+        android:hint="@string/hint_username"/>
+
+    <EditText
         style="@style/Vertical"
         android:inputType="textEmailAddress"
         android:id="@+id/LoginEmailAddress"
         android:hint="@string/hint_email"/>
-
-    <EditText
-        style="@style/Vertical.TextField"
-        android:inputType="textEmailAddress"
-        android:id="@+id/LoginRepeatEmailAddress"
-        android:hint="@string/hint_email_repeat"/>
 
     <EditText
         style="@style/Vertical.TextField"

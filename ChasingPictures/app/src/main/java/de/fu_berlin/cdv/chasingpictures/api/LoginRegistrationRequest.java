@@ -6,6 +6,7 @@ package de.fu_berlin.cdv.chasingpictures.api;
  * @author Simon Kalt
  */
 public class LoginRegistrationRequest {
+    private String name;
     private String email;
     private String password;
 
@@ -13,6 +14,12 @@ public class LoginRegistrationRequest {
      * This constructor is used for automatic construction from JSON.
      */
     public LoginRegistrationRequest() {}
+
+    public LoginRegistrationRequest(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
     public LoginRegistrationRequest(String email, String password) {
         this.email = email;
@@ -35,10 +42,19 @@ public class LoginRegistrationRequest {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "LoginRegistrationRequest{" +
-                "email='" + email + '\'' +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }
