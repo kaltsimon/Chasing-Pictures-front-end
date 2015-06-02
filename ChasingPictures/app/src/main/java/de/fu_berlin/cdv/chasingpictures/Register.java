@@ -14,7 +14,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -88,7 +87,7 @@ public class Register extends Activity {
             if (params.length != 0) {
                 try {
                     final String url = getString(R.string.api_url) + getString(R.string.api_path_register);
-                    RestTemplate restTemplate = Util.buildJSONRestTemplate();
+                    RestTemplate restTemplate = Util.buildJsonRestTemplate();
                     restTemplate.setErrorHandler(new RegistrationResponseErrorHandler());
                     return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(params[0], null), RegistrationApiResult.class);
                 }

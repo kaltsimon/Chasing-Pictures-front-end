@@ -21,7 +21,7 @@ public class Util {
      * Builds a basic JSON rest template for sending requests.
      * @return A RestTemplate with a {@link org.springframework.http.converter.json.MappingJackson2HttpMessageConverter} attached.
      */
-    public static RestTemplate buildJSONRestTemplate() {
+    public static RestTemplate buildJsonRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         return restTemplate;
