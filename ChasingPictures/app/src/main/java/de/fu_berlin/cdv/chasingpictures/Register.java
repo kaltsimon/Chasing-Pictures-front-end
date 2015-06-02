@@ -89,7 +89,6 @@ public class Register extends Activity {
             if (params.length != 0) {
                 try {
                     RestTemplate restTemplate = ApiUtil.buildJsonRestTemplate();
-                    restTemplate.setErrorHandler(new RegistrationResponseErrorHandler());
                     return restTemplate.exchange(apiUtil.getURIforEndpoint(R.string.api_path_register), HttpMethod.POST, new HttpEntity<>(params[0], null), RegistrationApiResult.class);
                 }
                 catch (Exception e) {
@@ -123,17 +122,6 @@ public class Register extends Activity {
                 Toast notification = Toast.makeText(getApplicationContext(), R.string.registration_fail, Toast.LENGTH_SHORT);
                 notification.show();
             }
-        }
-    }
-
-    private class RegistrationResponseErrorHandler extends DefaultResponseErrorHandler {
-        public void handleError(ClientHttpResponse response) throws IOException {
-            if (response.getStatusCode().value() == 403) {
-                // Registration was denied,
-                // do nothing and return.
-                return;
-            }
-            super.handleError(response);
         }
     }
 }

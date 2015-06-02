@@ -2,9 +2,12 @@ package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
 
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -27,6 +30,7 @@ public class ApiUtil {
     public static RestTemplate buildJsonRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        restTemplate.setErrorHandler(new DefaultResponseErrorHandler());
         return restTemplate;
     }
 
@@ -48,5 +52,20 @@ public class ApiUtil {
         }
 
         return null;
+    }
+
+    /**
+     * This default error handler, ignores the 403 error code,
+     * which is not always a fatal error.
+     */
+    public static class DefaultAPIResponseErrorHandler extends DefaultResponseErrorHandler {
+        public void handleError(ClientHttpResponse response) throws IOException {
+            if (response.getStatusCode().value() == 403) {
+                // Registration was denied,
+                // do nothing and return.
+                return;
+            }
+            super.handleError(response);
+        }
     }
 }
