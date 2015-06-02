@@ -25,13 +25,4 @@ public abstract class ApiResult {
         this.errors = errors;
     }
 
-    /**
-     * This method is deprecated, use {@link ApiUtil#callSuccessful} instead.
-     */
-    @JsonIgnore
-    @Deprecated
-    public boolean isSuccessful() {
-        // TODO: externalize String
-        return status.equals("success");
-    }
 }
