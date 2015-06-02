@@ -88,10 +88,9 @@ public class Register extends Activity {
         protected ResponseEntity<RegistrationApiResult> doInBackground(LoginRegistrationRequest... params) {
             if (params.length != 0) {
                 try {
-                    final String url = getString(R.string.api_url) + getString(R.string.api_path_register);
                     RestTemplate restTemplate = ApiUtil.buildJsonRestTemplate();
                     restTemplate.setErrorHandler(new RegistrationResponseErrorHandler());
-                    return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(params[0], null), RegistrationApiResult.class);
+                    return restTemplate.exchange(apiUtil.getURIforEndpoint(R.string.api_path_register), HttpMethod.POST, new HttpEntity<>(params[0], null), RegistrationApiResult.class);
                 }
                 catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
