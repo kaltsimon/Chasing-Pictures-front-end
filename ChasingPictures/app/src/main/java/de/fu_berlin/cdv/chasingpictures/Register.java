@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -86,7 +87,10 @@ public class Register extends Activity {
             if (params.length != 0) {
                 try {
                     RestTemplate restTemplate = ApiUtil.buildJsonRestTemplate();
-                    return restTemplate.exchange(apiUtil.getURIforEndpoint(R.string.api_path_register), HttpMethod.POST, new HttpEntity<>(params[0], null), RegistrationApiResult.class);
+                    return restTemplate.
+                            exchange(apiUtil.getURIforEndpoint(R.string.api_path_register),
+                                    HttpMethod.POST, new HttpEntity<>(params[0], null),
+                                    RegistrationApiResult.class);
                 }
                 catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
@@ -98,8 +102,13 @@ public class Register extends Activity {
         @Override
         protected void onPostExecute(ResponseEntity<RegistrationApiResult> responseEntity) {
             RegistrationApiResult apiResult = responseEntity.getBody();
-            if (apiUtil.callSuccessful(apiResult)) {
-                String accessToken = apiUtil.getHeader(responseEntity, R.string.api_header_accessToken);
+            String accessToken = apiUtil.getHeader(responseEntity, R.string.api_header_accessToken);
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK
+                    && apiUtil.callSuccessful(apiResult)
+                    && accessToken != null
+                    && !accessToken.isEmpty()) {
+                // TODO: Pass on access token and user data
                 setResult(RESULT_OK);
                 finish();
             } else {

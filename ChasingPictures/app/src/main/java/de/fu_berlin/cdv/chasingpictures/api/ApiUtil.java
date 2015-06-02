@@ -2,6 +2,7 @@ package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -32,7 +33,7 @@ public class ApiUtil {
     public static RestTemplate buildJsonRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-        restTemplate.setErrorHandler(new DefaultResponseErrorHandler());
+        restTemplate.setErrorHandler(new DefaultAPIResponseErrorHandler());
         return restTemplate;
     }
 
@@ -79,7 +80,7 @@ public class ApiUtil {
      */
     public String getHeader(ResponseEntity<?> responseEntity, int resourceId) {
         List<String> headers = getHeaders(responseEntity, resourceId);
-        return headers.isEmpty() ? null : headers.get(0);
+        return headers == null || headers.isEmpty() ? null : headers.get(0);
     }
 
     /**
@@ -88,8 +89,9 @@ public class ApiUtil {
      */
     public static class DefaultAPIResponseErrorHandler extends DefaultResponseErrorHandler {
         public void handleError(ClientHttpResponse response) throws IOException {
-            if (response.getStatusCode().value() == 403) {
-                // Registration was denied,
+            final HttpStatus statusCode = response.getStatusCode();
+            if (statusCode == HttpStatus.FORBIDDEN || statusCode == HttpStatus.UNAUTHORIZED) {
+                // Request was denied,
                 // do nothing and return.
                 return;
             }

@@ -1,7 +1,6 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,21 +10,27 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
+import de.fu_berlin.cdv.chasingpictures.api.LoginApiResult;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
-import de.fu_berlin.cdv.chasingpictures.api.LoginResult;
 
 
 public class LoginForm extends Activity {
 
     public static final String TAG = "LoginForm";
+    private ApiUtil apiUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_form);
+        apiUtil = new ApiUtil(this);
     }
 
     @Override
@@ -64,17 +69,18 @@ public class LoginForm extends Activity {
         loginRequestTask.execute(loginRequest);
     }
 
-    private class LoginRequestTask extends AsyncTask<LoginRegistrationRequest, Void, LoginResult> {
+    private class LoginRequestTask extends AsyncTask<LoginRegistrationRequest, Void, ResponseEntity<LoginApiResult>> {
 
         @Override
-        protected LoginResult doInBackground(LoginRegistrationRequest... params) {
+        protected ResponseEntity<LoginApiResult> doInBackground(LoginRegistrationRequest... params) {
             if (params.length != 0) {
                 try {
-                    final String url = getString(R.string.api_url) + getString(R.string.api_path_login);
-                    RestTemplate restTemplate = new RestTemplate();
-
-                    restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                    return restTemplate.postForObject(url, params[0], LoginResult.class);
+                    RestTemplate restTemplate = ApiUtil.buildJsonRestTemplate();
+                    return restTemplate.
+                            exchange(apiUtil.getURIforEndpoint(R.string.api_path_login),
+                                    HttpMethod.POST,
+                                    new HttpEntity<>(params[0], null),
+                                    LoginApiResult.class);
                 }
                 catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
@@ -84,25 +90,23 @@ public class LoginForm extends Activity {
         }
 
         @Override
-        protected void onPostExecute(LoginResult loginResult) {
-            Log.d(TAG, "Received result from API:");
-            Log.d(TAG, loginResult.toString());
+        protected void onPostExecute(ResponseEntity<LoginApiResult> responseEntity) {
+            String accessToken = apiUtil.getHeader(responseEntity, R.string.api_header_accessToken);
 
-            // DUMMY
-            loginResult.setSuccessful(true);
-
-            Toast notification;
-
-            if (loginResult.isSuccessful()) {
-                notification = Toast.makeText(getApplicationContext(), R.string.login_success, Toast.LENGTH_SHORT);
-                notification.show();
+            if (responseEntity.getStatusCode() == HttpStatus.OK
+                    && accessToken != null
+                    && !accessToken.isEmpty()) {
+                // TODO: Pass on Access Token and user data
 
                 // Return to previous view
                 setResult(RESULT_OK);
                 finish();
             } else {
-                notification = Toast.makeText(getApplicationContext(), R.string.login_fail, Toast.LENGTH_SHORT);
-                notification.show();
+                Log.d(TAG, "Status: " + responseEntity.getStatusCode());
+                Log.d(TAG, "Response Body: " + responseEntity.getBody());
+                Toast.makeText(getApplicationContext(),
+                        R.string.login_fail,
+                        Toast.LENGTH_SHORT).show();
             }
 
         }

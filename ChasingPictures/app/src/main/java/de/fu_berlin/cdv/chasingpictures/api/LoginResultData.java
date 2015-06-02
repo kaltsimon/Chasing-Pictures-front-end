@@ -1,15 +1,12 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Date;
 
 /**
  * @author Simon Kalt
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RegistrationResultData {
+public class LoginResultData {
     private Integer id;
     private String provider;
     private String uid;
@@ -17,10 +14,6 @@ public class RegistrationResultData {
     private String nickname;
     private String image;
     private String email;
-    @JsonProperty("created_at")
-    private Date createdAt;
-    @JsonProperty("updated_at")
-    private Date updatedAt;
 
     public Integer getId() {
         return id;
@@ -28,14 +21,6 @@ public class RegistrationResultData {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getProvider() {
@@ -46,28 +31,20 @@ public class RegistrationResultData {
         this.provider = provider;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public String getUid() {
         return uid;
     }
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getNickname() {
@@ -86,11 +63,11 @@ public class RegistrationResultData {
         this.image = image;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
