@@ -59,25 +59,16 @@ public class RegistrationTest extends ApplicationTestCase<Application> {
     }
 
     public void testResponseHeaders() throws Exception {
-        String expectedEmail;
-        HttpHeaders responseHeaders, requestHeaders;
+        HttpHeaders responseHeaders;
         ResponseEntity<RegistrationApiResult> exchange;
-        List<String> accessToken;
-        HttpEntity<LoginRegistrationRequest> requestEntity;
+        String[] expectedHeaders = {"Access-Token", "Uid"};
 
-        expectedEmail = getUniqueEmail();
-        LoginRegistrationRequest request = new LoginRegistrationRequest("Tom", expectedEmail, "12345678");
+        LoginRegistrationRequest request = new LoginRegistrationRequest("Tom", getUniqueEmail(), "12345678");
         responseErrorHandler.setExpectedStatusCode(200);
 
-        requestHeaders = new HttpHeaders();
-        requestHeaders.set("Content-type", MediaType.APPLICATION_JSON_VALUE);
-        requestEntity = new HttpEntity<>(request, requestHeaders);
-
-        exchange = restTemplate.exchange(apiURL, HttpMethod.POST, requestEntity, RegistrationApiResult.class);
+        exchange = restTemplate.exchange(apiURL, HttpMethod.POST, new HttpEntity<>(request, null), RegistrationApiResult.class);
         responseHeaders = exchange.getHeaders();
         assertNotNull(responseHeaders);
-
-        String[] expectedHeaders = {"Access-Token", "Uid"};
 
         for (String header : expectedHeaders) {
             assertFalse(responseHeaders.get(header).isEmpty());
@@ -86,8 +77,7 @@ public class RegistrationTest extends ApplicationTestCase<Application> {
     }
 
     public void testGetStatus() throws Exception {
-        final String expectedEmail = getUniqueEmail();
-        RegistrationApiResult apiResult = postRequest("Tom", expectedEmail, "12345678", 200);
+        RegistrationApiResult apiResult = postRequest("Tom", getUniqueEmail(), "12345678", 200);
         assertEquals("Status does not match.", "success", apiResult.getStatus());
     }
 
