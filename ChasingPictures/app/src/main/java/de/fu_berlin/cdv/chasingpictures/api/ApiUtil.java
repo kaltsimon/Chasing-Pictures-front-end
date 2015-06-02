@@ -10,10 +10,10 @@ import de.fu_berlin.cdv.chasingpictures.R;
 /**
  * @author Simon Kalt
  */
-public class Util {
+public class ApiUtil {
     private final Context context;
 
-    public Util(Context context) {
+    public ApiUtil(Context context) {
         this.context = context;
     }
 

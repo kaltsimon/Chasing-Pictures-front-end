@@ -24,17 +24,19 @@ import java.util.Map;
 import de.fu_berlin.cdv.chasingpictures.api.ApiErrors;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
 import de.fu_berlin.cdv.chasingpictures.api.RegistrationApiResult;
-import de.fu_berlin.cdv.chasingpictures.api.Util;
+import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
 
 
 public class Register extends Activity {
 
     private static final String TAG = "RegisterForm";
+    private ApiUtil apiUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        apiUtil = new ApiUtil(this);
     }
 
     @Override
@@ -87,7 +89,7 @@ public class Register extends Activity {
             if (params.length != 0) {
                 try {
                     final String url = getString(R.string.api_url) + getString(R.string.api_path_register);
-                    RestTemplate restTemplate = Util.buildJsonRestTemplate();
+                    RestTemplate restTemplate = ApiUtil.buildJsonRestTemplate();
                     restTemplate.setErrorHandler(new RegistrationResponseErrorHandler());
                     return restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(params[0], null), RegistrationApiResult.class);
                 }
@@ -101,7 +103,7 @@ public class Register extends Activity {
         @Override
         protected void onPostExecute(ResponseEntity<RegistrationApiResult> responseEntity) {
             RegistrationApiResult apiResult = responseEntity.getBody();
-            if (apiResult.isSuccessful()) {
+            if (apiUtil.callSuccessful(apiResult)) {
                 responseEntity.getHeaders().get(getString(R.string.api_header_accessToken)).get(0);
                 setResult(RESULT_OK);
                 finish();

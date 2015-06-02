@@ -6,9 +6,9 @@ import android.test.ApplicationTestCase;
 /**
  * @author Simon
  */
-public class UtilTest extends ApplicationTestCase<Application> {
+public class ApiUtilTest extends ApplicationTestCase<Application> {
 
-    public UtilTest() {
+    public ApiUtilTest() {
         super(Application.class);
     }
 

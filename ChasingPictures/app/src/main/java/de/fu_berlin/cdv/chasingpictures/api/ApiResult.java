@@ -26,7 +26,7 @@ public abstract class ApiResult {
     }
 
     /**
-     * This method is deprecated, use {@link Util#callSuccessful} instead.
+     * This method is deprecated, use {@link ApiUtil#callSuccessful} instead.
      */
     @JsonIgnore
     @Deprecated

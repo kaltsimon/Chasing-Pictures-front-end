@@ -30,6 +30,7 @@ public class RegistrationTest extends ApplicationTestCase<Application> {
     RestTemplate restTemplate;
     String apiURL;
     ResponseErrorHandler responseErrorHandler;
+    ApiUtil apiUtil;
 
     public RegistrationTest() {
         super(Application.class);
@@ -37,7 +38,8 @@ public class RegistrationTest extends ApplicationTestCase<Application> {
 
     @Override
     public void setUp() throws Exception {
-        res = mContext.getResources();
+        apiUtil = new ApiUtil(getContext());
+        res = getContext().getResources();
         apiURL = res.getString(R.string.api_url) + res.getString(R.string.api_path_register);
         restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -88,7 +90,7 @@ public class RegistrationTest extends ApplicationTestCase<Application> {
         RegistrationApiResult apiResult = postRequest("Hello", "", "12345", 403);
 
         // Check results
-        assertFalse(apiResult.isSuccessful());
+        assertFalse(apiUtil.callSuccessful(apiResult));
         assertEquals("API return status is wrong.", "error", apiResult.getStatus());
         assertEquals("Email error message is wrong.", "can't be blank", apiResult.getErrors().getErrorMessages().get("email").get(0));
     }
@@ -98,7 +100,7 @@ public class RegistrationTest extends ApplicationTestCase<Application> {
         RegistrationApiResult apiResult = postRequest("Hello", "a@b.de", "", 403);
 
         // Check results
-        assertFalse(apiResult.isSuccessful());
+        assertFalse(apiUtil.callSuccessful(apiResult));
         assertEquals("API return status is wrong.", "error", apiResult.getStatus());
         assertEquals("Email error message is wrong.", "can't be blank", apiResult.getErrors().getErrorMessages().get("password").get(0));
     }
