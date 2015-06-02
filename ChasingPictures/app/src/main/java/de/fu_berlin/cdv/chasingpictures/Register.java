@@ -13,11 +13,8 @@ import android.widget.Toast;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -102,7 +99,7 @@ public class Register extends Activity {
         protected void onPostExecute(ResponseEntity<RegistrationApiResult> responseEntity) {
             RegistrationApiResult apiResult = responseEntity.getBody();
             if (apiUtil.callSuccessful(apiResult)) {
-                responseEntity.getHeaders().get(getString(R.string.api_header_accessToken)).get(0);
+                String accessToken = apiUtil.getHeader(responseEntity, R.string.api_header_accessToken);
                 setResult(RESULT_OK);
                 finish();
             } else {

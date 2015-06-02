@@ -2,6 +2,7 @@ package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.DefaultResponseErrorHandler;
@@ -10,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.R;
 
@@ -43,6 +45,11 @@ public class ApiUtil {
         return result.getStatus().equals(context.getString(R.string.api_status_success));
     }
 
+    /**
+     * Retrieves the API URI for the specified endpoint.
+     * @param endpointId An android resource id pointing to an R.strings.api_path_* value
+     * @return The URI to send your request to
+     */
     public URI getURIforEndpoint(int endpointId) {
         try {
             URI apiUrl = new URI(context.getString(R.string.api_url));
@@ -52,6 +59,27 @@ public class ApiUtil {
         }
 
         return null;
+    }
+
+    /**
+     * Returns all headers for the header field named by the given resource ID.
+     * @param responseEntity The request response
+     * @param resourceId The resource ID for the header field
+     * @return A list of strings containing the values for this header field
+     */
+    public List<String> getHeaders(ResponseEntity<?> responseEntity, int resourceId) {
+        return responseEntity.getHeaders().get(context.getString(resourceId));
+    }
+
+    /**
+     * Returns <i>the first</i> header for the header field named by the given resource ID.
+     * @param responseEntity The request response
+     * @param resourceId The resource ID for the header field
+     * @return A strings containing the value of this header field
+     */
+    public String getHeader(ResponseEntity<?> responseEntity, int resourceId) {
+        List<String> headers = getHeaders(responseEntity, resourceId);
+        return headers.isEmpty() ? null : headers.get(0);
     }
 
     /**
