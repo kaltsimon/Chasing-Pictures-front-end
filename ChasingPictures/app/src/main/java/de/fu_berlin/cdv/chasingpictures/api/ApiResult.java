@@ -27,6 +27,7 @@ public abstract class ApiResult {
 
     @JsonIgnore
     public boolean isSuccessful() {
-        return status.equals("successful");
+        // TODO: externalize String
+        return status.equals("success");
     }
 }

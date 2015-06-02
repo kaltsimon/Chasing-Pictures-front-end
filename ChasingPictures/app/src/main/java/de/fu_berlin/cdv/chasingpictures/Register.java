@@ -36,8 +36,6 @@ public class Register extends Activity {
     }
 
     public void doRegister(View view) {
-        Resources res = getResources();
-
         // Retrieve text fields
         EditText email = (EditText) findViewById(R.id.LoginEmailAddress);
         EditText username = (EditText) findViewById(R.id.LoginUsername);
@@ -50,19 +48,19 @@ public class Register extends Activity {
 
         // Check if username is valid
         if (usernameString.isEmpty()) {
-            username.setError(res.getString(R.string.register_invalid_username));
+            username.setError(getString(R.string.register_invalid_username));
             return;
         }
 
         // Check if E-Mail address is valid
         if (!Patterns.EMAIL_ADDRESS.matcher(emailString).matches()) {
-            email.setError(res.getString(R.string.invalid_email));
+            email.setError(getString(R.string.invalid_email));
             return;
         }
 
         // Ensure that password is not empty
         if (passwordString.isEmpty()) {
-            password.setError(res.getString(R.string.empty_password));
+            password.setError(getString(R.string.empty_password));
             return;
         }
 

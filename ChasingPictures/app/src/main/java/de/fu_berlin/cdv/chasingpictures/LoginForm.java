@@ -48,13 +48,13 @@ public class LoginForm extends Activity {
 
         // Check if E-Mail address is valid
         if (!Patterns.EMAIL_ADDRESS.matcher(emailString).matches()) {
-            email.setError(res.getString(R.string.invalid_email));
+            email.setError(getString(R.string.invalid_email));
             return;
         }
 
         // Check if password is not empty
         if (passwordString.isEmpty()) {
-            password.setError(res.getString(R.string.empty_password));
+            password.setError(getString(R.string.empty_password));
             return;
         }
 
