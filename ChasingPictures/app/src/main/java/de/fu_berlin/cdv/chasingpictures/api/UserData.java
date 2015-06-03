@@ -143,4 +143,55 @@ public class UserData implements Parcelable {
                     return new UserData[size];
                 }
             };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserData userData = (UserData) o;
+
+        if (id != null ? !id.equals(userData.id) : userData.id != null) return false;
+        if (provider != null ? !provider.equals(userData.provider) : userData.provider != null)
+            return false;
+        if (uid != null ? !uid.equals(userData.uid) : userData.uid != null) return false;
+        if (name != null ? !name.equals(userData.name) : userData.name != null) return false;
+        if (nickname != null ? !nickname.equals(userData.nickname) : userData.nickname != null)
+            return false;
+        if (image != null ? !image.equals(userData.image) : userData.image != null) return false;
+        if (email != null ? !email.equals(userData.email) : userData.email != null) return false;
+        if (createdAt != null ? !createdAt.equals(userData.createdAt) : userData.createdAt != null)
+            return false;
+        return !(updatedAt != null ? !updatedAt.equals(userData.updatedAt) : userData.updatedAt != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (provider != null ? provider.hashCode() : 0);
+        result = 31 * result + (uid != null ? uid.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (nickname != null ? nickname.hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "UserData{" +
+                "id=" + id +
+                ", provider='" + provider + '\'' +
+                ", uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", image='" + image + '\'' +
+                ", email='" + email + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }
