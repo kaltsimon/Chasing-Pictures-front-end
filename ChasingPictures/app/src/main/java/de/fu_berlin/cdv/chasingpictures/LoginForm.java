@@ -1,6 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,12 +20,16 @@ import org.springframework.web.client.RestTemplate;
 import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
 import de.fu_berlin.cdv.chasingpictures.api.LoginApiResult;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
+import de.fu_berlin.cdv.chasingpictures.api.UserData;
 
 
 public class LoginForm extends Activity {
 
     public static final String TAG = "LoginForm";
     private ApiUtil apiUtil;
+
+    // Returned Data
+    public static final String RETURN_USER_DATA = "return_user_data";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,10 +101,15 @@ public class LoginForm extends Activity {
             if (responseEntity.getStatusCode() == HttpStatus.OK
                     && accessToken != null
                     && !accessToken.isEmpty()) {
-                // TODO: Pass on Access Token and user data
+                // Place access token in user data
+                UserData userData = responseEntity.getBody().getData();
+                userData.setAccessToken(accessToken);
+
+                Intent resultData = new Intent();
+                resultData.putExtra(RETURN_USER_DATA, userData);
 
                 // Return to previous view
-                setResult(RESULT_OK);
+                setResult(RESULT_OK, resultData);
                 finish();
             } else {
                 Log.d(TAG, "Status: " + responseEntity.getStatusCode());

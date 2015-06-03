@@ -3,9 +3,12 @@ package de.fu_berlin.cdv.chasingpictures;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+
+import de.fu_berlin.cdv.chasingpictures.api.UserData;
 
 
 public class LoginPage extends Activity {
@@ -43,7 +46,9 @@ public class LoginPage extends Activity {
             // TODO: Depending on whether the user logged in or registered, do something with that information...
             switch (requestCode) {
                 case LOGIN:
-                    Log.d(TAG, "Logged in successfully!");
+                    UserData userData = data.getParcelableExtra(LoginForm.RETURN_USER_DATA);
+                    Log.d(TAG, "Logged in successfully with following user data:");
+                    Log.d(TAG, userData.toString());
                     break;
                 case REGISTER:
                     Log.d(TAG, "Registered successfully!");
