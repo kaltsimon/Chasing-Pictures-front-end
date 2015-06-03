@@ -28,7 +28,6 @@ public class LoginPage extends Activity {
     }
 
     public void showLoginForm(View view) {
-        Log.d(TAG, "Showing log in form...");
         Intent intent = new Intent(this, LoginForm.class);
         startActivityForResult(intent, LOGIN);
     }
@@ -41,7 +40,7 @@ public class LoginPage extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            // TODO: Depending on wether the user logged in or registered, do something with that information...
+            // TODO: Depending on whether the user logged in or registered, do something with that information...
             switch (requestCode) {
                 case LOGIN:
                     Log.d(TAG, "Logged in successfully!");
