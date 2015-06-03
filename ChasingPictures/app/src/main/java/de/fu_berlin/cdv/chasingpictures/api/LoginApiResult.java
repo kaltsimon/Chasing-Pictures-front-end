@@ -11,7 +11,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginApiResult {
     private List<String> errors;
-    private LoginResultData data;
+    private RegistrationResultData data;
 
     public List<String> getErrors() {
         return errors;
@@ -21,11 +21,11 @@ public class LoginApiResult {
         this.errors = errors;
     }
 
-    public LoginResultData getData() {
+    public RegistrationResultData getData() {
         return data;
     }
 
-    public void setData(LoginResultData data) {
+    public void setData(RegistrationResultData data) {
         this.data = data;
     }
 
