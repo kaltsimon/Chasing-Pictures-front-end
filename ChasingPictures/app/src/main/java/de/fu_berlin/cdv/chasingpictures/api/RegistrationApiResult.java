@@ -4,13 +4,13 @@ package de.fu_berlin.cdv.chasingpictures.api;
  * @author Simon Kalt
  */
 public class RegistrationApiResult extends ApiResult {
-    private RegistrationResultData data;
+    private UserData data;
 
-    public RegistrationResultData getData() {
+    public UserData getData() {
         return data;
     }
 
-    public void setData(RegistrationResultData data) {
+    public void setData(UserData data) {
         this.data = data;
     }
 }

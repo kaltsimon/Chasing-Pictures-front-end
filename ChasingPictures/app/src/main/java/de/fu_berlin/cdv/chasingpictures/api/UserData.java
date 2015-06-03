@@ -1,5 +1,8 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,7 +12,7 @@ import java.util.Date;
  * @author Simon Kalt
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RegistrationResultData {
+public class UserData {
     private Integer id;
     private String provider;
     private String uid;
