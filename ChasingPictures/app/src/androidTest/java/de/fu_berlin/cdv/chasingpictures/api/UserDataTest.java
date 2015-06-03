@@ -27,6 +27,7 @@ public class UserDataTest extends ApplicationTestCase<Application> {
         data.setName("Tom");
         data.setEmail("a@b.de");
         data.setCreatedAt(new Date());
+        data.setAccessToken("224g9f8z2h3d");
     }
 
     public void tearDown() throws Exception {

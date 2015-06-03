@@ -3,6 +3,7 @@ package de.fu_berlin.cdv.chasingpictures.api;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -24,6 +25,8 @@ public class UserData implements Parcelable {
     private Date createdAt;
     @JsonProperty("updated_at")
     private Date updatedAt;
+    @JsonIgnore
+    private String accessToken;
 
     public Integer getId() {
         return id;
@@ -97,6 +100,14 @@ public class UserData implements Parcelable {
         this.updatedAt = updatedAt;
     }
 
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
     public UserData() { }
 
     public UserData(Parcel in) {
@@ -113,6 +124,7 @@ public class UserData implements Parcelable {
         setEmail(in.readString());
         setCreatedAt(new Date(in.readLong()));
         setUpdatedAt(new Date(in.readLong()));
+        setAccessToken(in.readString());
     }
 
     @Override
@@ -126,6 +138,7 @@ public class UserData implements Parcelable {
         dest.writeString(email);
         dest.writeLong(createdAt == null ? 0 : createdAt.getTime());
         dest.writeLong(updatedAt == null ? 0 : updatedAt.getTime());
+        dest.writeString(accessToken);
     }
 
     @Override
@@ -162,7 +175,9 @@ public class UserData implements Parcelable {
         if (email != null ? !email.equals(userData.email) : userData.email != null) return false;
         if (createdAt != null ? !createdAt.equals(userData.createdAt) : userData.createdAt != null)
             return false;
-        return !(updatedAt != null ? !updatedAt.equals(userData.updatedAt) : userData.updatedAt != null);
+        if (updatedAt != null ? !updatedAt.equals(userData.updatedAt) : userData.updatedAt != null)
+            return false;
+        return !(accessToken != null ? !accessToken.equals(userData.accessToken) : userData.accessToken != null);
 
     }
 
@@ -177,6 +192,7 @@ public class UserData implements Parcelable {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
         result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
+        result = 31 * result + (accessToken != null ? accessToken.hashCode() : 0);
         return result;
     }
 
@@ -192,6 +208,7 @@ public class UserData implements Parcelable {
                 ", email='" + email + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", accessToken='" + accessToken + '\'' +
                 '}';
     }
 }
