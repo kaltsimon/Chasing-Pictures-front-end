@@ -21,6 +21,7 @@ import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
 import de.fu_berlin.cdv.chasingpictures.api.LoginApiResult;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
 import de.fu_berlin.cdv.chasingpictures.api.UserData;
+import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 
 public class LoginForm extends Activity {
@@ -102,6 +103,8 @@ public class LoginForm extends Activity {
                     && accessToken != null
                     && !accessToken.isEmpty()) {
                 UserData userData = responseEntity.getBody().getData();
+
+                Access.setAccessToken(getApplicationContext(), accessToken);
 
                 Intent resultData = new Intent();
                 resultData.putExtra(RETURN_USER_DATA, userData);

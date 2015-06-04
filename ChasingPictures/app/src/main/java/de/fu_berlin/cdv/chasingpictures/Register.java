@@ -23,6 +23,7 @@ import de.fu_berlin.cdv.chasingpictures.api.ApiErrors;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
 import de.fu_berlin.cdv.chasingpictures.api.RegistrationApiResult;
 import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
+import de.fu_berlin.cdv.chasingpictures.security.Access;
 import de.fu_berlin.cdv.chasingpictures.security.SecurePreferences;
 
 
@@ -110,10 +111,7 @@ public class Register extends Activity {
                     && accessToken != null
                     && !accessToken.isEmpty()) {
 
-                SecurePreferences prefs = SecurePreferences
-                        .getInstanceFromResources(getApplicationContext(), R.string.security_prefsID);
-
-                prefs.put(getString(R.string.security_prefs_accessToken), accessToken);
+                Access.setAccessToken(getApplicationContext(), accessToken);
 
                 setResult(RESULT_OK);
                 finish();
