@@ -216,7 +216,7 @@ public class SecurePreferences {
 
 	public void put(String key, String value) {
 		if (value == null) {
-			preferences.edit().remove(toKey(key)).commit();
+			remove(key);
 		}
 		else {
 			putValue(toKey(key), value);
@@ -227,11 +227,11 @@ public class SecurePreferences {
 		return preferences.contains(toKey(key));
 	}
 
-	public void removeValue(String key) {
-		preferences.edit().remove(toKey(key)).commit();
+	public void remove(String key) {
+		preferences.edit().remove(toKey(key)).apply();
 	}
 
-	public String getString(String key) throws SecurePreferencesException {
+	public String get(String key) throws SecurePreferencesException {
 		if (preferences.contains(toKey(key))) {
 			String securedEncodedValue = preferences.getString(toKey(key), "");
 			return decrypt(securedEncodedValue);
@@ -239,12 +239,8 @@ public class SecurePreferences {
 		return null;
 	}
 
-    public String get(String key) throws SecurePreferencesException {
-        return getString(key);
-    }
-
 	public void clear() {
-		preferences.edit().clear().commit();
+		preferences.edit().clear().apply();
 	}
 
 	private String toKey(String key) {
@@ -256,7 +252,7 @@ public class SecurePreferences {
 	private void putValue(String key, String value) throws SecurePreferencesException {
 		String secureValueEncoded = encrypt(value, writer);
 
-		preferences.edit().putString(key, secureValueEncoded).commit();
+		preferences.edit().putString(key, secureValueEncoded).apply();
 	}
 
 	protected String encrypt(String value, Cipher writer) throws SecurePreferencesException {
@@ -267,8 +263,7 @@ public class SecurePreferences {
 		catch (UnsupportedEncodingException e) {
 			throw new SecurePreferencesException(e);
 		}
-		String secureValueEncoded = Base64.encodeToString(secureValue, Base64.NO_WRAP);
-		return secureValueEncoded;
+        return Base64.encodeToString(secureValue, Base64.NO_WRAP);
 	}
 
 	protected String decrypt(String securedEncodedValue) {

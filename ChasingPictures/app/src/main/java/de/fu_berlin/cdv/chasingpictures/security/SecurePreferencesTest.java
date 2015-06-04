@@ -33,13 +33,13 @@ public class SecurePreferencesTest extends ApplicationTestCase<Application> {
         String key = randomString(10);
         String value = randomString(10);
         getPreferences().put(key, value);
-        assertEquals("Decrypted value does not match.", value, getPreferences().getString(key));
-        getPreferences().removeValue(key);
+        assertEquals("Decrypted value does not match.", value, getPreferences().get(key));
+        getPreferences().remove(key);
     }
 
     public void testPersistence() throws Exception {
         getPreferences().put(persistentKey, persistentValue);
-        String received = getPreferences().getString(persistentKey);
+        String received = getPreferences().get(persistentKey);
         assertEquals("Decrypted value does not match over multiple instances", persistentValue, received);
     }
 
