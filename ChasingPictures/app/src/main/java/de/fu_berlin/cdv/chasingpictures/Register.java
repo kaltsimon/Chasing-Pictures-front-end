@@ -139,16 +139,4 @@ public class Register extends Activity {
             }
         }
     }
-
-    private void unlockKeyStore() {
-        try {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                startActivity(new Intent("android.credentials.UNLOCK"));
-            } else {
-                startActivity(new Intent("com.android.credentials.UNLOCK"));
-            }
-        } catch (ActivityNotFoundException e) {
-            Log.e(TAG, "No UNLOCK activity: " + e.getMessage(), e);
-        }
-    }
 }
