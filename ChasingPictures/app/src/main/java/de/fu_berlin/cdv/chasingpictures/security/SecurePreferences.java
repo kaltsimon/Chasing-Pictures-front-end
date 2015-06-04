@@ -105,6 +105,7 @@ public class SecurePreferences {
      * @param context Application context
      * @param preferenceNameId Resource ID for preference name.
      */
+    @Deprecated
     public static SecurePreferences getInstance(Context context, int preferenceNameId) {
         return SecurePreferences.getInstance(context, context.getString(preferenceNameId));
     }
@@ -117,6 +118,7 @@ public class SecurePreferences {
      * @param context Application context
      * @param preferenceName Name of preferences to use.
      */
+    @Deprecated
     public static SecurePreferences getInstance(Context context, String preferenceName) {
         KeyStore keyStore = KeyStore.getInstance();
         byte[] keyBytes, ivBytes;
