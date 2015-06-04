@@ -1,8 +1,12 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
@@ -16,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +28,8 @@ import de.fu_berlin.cdv.chasingpictures.api.ApiErrors;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
 import de.fu_berlin.cdv.chasingpictures.api.RegistrationApiResult;
 import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
+import de.fu_berlin.cdv.chasingpictures.security.KeyStore;
+import de.fu_berlin.cdv.chasingpictures.security.SecurePreferences;
 
 
 public class Register extends Activity {
@@ -108,7 +115,9 @@ public class Register extends Activity {
                     && apiUtil.callSuccessful(apiResult)
                     && accessToken != null
                     && !accessToken.isEmpty()) {
-                // TODO: Pass on access token and user data
+
+                SecurePreferences.getInstance(getApplicationContext(), R.string.security_preferences_ID);
+
                 setResult(RESULT_OK);
                 finish();
             } else {
@@ -128,6 +137,18 @@ public class Register extends Activity {
                 Toast notification = Toast.makeText(getApplicationContext(), R.string.registration_fail, Toast.LENGTH_SHORT);
                 notification.show();
             }
+        }
+    }
+
+    private void unlockKeyStore() {
+        try {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+                startActivity(new Intent("android.credentials.UNLOCK"));
+            } else {
+                startActivity(new Intent("com.android.credentials.UNLOCK"));
+            }
+        } catch (ActivityNotFoundException e) {
+            Log.e(TAG, "No UNLOCK activity: " + e.getMessage(), e);
         }
     }
 }
