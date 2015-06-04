@@ -101,9 +101,7 @@ public class LoginForm extends Activity {
             if (responseEntity.getStatusCode() == HttpStatus.OK
                     && accessToken != null
                     && !accessToken.isEmpty()) {
-                // Place access token in user data
                 UserData userData = responseEntity.getBody().getData();
-                userData.setAccessToken(accessToken);
 
                 Intent resultData = new Intent();
                 resultData.putExtra(RETURN_USER_DATA, userData);
