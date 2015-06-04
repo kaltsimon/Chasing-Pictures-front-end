@@ -1,12 +1,8 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
@@ -20,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +23,6 @@ import de.fu_berlin.cdv.chasingpictures.api.ApiErrors;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
 import de.fu_berlin.cdv.chasingpictures.api.RegistrationApiResult;
 import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
-import de.fu_berlin.cdv.chasingpictures.security.KeyStore;
 import de.fu_berlin.cdv.chasingpictures.security.SecurePreferences;
 
 
@@ -116,7 +110,10 @@ public class Register extends Activity {
                     && accessToken != null
                     && !accessToken.isEmpty()) {
 
-                SecurePreferences.getInstance(getApplicationContext(), R.string.security_preferences_ID);
+                SecurePreferences prefs = SecurePreferences
+                        .getInstanceFromResources(getApplicationContext(), R.string.security_prefsID);
+
+                prefs.put(getString(R.string.security_prefs_accessToken), accessToken);
 
                 setResult(RESULT_OK);
                 finish();

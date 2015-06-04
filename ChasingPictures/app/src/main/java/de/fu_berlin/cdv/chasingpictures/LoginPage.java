@@ -3,12 +3,13 @@ package de.fu_berlin.cdv.chasingpictures;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 import de.fu_berlin.cdv.chasingpictures.api.UserData;
+import de.fu_berlin.cdv.chasingpictures.security.SecurePreferences;
 
 
 public class LoginPage extends Activity {
@@ -51,7 +52,21 @@ public class LoginPage extends Activity {
                     Log.d(TAG, userData.toString());
                     break;
                 case REGISTER:
-                    Log.d(TAG, "Registered successfully!");
+                    SecurePreferences prefs = SecurePreferences
+                            .getInstanceFromResources(getApplicationContext(), R.string.security_prefsID);
+                    if (prefs.containsKey(getString(R.string.security_prefs_accessToken))) {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                R.string.registration_success,
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    } else {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                R.string.registration_fail,
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
                     break;
             }
 
