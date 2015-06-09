@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Storing key and IV here is really bad, but there doesn't seem to be another way? -->
+<resources>
+    <string name="security.prefsID">de.fu_berlin.cdv.chasingpictures.preferences</string>
+    <string name="security.IV">MyUyzS5qocek7c7ZFzEzqg==</string>
+    <string name="security.KEY">y6CJ7dQvfagiQdwH8bJ8Sw==</string>
+    <string name="security.secretKey.storeKey">SECRET_KEY</string>
+    <string name="security.IV.storeKey">IV</string>
+    <string name="security.prefs.accessToken">accessToken</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="api.url" translatable="false">http://10.0.2.2:3000/</string>
+    <string name="api.path.login" translatable="false">auth/sign_in</string>
+    <string name="api.path.register" translatable="false">auth</string>
+    <string name="api.header.accessToken" translatable="false">Access-Token</string>
+    <string name="api.error.email" translatable="false">email</string>
+    <string name="api.error.password" translatable="false">password</string>
+    <string name="api.error.username" translatable="false">name</string>
+    <string name="api.status.success">success</string>
+</resources>

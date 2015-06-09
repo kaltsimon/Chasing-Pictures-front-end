@@ -8,8 +8,18 @@
     <string name="register_button">Registrieren</string>
     <string name="hint_password">Passwort</string>
     <string name="hint_email">sie@beispiel.de</string>
-    <string name="hint_email_repeat">Email wiederholen</string>
+    <string name="hint_username">Benutzername</string>
     <string name="title_activity_login_form">Einloggen</string>
     <string name="title_activity_register">Registrieren</string>
-    <string name="login_prompt">Bitte einloggen...</string>
+    <string name="login_prompt">Bitte einloggen…</string>
+    <string name="toolbar.help_button_label">Hilfe</string>
+    <string name="toolbar.camera_button_label">Kamera</string>
+    <string name="toolbar.distance_label">Distanz</string>
+    <string name="invalid_email">Die eingegebene E-Mail Adresse ist nicht gültig.</string>
+    <string name="login_success">Log-In erfolgreich.</string>
+    <string name="login_fail">Log-in fehlgeschlagen.</string>
+    <string name="empty_password">Passwort kann nicht leer sein.</string>
+    <string name="registration_success">Erfolgreich registriert.</string>
+    <string name="registration_fail">Registrierung fehlgeschlagen.</string>
+    <string name="register.invalid_username">Dieser Benutzername ist ungültig.</string>
 </resources>
