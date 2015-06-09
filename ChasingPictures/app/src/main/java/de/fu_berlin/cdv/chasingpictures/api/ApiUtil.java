@@ -2,6 +2,8 @@ package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
@@ -81,6 +83,16 @@ public class ApiUtil {
     public String getHeader(ResponseEntity<?> responseEntity, int resourceId) {
         List<String> headers = getHeaders(responseEntity, resourceId);
         return headers == null || headers.isEmpty() ? null : headers.get(0);
+    }
+
+    /**
+     * Sets the value for the header field named by the given resource ID.
+     * @param headers The http headers
+     * @param keyResID Resource ID for the name of the header field
+     * @param value String to set as the value of the header field
+     */
+    public void setHeader(HttpHeaders headers, int keyResID, String value) {
+        headers.set(context.getResources().getString(keyResID), value);
     }
 
     /**

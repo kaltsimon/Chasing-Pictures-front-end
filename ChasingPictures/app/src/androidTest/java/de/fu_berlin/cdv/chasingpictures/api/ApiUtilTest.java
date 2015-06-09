@@ -3,6 +3,8 @@ package de.fu_berlin.cdv.chasingpictures.api;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 
+import org.springframework.http.HttpHeaders;
+
 import java.net.URI;
 
 import de.fu_berlin.cdv.chasingpictures.R;
@@ -40,5 +42,16 @@ public class ApiUtilTest extends ApplicationTestCase<Application> {
 
         URI expectedUriLogin = new URI(base_uri + getContext().getString(R.string.api_path_login));
         assertEquals("Login URIs differ", expectedUriLogin, apiUtil.getURIforEndpoint(R.string.api_path_login));
+    }
+
+    public void testSetHeader() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        String accessToken = "238fz09238f0239r";
+        apiUtil.setHeader(headers, R.string.api_header_accessToken, accessToken);
+        assertEquals(
+                "Stored header does not match input.",
+                accessToken,
+                headers.get(getContext().getString(R.string.api_header_accessToken)).get(0)
+        );
     }
 }
