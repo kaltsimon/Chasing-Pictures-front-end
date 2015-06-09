@@ -106,6 +106,7 @@ public class LoginForm extends Activity {
 
                 Access.setAccessToken(getApplicationContext(), accessToken);
 
+                // TODO: save user data in storage, e.g. SQLite DB
                 Intent resultData = new Intent();
                 resultData.putExtra(RETURN_USER_DATA, userData);
 

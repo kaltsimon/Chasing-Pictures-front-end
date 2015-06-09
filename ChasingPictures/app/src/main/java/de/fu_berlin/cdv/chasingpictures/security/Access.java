@@ -23,4 +23,12 @@ public class Access {
         SecurePreferences prefs = getSecurePreferences(context);
         prefs.put(context.getString(R.string.security_prefs_accessToken), accessToken);
     }
+
+    /**
+     * Salts and hashes the given password.
+     */
+    public String saltAndHash(Context context, String password) {
+        // TODO: actually do something
+        return password;
+    }
 }
