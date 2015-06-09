@@ -5,15 +5,23 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import org.springframework.http.ResponseEntity;
+
 import java.lang.reflect.Method;
+import java.util.List;
+
+import de.fu_berlin.cdv.chasingpictures.api.LocationRequest;
+import de.fu_berlin.cdv.chasingpictures.api.Place;
+import de.fu_berlin.cdv.chasingpictures.api.PlacesApiResult;
 
 import static com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import static com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
@@ -39,9 +47,19 @@ public class PictureSelectionActivity extends Activity implements ConnectionCall
 
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         setMockLocation(MOCK_LOCATION_LAT, MOCK_LOCATION_LON);
-        Log.d(TAG, "Last location: " + mLocationManager.getLastKnownLocation(MOCK_LOCATION_PROVIDER));
 
-        buildGoogleApiClient();
+        // This currently does not work!
+        // buildGoogleApiClient();
+
+        // Instead we manually get the mock location and send it.
+        Location lastKnownLocation = mLocationManager.getLastKnownLocation(MOCK_LOCATION_PROVIDER);
+        Log.d(TAG, "Last location: " + lastKnownLocation);
+
+        if (lastKnownLocation != null) {
+            new LocationTask().execute(lastKnownLocation);
+        } else {
+            Toast.makeText(this, "Could not read location...", Toast.LENGTH_SHORT).show();
+        }
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -52,15 +70,34 @@ public class PictureSelectionActivity extends Activity implements ConnectionCall
                 .build();
     }
 
+    private class LocationTask extends AsyncTask<Location, Object, List<Place>> {
+
+        @Override
+        protected List<Place> doInBackground(Location... params) {
+            if (params.length == 0)
+                return null;
+
+            LocationRequest request = new LocationRequest(getApplicationContext(), params[0]);
+            ResponseEntity<PlacesApiResult> result = request.send();
+            return result.getBody().getPlaces();
+        }
+
+        @Override
+        protected void onPostExecute(List<Place> places) {
+            for (Place place : places) {
+                new PictureDownloader(getCacheDir()).execute(place.getPicture());
+            }
+        }
+    }
+
     //region Google API callbacks
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.d(TAG, "Connected to Google API services.");
 
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        Log.d(TAG, mLastLocation.toString());
-        ((TextView) findViewById(R.id.textLatitude)).setText(String.valueOf(mLastLocation.getLatitude()));
-        ((TextView) findViewById(R.id.textLongitude)).setText(String.valueOf(mLastLocation.getLongitude()));
+
+        new LocationTask().execute(mLastLocation);
     }
 
     @Override
