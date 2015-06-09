@@ -1,7 +1,9 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.File;
 import java.util.Date;
 
 /**
@@ -18,6 +20,8 @@ public class Picture {
     private Date createdAt;
     @JsonProperty("updated_at")
     private Date updatedAt;
+    @JsonIgnore
+    private File cachedFile;
 
     public long getId() {
         return id;
@@ -65,6 +69,14 @@ public class Picture {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public File getCachedFile() {
+        return cachedFile;
+    }
+
+    public void setCachedFile(File cachedFile) {
+        this.cachedFile = cachedFile;
     }
 
     @Override
