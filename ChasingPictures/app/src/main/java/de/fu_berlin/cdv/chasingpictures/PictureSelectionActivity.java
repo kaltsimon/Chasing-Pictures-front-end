@@ -137,7 +137,7 @@ public class PictureSelectionActivity extends Activity implements ConnectionCall
         mockLocation.setTime(System.currentTimeMillis());
 
         //region Complete Mock Location
-        Method locationJellyBeanFixMethod = null;
+        Method locationJellyBeanFixMethod;
         try {
             locationJellyBeanFixMethod = Location.class.getMethod("makeComplete");
             if (locationJellyBeanFixMethod != null) {
