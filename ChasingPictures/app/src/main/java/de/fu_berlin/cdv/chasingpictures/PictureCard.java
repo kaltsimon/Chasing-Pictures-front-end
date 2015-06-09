@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 
@@ -30,6 +28,9 @@ public class PictureCard extends Fragment {
     public static final String PLACE = "place_param";
 
     private Place[] places;
+    private int currentPlace = 0;
+    private SwipeDetector mSwipeDetector;
+    private ImageView mImageView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -59,7 +60,7 @@ public class PictureCard extends Fragment {
         if (getArguments() != null) {
             this.places = (Place[]) getArguments().getSerializable(PLACE);
         }
-
+        mSwipeDetector = new SwipeDetector();
     }
 
     @Override
@@ -67,21 +68,21 @@ public class PictureCard extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_picture_card, container, false);
+        view.setOnTouchListener(mSwipeDetector);
 
-        File cachedFile = places[0].getPicture().getCachedFile();
-        if (cachedFile != null) {
-            ImageView imageView = (ImageView) view.findViewById(R.id.picture_card_image);
-            Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
-            imageView.setImageBitmap(bitmap);
-        }
+        view.setOnClickListener(new ClickListener());
+
+        mImageView = (ImageView) view.findViewById(R.id.picture_card_image);
+        updatePicture();
 
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onSwipe(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    private void updatePicture() {
+        File cachedFile = places[currentPlace].getPicture().getCachedFile();
+        if (cachedFile != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
+            mImageView.setImageBitmap(bitmap);
         }
     }
 
@@ -117,4 +118,34 @@ public class PictureCard extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
+    private class ClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (mSwipeDetector.swipeDetected()) {
+                showNextPlace(mSwipeDetector.getAction());
+            }
+        }
+    }
+
+    private void showNextPlace(SwipeDetector.Action direction) {
+        switch (direction) {
+            case LR:
+                // Because the modulo operator in Java is shit.
+                if (currentPlace > 0)
+                    currentPlace--;
+                else
+                    currentPlace = places.length - 1;
+                break;
+            case RL:
+                currentPlace = (currentPlace + 1) % places.length;
+                break;
+            case TB:
+            case BT:
+            case None:
+            default:
+                break;
+        }
+
+        updatePicture();
+    }
 }

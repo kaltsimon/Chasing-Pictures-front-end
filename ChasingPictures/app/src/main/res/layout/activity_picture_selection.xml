@@ -7,14 +7,4 @@
     tools:context="de.fu_berlin.cdv.chasingpictures.PictureSelectionActivity"
     android:id="@+id/picture_selection_layout">
 
-<!--
-    <fragment
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:name="de.fu_berlin.cdv.chasingpictures.PictureCard"
-        android:id="@+id/fragment_picture_card"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        tools:layout="@layout/fragment_picture_card" />
-        -->
 </RelativeLayout>
