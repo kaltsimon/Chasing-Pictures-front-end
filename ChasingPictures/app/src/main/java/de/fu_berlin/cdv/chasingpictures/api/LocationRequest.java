@@ -1,65 +1,50 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
+import android.content.Context;
 import android.location.Location;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import de.fu_berlin.cdv.chasingpictures.R;
 
 /**
  * @author Simon Kalt
  */
-public class LocationRequest {
-    private double latitude;
-    private double longitude;
+public class LocationRequest extends ApiRequest<PlacesApiResult> {
 
-    public LocationRequest() {}
+    private final Location location;
 
-    public LocationRequest(Location location) {
-        setLatitude(location.getLatitude());
-        setLongitude(location.getLongitude());
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public LocationRequest(Context context, Location location) {
+        super(context, R.string.api_path_location_request);
+        this.location = location;
     }
 
     @Override
-    public String toString() {
-        return "LocationRequest{" +
-                "latitude=" + latitude +
-                ", longitude=" + longitude +
-                '}';
+    public ResponseEntity<PlacesApiResult> sendRequest() {
+        HttpHeaders headers = new HttpHeaders();
+        apiUtil.setAccessTokenHeader(headers);
+        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+
+        Map<String, Double> queryParameters = new HashMap<>(2);
+        queryParameters.put("latitude", location.getLatitude());
+        queryParameters.put("longitude", location.getLongitude());
+
+        return restTemplate.exchange(
+                apiUri,
+                HttpMethod.GET,
+                httpEntity,
+                PlacesApiResult.class,
+                queryParameters);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LocationRequest that = (LocationRequest) o;
-
-        if (Double.compare(that.latitude, latitude) != 0) return false;
-        return Double.compare(that.longitude, longitude) == 0;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(latitude);
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(longitude);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
+    public RestTemplate getRestTemplate() {
+        return restTemplate;
     }
 }

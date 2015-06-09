@@ -2,32 +2,20 @@ package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.res.Resources;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.test.ApplicationTestCase;
-import android.util.Log;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.DefaultResponseErrorHandler;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import de.fu_berlin.cdv.chasingpictures.R;
-import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 /**
  * @author Simon
@@ -40,9 +28,6 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
         super(Application.class);
     }
 
-    Resources res;
-    RestTemplate restTemplate;
-    String apiURL;
     ResponseErrorHandler responseErrorHandler;
     ApiUtil apiUtil;
     LocationManager mLocationManager;
@@ -55,12 +40,7 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
     @Override
     public void setUp() throws Exception {
         apiUtil = new ApiUtil(getContext());
-        res = getContext().getResources();
-        apiURL = res.getString(R.string.api_url) + res.getString(R.string.api_path_location_request);
-        restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         responseErrorHandler = new ResponseErrorHandler();
-        restTemplate.setErrorHandler(responseErrorHandler);
         mLocationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
     }
 
@@ -74,19 +54,13 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
         setMockLocation(MOCK_LOCATION_LON, MOCK_LOCATION_LAT);
         Location location = mLocationManager.getLastKnownLocation(MOCK_LOCATION_PROVIDER);
 
-        HttpHeaders headers = new HttpHeaders();
-        apiUtil.setAccessTokenHeader(headers);
-        HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-        ResponseEntity<PlacesApiResult> exchange = restTemplate.exchange(
-                apiURL,
-                HttpMethod.GET,
-                httpEntity,
-                PlacesApiResult.class,
-                location.getLatitude(),
-                location.getLongitude());
+        LocationRequest locationRequest = new LocationRequest(getContext(), location);
+        responseErrorHandler.setExpectedStatusCode(200);
+        locationRequest.getRestTemplate().setErrorHandler(responseErrorHandler);
 
-        assertEquals("Exchange not successful!", HttpStatus.OK, exchange.getStatusCode());
-        List<Place> places = exchange.getBody().getPlaces();
+        ResponseEntity<PlacesApiResult> result = locationRequest.sendRequest();
+
+        List<Place> places = result.getBody().getPlaces();
         assertNotNull(places);
 
         // This only works if the mock location is set properly
