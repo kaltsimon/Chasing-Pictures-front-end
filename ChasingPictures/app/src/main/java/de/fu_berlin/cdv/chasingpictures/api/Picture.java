@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
 
@@ -47,12 +51,15 @@ public class Picture {
         return url;
     }
 
-    public String getEncodedUrl() {
+    public URL getASCIIUrl() {
+
         try {
-            return URLEncoder.encode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            Log.d("Picture", Log.getStackTraceString(e));
+            URI uri = new URL(url).toURI();
+            return new URL(uri.toASCIIString());
+        } catch (MalformedURLException | URISyntaxException e) {
+            Log.e("Picture", Log.getStackTraceString(e));
         }
+
         return null;
     }
 

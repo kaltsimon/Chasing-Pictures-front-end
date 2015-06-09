@@ -39,7 +39,7 @@ public class PictureDownloader extends AsyncTask<Picture, Object, Void> {
                     continue;
                 }
 
-                URL url = new URL(picture.getEncodedUrl());
+                URL url = picture.getASCIIUrl();
                 downloadUrlToFile(url, destinationFile);
             } catch (IOException e) {
                 Log.e(TAG, Log.getStackTraceString(e));
