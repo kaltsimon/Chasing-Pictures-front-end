@@ -4,40 +4,17 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="de.fu_berlin.cdv.chasingpictures.PictureSelectionActivity">
+    tools:context="de.fu_berlin.cdv.chasingpictures.PictureSelectionActivity"
+    android:id="@+id/picture_selection_layout">
 
-
-    <TextView
+<!--
+    <fragment
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Latitude"
-        android:id="@+id/labelLatitude"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Longitude"
-        android:id="@+id/labelLongitude"
-        android:layout_below="@+id/labelLatitude" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textLongitude"
-        android:layout_alignTop="@+id/labelLongitude"
-        android:layout_toRightOf="@+id/labelLongitude"
-        android:layout_toEndOf="@+id/labelLongitude"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textLatitude"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/textLongitude"
-        android:layout_alignStart="@+id/textLongitude" />
+        android:name="de.fu_berlin.cdv.chasingpictures.PictureCard"
+        android:id="@+id/fragment_picture_card"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/fragment_picture_card" />
+        -->
 </RelativeLayout>

@@ -1,13 +1,20 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -16,9 +23,12 @@ import com.google.android.gms.location.LocationServices;
 
 import org.springframework.http.ResponseEntity;
 
+import java.io.File;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
+import de.fu_berlin.cdv.chasingpictures.PictureCard.OnFragmentInteractionListener;
 import de.fu_berlin.cdv.chasingpictures.api.LocationRequest;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.api.PlacesApiResult;
@@ -27,7 +37,7 @@ import static com.google.android.gms.common.api.GoogleApiClient.ConnectionCallba
 import static com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 
-public class PictureSelectionActivity extends Activity implements ConnectionCallbacks, OnConnectionFailedListener {
+public class PictureSelectionActivity extends Activity implements ConnectionCallbacks, OnConnectionFailedListener, OnFragmentInteractionListener {
     private static final String TAG = "PictureSelection";
 
     private GoogleApiClient mGoogleApiClient;
@@ -70,6 +80,11 @@ public class PictureSelectionActivity extends Activity implements ConnectionCall
                 .build();
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
     private class LocationTask extends AsyncTask<Location, Object, List<Place>> {
 
         @Override
@@ -79,14 +94,25 @@ public class PictureSelectionActivity extends Activity implements ConnectionCall
 
             LocationRequest request = new LocationRequest(getApplicationContext(), params[0]);
             ResponseEntity<PlacesApiResult> result = request.send();
-            return result.getBody().getPlaces();
+            List<Place> places = result.getBody().getPlaces();
+
+            for (Place place : places) {
+                new PictureDownloader(getCacheDir()).execute(place.getPicture());
+            }
+
+            return places;
         }
 
         @Override
         protected void onPostExecute(List<Place> places) {
-            for (Place place : places) {
-                new PictureDownloader(getCacheDir()).execute(place.getPicture());
-            }
+            // Add the picture view Fragment
+            Fragment pictureCard = PictureCard.newInstance(places.toArray(new Place[places.size()]));
+
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.add(R.id.picture_selection_layout, pictureCard);
+            fragmentTransaction.commit();
         }
     }
 
