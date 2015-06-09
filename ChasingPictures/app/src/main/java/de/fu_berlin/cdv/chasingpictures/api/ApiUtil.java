@@ -54,15 +54,8 @@ public class ApiUtil {
      * @param endpointId An android resource id pointing to an R.strings.api_path_* value
      * @return The URI to send your request to
      */
-    public URI getURIforEndpoint(int endpointId) {
-        try {
-            URI apiUrl = new URI(context.getString(R.string.api_url));
-            return apiUrl.resolve(context.getString(endpointId));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public String getURIforEndpoint(int endpointId) {
+        return context.getString(R.string.api_url) + context.getString(endpointId);
     }
 
     /**

@@ -39,10 +39,10 @@ public class ApiUtilTest extends ApplicationTestCase<Application> {
         String base_uri = getContext().getString(R.string.api_url);
 
         URI expectedUriRegister = new URI(base_uri + getContext().getString(R.string.api_path_register));
-        assertEquals("Registration URIs differ", expectedUriRegister, apiUtil.getURIforEndpoint(R.string.api_path_register));
+        assertEquals("Registration URIs differ", expectedUriRegister.toString(), apiUtil.getURIforEndpoint(R.string.api_path_register));
 
         URI expectedUriLogin = new URI(base_uri + getContext().getString(R.string.api_path_login));
-        assertEquals("Login URIs differ", expectedUriLogin, apiUtil.getURIforEndpoint(R.string.api_path_login));
+        assertEquals("Login URIs differ", expectedUriLogin.toString(), apiUtil.getURIforEndpoint(R.string.api_path_login));
     }
 
     public void testSetHeader() throws Exception {
