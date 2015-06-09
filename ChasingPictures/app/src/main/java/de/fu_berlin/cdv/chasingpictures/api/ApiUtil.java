@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.R;
+import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 /**
  * @author Simon Kalt
@@ -93,6 +94,14 @@ public class ApiUtil {
      */
     public void setHeader(HttpHeaders headers, int keyResID, String value) {
         headers.set(context.getResources().getString(keyResID), value);
+    }
+
+    /**
+     * Sets the access token field in the given headers to the current access token.
+     * @param headers HTTP headers
+     */
+    public void setAccessTokenHeader(HttpHeaders headers) {
+        setHeader(headers, R.string.api_header_accessToken, Access.getAccessToken(context));
     }
 
     /**

@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import java.net.URI;
 
 import de.fu_berlin.cdv.chasingpictures.R;
+import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 /**
  * @author Simon
@@ -51,6 +52,16 @@ public class ApiUtilTest extends ApplicationTestCase<Application> {
         assertEquals(
                 "Stored header does not match input.",
                 accessToken,
+                headers.get(getContext().getString(R.string.api_header_accessToken)).get(0)
+        );
+    }
+
+    public void testSetAccessTokenHeader() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        apiUtil.setAccessTokenHeader(headers);
+        assertEquals(
+                "Stored header does not match input.",
+                Access.getAccessToken(getContext()),
                 headers.get(getContext().getString(R.string.api_header_accessToken)).get(0)
         );
     }
