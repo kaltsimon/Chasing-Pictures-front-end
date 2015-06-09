@@ -11,11 +11,12 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import static com.google.android.gms.common.api.GoogleApiClient.*;
 import com.google.android.gms.location.LocationServices;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import static com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import static com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
 
 public class PictureSelectionActivity extends Activity implements ConnectionCallbacks, OnConnectionFailedListener {
@@ -51,11 +52,7 @@ public class PictureSelectionActivity extends Activity implements ConnectionCall
                 .build();
     }
 
-
-    /*
-    Google API callbacks
-     */
-
+    //region Google API callbacks
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.d(TAG, "Connected to Google API services.");
@@ -75,6 +72,7 @@ public class PictureSelectionActivity extends Activity implements ConnectionCall
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.e(TAG, "Connection to Google API services failed: " + connectionResult);
     }
+    //endregion
 
     //region MockLocation
     public void setMockLocation(double latitude, double longitude) {
