@@ -13,10 +13,13 @@ public class Access {
     }
 
     public static boolean hasAccess(Context context) {
-        SecurePreferences prefs = getSecurePreferences(context);
-        String accessToken = prefs.get(context.getString(R.string.security_prefs_accessToken));
-
+        String accessToken = getAccessToken(context);
         return accessToken != null && !accessToken.isEmpty();
+    }
+
+    public static String getAccessToken(Context context) {
+        SecurePreferences prefs = getSecurePreferences(context);
+        return prefs.get(context.getString(R.string.security_prefs_accessToken));
     }
 
     public static void setAccessToken(Context context, String accessToken) {
