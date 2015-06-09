@@ -59,6 +59,10 @@
             android:name=".Maps"
             android:label="@string/title_activity_maps" >
         </activity>
+        <activity
+            android:name=".PictureSelectionActivity"
+            android:label="@string/title_activity_picture_selection" >
+        </activity>
     </application>
 
 </manifest>
