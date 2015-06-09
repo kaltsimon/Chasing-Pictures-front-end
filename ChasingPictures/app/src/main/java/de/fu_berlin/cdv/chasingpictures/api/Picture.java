@@ -1,9 +1,13 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 
 /**
@@ -41,6 +45,15 @@ public class Picture {
 
     public String getUrl() {
         return url;
+    }
+
+    public String getEncodedUrl() {
+        try {
+            return URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Log.d("Picture", Log.getStackTraceString(e));
+        }
+        return null;
     }
 
     public void setUrl(String url) {

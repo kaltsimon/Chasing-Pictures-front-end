@@ -1,7 +1,5 @@
 package de.fu_berlin.cdv.chasingpictures;
 
-import android.media.Image;
-import android.media.ImageReader;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -12,9 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 
@@ -44,10 +39,10 @@ public class PictureDownloader extends AsyncTask<Picture, Object, Void> {
                     continue;
                 }
 
-                URL url = new URL(picture.getUrl());
+                URL url = new URL(picture.getEncodedUrl());
                 downloadUrlToFile(url, destinationFile);
             } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, Log.getStackTraceString(e));
                 picture.setCachedFile(null);
             }
         }

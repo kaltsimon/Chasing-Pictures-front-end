@@ -6,6 +6,7 @@ import android.util.Log;
 
 import junit.framework.TestCase;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -27,16 +28,24 @@ public class PictureDownloaderTest extends ApplicationTestCase<Application> {
 
     }
 
-    public void testPictureDownloader() throws Exception {
+    protected static Picture makePicture(String url, long id, Date updatedAt) {
         Picture p = new Picture();
-        Picture p2 = new Picture();
-        p.setId(5);
-        p2.setId(7);
-        p.setUpdatedAt(new GregorianCalendar(2015, 6, 9, 14, 25).getTime());
-        p2.setUpdatedAt(new GregorianCalendar(2015, 6, 9, 14, 34).getTime());
-        p.setUrl("http://upload.wikimedia.org/wikipedia/commons/8/89/Mauerstrasse-Dreifaltigkeitskirche-GDR-71-67.jpg");
-        p2.setUrl("http://upload.wikimedia.org/wikipedia/commons/5/5c/Platz_am_Zeughaus-VII-59-513-x.jpg");
-        Picture[] pictures = {p, p2};
+        p.setUrl(url);
+        p.setId(id);
+        p.setUpdatedAt(updatedAt);
+
+        return p;
+    }
+
+    public void testPictureDownloader() throws Exception {
+        GregorianCalendar updatedAt = new GregorianCalendar(2015, 6, 9, 14, 34);
+        Picture p = makePicture("http://upload.wikimedia.org/wikipedia/commons/8/89/Mauerstrasse-Dreifaltigkeitskirche-GDR-71-67.jpg", 5, updatedAt.getTime());
+        updatedAt.roll(Calendar.HOUR, 1);
+        Picture p2 = makePicture("http://upload.wikimedia.org/wikipedia/commons/5/5c/Platz_am_Zeughaus-VII-59-513-x.jpg", 7, updatedAt.getTime());
+        updatedAt.roll(Calendar.MINUTE, 10);
+        Picture p3 = makePicture("http://upload.wikimedia.org/wikipedia/commons/6/68/Schlossbrücke-VII-62-424-a-W.jpg", 8, updatedAt.getTime());
+
+        Picture[] pictures = {p, p2, p3};
 
         PictureDownloader pictureDownloader = new PictureDownloader(getContext().getCacheDir());
         pictureDownloader.execute(pictures);
