@@ -39,16 +39,16 @@ public class PictureDownloader extends AsyncTask<Picture, Object, Void> {
                 File destinationFile = new File(targetDirectory, fileName);
 
                 // If file already exists, skip the download.
+                picture.setCachedFile(destinationFile);
                 if (destinationFile.exists()) {
                     continue;
                 }
 
                 URL url = new URL(picture.getUrl());
                 downloadUrlToFile(url, destinationFile);
-
-                picture.setCachedFile(destinationFile);
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
+                picture.setCachedFile(null);
             }
         }
         return null;
