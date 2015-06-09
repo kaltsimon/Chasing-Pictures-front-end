@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.test.ApplicationTestCase;
+import android.util.Log;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +33,8 @@ import de.fu_berlin.cdv.chasingpictures.security.Access;
  * @author Simon
  */
 public class LocationRequestTest extends ApplicationTestCase<Application> {
+
+    private static final String TAG = "LocationRequestTest";
 
     public LocationRequestTest() {
         super(Application.class);
@@ -69,13 +72,18 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
     public void testLocationRequest() throws Exception {
         // FIXME: WRONG ORDER SINCE API WANTS THEM THAT WAY!!!
         setMockLocation(MOCK_LOCATION_LON, MOCK_LOCATION_LAT);
-        LocationRequest loc = new LocationRequest(mLocationManager.getLastKnownLocation(MOCK_LOCATION_PROVIDER));
-
+        Location location = mLocationManager.getLastKnownLocation(MOCK_LOCATION_PROVIDER);
 
         HttpHeaders headers = new HttpHeaders();
         apiUtil.setAccessTokenHeader(headers);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-        ResponseEntity<PlacesApiResult> exchange = restTemplate.exchange(apiURL, HttpMethod.GET, httpEntity, PlacesApiResult.class, loc.getLatitude(), loc.getLongitude());
+        ResponseEntity<PlacesApiResult> exchange = restTemplate.exchange(
+                apiURL,
+                HttpMethod.GET,
+                httpEntity,
+                PlacesApiResult.class,
+                location.getLatitude(),
+                location.getLongitude());
 
         assertEquals("Exchange not successful!", HttpStatus.OK, exchange.getStatusCode());
         List<Place> places = exchange.getBody().getPlaces();
