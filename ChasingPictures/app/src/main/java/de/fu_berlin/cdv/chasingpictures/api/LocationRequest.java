@@ -27,7 +27,7 @@ public class LocationRequest extends ApiRequest<PlacesApiResult> {
     }
 
     @Override
-    public ResponseEntity<PlacesApiResult> sendRequest() {
+    public ResponseEntity<PlacesApiResult> send() {
         HttpHeaders headers = new HttpHeaders();
         apiUtil.setAccessTokenHeader(headers);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);

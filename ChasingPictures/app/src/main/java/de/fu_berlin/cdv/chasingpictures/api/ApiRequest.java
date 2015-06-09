@@ -20,5 +20,5 @@ public abstract class ApiRequest<T> {
         this.restTemplate = ApiUtil.buildJsonRestTemplate();
     }
 
-    public abstract ResponseEntity<T> sendRequest();
+    public abstract ResponseEntity<T> send();
 }
