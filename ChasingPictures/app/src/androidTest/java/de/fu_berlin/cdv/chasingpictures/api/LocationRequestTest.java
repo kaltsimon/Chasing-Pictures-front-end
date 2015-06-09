@@ -50,8 +50,7 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
     }
 
     public void testLocationRequest() throws Exception {
-        // FIXME: WRONG ORDER SINCE API WANTS THEM THAT WAY!!!
-        setMockLocation(MOCK_LOCATION_LON, MOCK_LOCATION_LAT);
+        setMockLocation(MOCK_LOCATION_LAT, MOCK_LOCATION_LON);
         Location location = mLocationManager.getLastKnownLocation(MOCK_LOCATION_PROVIDER);
 
         LocationRequest locationRequest = new LocationRequest(getContext(), location);
