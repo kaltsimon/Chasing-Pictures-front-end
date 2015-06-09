@@ -66,4 +66,44 @@ public class Picture {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Picture picture = (Picture) o;
+
+        if (id != picture.id) return false;
+        if (placeId != picture.placeId) return false;
+        if (time != null ? !time.equals(picture.time) : picture.time != null) return false;
+        if (url != null ? !url.equals(picture.url) : picture.url != null) return false;
+        if (createdAt != null ? !createdAt.equals(picture.createdAt) : picture.createdAt != null)
+            return false;
+        return !(updatedAt != null ? !updatedAt.equals(picture.updatedAt) : picture.updatedAt != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (time != null ? time.hashCode() : 0);
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (int) (placeId ^ (placeId >>> 32));
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Picture{" +
+                "id=" + id +
+                ", time=" + time +
+                ", url='" + url + '\'' +
+                ", placeId=" + placeId +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }
