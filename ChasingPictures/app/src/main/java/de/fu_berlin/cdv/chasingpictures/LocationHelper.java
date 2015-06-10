@@ -81,7 +81,7 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
     }
 
     /**
-     *
+     * Be aware that this call blocks until a location is available.
      * @return
      */
     public Location waitForLastLocation() {
