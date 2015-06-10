@@ -2,6 +2,8 @@ package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
@@ -15,6 +17,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.R;
+import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 /**
  * @author Simon Kalt
@@ -51,15 +54,8 @@ public class ApiUtil {
      * @param endpointId An android resource id pointing to an R.strings.api_path_* value
      * @return The URI to send your request to
      */
-    public URI getURIforEndpoint(int endpointId) {
-        try {
-            URI apiUrl = new URI(context.getString(R.string.api_url));
-            return apiUrl.resolve(context.getString(endpointId));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    public String getURIforEndpoint(int endpointId) {
+        return context.getString(R.string.api_url) + context.getString(endpointId);
     }
 
     /**
@@ -81,6 +77,24 @@ public class ApiUtil {
     public String getHeader(ResponseEntity<?> responseEntity, int resourceId) {
         List<String> headers = getHeaders(responseEntity, resourceId);
         return headers == null || headers.isEmpty() ? null : headers.get(0);
+    }
+
+    /**
+     * Sets the value for the header field named by the given resource ID.
+     * @param headers The http headers
+     * @param keyResID Resource ID for the name of the header field
+     * @param value String to set as the value of the header field
+     */
+    public void setHeader(HttpHeaders headers, int keyResID, String value) {
+        headers.set(context.getResources().getString(keyResID), value);
+    }
+
+    /**
+     * Sets the access token field in the given headers to the current access token.
+     * @param headers HTTP headers
+     */
+    public void setAccessTokenHeader(HttpHeaders headers) {
+        setHeader(headers, R.string.api_header_accessToken, Access.getAccessToken(context));
     }
 
     /**

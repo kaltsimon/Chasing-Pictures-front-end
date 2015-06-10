@@ -20,4 +20,10 @@
         android:text="toMaps"
         android:onClick="toNext"/>
 
+    <Button
+        style="@style/Vertical.Button"
+        android:ems="@integer/standard_textinput_ems"
+        android:text="Go to picture selection"
+        android:onClick="showPictureSelectionPage"/>
+
 </LinearLayout>

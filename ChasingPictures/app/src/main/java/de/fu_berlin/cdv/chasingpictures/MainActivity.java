@@ -50,4 +50,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    public void showPictureSelectionPage(View view) {
+        Intent intent = new Intent(this, PictureSelectionActivity.class);
+        startActivity(intent);
+    }
 }
