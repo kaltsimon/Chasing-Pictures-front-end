@@ -104,14 +104,10 @@ public class Register extends Activity {
         @Override
         protected void onPostExecute(ResponseEntity<RegistrationApiResult> responseEntity) {
             RegistrationApiResult apiResult = responseEntity.getBody();
-            String accessToken = apiUtil.getHeader(responseEntity, R.string.api_header_accessToken);
+            Access.setAccess(getApplicationContext(), responseEntity);
 
             if (responseEntity.getStatusCode() == HttpStatus.OK
-                    && apiUtil.callSuccessful(apiResult)
-                    && accessToken != null
-                    && !accessToken.isEmpty()) {
-
-                Access.setAccessToken(getApplicationContext(), accessToken);
+                    && Access.hasAccess(getApplicationContext())) {
 
                 setResult(RESULT_OK);
                 finish();

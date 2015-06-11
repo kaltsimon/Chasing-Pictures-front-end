@@ -97,14 +97,11 @@ public class LoginForm extends Activity {
 
         @Override
         protected void onPostExecute(ResponseEntity<LoginApiResult> responseEntity) {
-            String accessToken = apiUtil.getHeader(responseEntity, R.string.api_header_accessToken);
+            Access.setAccess(getApplicationContext(), responseEntity);
 
             if (responseEntity.getStatusCode() == HttpStatus.OK
-                    && accessToken != null
-                    && !accessToken.isEmpty()) {
+                    && Access.hasAccess(getApplicationContext())) {
                 UserData userData = responseEntity.getBody().getData();
-
-                Access.setAccessToken(getApplicationContext(), accessToken);
 
                 // TODO: save user data in storage, e.g. SQLite DB
                 Intent resultData = new Intent();

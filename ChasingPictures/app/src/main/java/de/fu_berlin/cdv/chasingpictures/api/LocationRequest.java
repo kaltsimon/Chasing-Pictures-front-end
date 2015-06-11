@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.fu_berlin.cdv.chasingpictures.R;
+import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 /**
  * @author Simon Kalt
@@ -29,7 +30,7 @@ public class LocationRequest extends ApiRequest<PlacesApiResult> {
     @Override
     public ResponseEntity<PlacesApiResult> send() {
         HttpHeaders headers = new HttpHeaders();
-        apiUtil.setAccessTokenHeader(headers);
+        Access.getAccess(context, headers);
         HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 
         Map<String, Double> queryParameters = new HashMap<>(2);
