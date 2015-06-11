@@ -21,6 +21,7 @@ import java.util.Date;
 import de.fu_berlin.cdv.chasingpictures.R;
 
 
+// TODO: Move these Tests to {@link LoginRequestTest}
 /**
  * @author Simon Kalt
  */
