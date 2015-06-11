@@ -3,40 +3,32 @@ package de.fu_berlin.cdv.chasingpictures;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
 
 import de.fu_berlin.cdv.chasingpictures.api.ApiErrors;
-import de.fu_berlin.cdv.chasingpictures.api.LoginRegistrationRequest;
+import de.fu_berlin.cdv.chasingpictures.api.LoginRequest;
 import de.fu_berlin.cdv.chasingpictures.api.RegistrationApiResult;
-import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
-import de.fu_berlin.cdv.chasingpictures.security.SecurePreferences;
 
 
 public class Register extends Activity {
 
     private static final String TAG = "RegisterForm";
-    private ApiUtil apiUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        apiUtil = new ApiUtil(this);
     }
 
     @Override
@@ -73,32 +65,24 @@ public class Register extends Activity {
         if (passwordString.isEmpty()) {
             password.setError(getString(R.string.empty_password));
             return;
+        } else if (password.length() < 8) { // TODO: Put MIN_PASS_LENGTH into field
+            password.setError("Password is too short");
         }
 
         // TODO: salt & hash password?!
 
-        LoginRegistrationRequest registrationRequest = new LoginRegistrationRequest(usernameString, emailString, passwordString);
+        LoginRequest<RegistrationApiResult> registrationRequest = LoginRequest.makeRegistrationRequest(this, usernameString, emailString, passwordString);
         RegistrationRequestTask requestTask = new RegistrationRequestTask();
+        //noinspection unchecked
         requestTask.execute(registrationRequest);
     }
 
-    private class RegistrationRequestTask extends AsyncTask<LoginRegistrationRequest, Void, ResponseEntity<RegistrationApiResult>> {
+    private class RegistrationRequestTask extends AsyncTask<LoginRequest<RegistrationApiResult>, Void, ResponseEntity<RegistrationApiResult>> {
 
+        @SafeVarargs
         @Override
-        protected ResponseEntity<RegistrationApiResult> doInBackground(LoginRegistrationRequest... params) {
-            if (params.length != 0) {
-                try {
-                    RestTemplate restTemplate = ApiUtil.buildJsonRestTemplate();
-                    return restTemplate.
-                            exchange(apiUtil.getURIforEndpoint(R.string.api_path_register),
-                                    HttpMethod.POST, new HttpEntity<>(params[0], null),
-                                    RegistrationApiResult.class);
-                }
-                catch (Exception e) {
-                    Log.e(TAG, e.getMessage(), e);
-                }
-            }
-            return null;
+        protected final ResponseEntity<RegistrationApiResult> doInBackground(LoginRequest<RegistrationApiResult>... params) {
+            return params.length > 0 ? params[0].send() : null;
         }
 
         @Override
@@ -125,8 +109,11 @@ public class Register extends Activity {
                         }
                     }
                 }
-                Toast notification = Toast.makeText(getApplicationContext(), R.string.registration_fail, Toast.LENGTH_SHORT);
-                notification.show();
+                Toast.makeText(
+                        getApplicationContext(),
+                        R.string.registration_fail,
+                        Toast.LENGTH_SHORT
+                ).show();
             }
         }
     }
