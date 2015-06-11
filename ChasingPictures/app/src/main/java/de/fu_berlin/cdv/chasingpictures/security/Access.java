@@ -29,7 +29,7 @@ public class Access {
 
         /**
          * Load the value of this header from the secure preferences.
-         * @param prefs
+         * @param prefs The preferences to use
          * @return
          */
         public String load(SecurePreferences prefs) {
@@ -39,7 +39,7 @@ public class Access {
         /**
          * Store the value of this header received in the given response entity
          * in the given secure preferences.
-         * @param prefs
+         * @param prefs The preferences to use
          * @param responseEntity
          */
         public void store(SecurePreferences prefs, ResponseEntity<?> responseEntity) {
@@ -48,11 +48,19 @@ public class Access {
 
         /**
          * Gets the stored value of this header and sets it in the given HTTP headers.
-         * @param prefs
+         * @param prefs The preferences to use
          * @param headers
          */
         public void loadAndSet(SecurePreferences prefs, HttpHeaders headers) {
             headers.set(field, load(prefs));
+        }
+
+        /**
+         * Deletes the value stored in the application for this header.
+         * @param prefs The preferences to use
+         */
+        public void delete(SecurePreferences prefs) {
+            prefs.remove(field);
         }
     }
 
@@ -102,6 +110,17 @@ public class Access {
         SecurePreferences prefs = getSecurePreferences(context);
         for (Headers header : Headers.values()) {
             header.loadAndSet(prefs, headers);
+        }
+    }
+
+    /**
+     * Deletes all saved access information.
+     * @param context The current context
+     */
+    public static void revokeAccess(Context context) {
+        SecurePreferences prefs = getSecurePreferences(context);
+        for (Headers header : Headers.values()) {
+            header.delete(prefs);
         }
     }
 
