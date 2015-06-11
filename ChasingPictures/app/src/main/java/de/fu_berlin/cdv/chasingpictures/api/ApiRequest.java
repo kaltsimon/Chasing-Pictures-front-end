@@ -13,8 +13,10 @@ public abstract class ApiRequest<T> {
     protected final ApiUtil apiUtil;
     protected final String apiUri;
     protected final RestTemplate restTemplate;
+    protected final Context context;
 
     protected ApiRequest(Context context, int endpointResID) {
+        this.context = context;
         this.apiUtil = new ApiUtil(context);
         this.apiUri = apiUtil.getURIforEndpoint(endpointResID);
         this.restTemplate = ApiUtil.buildJsonRestTemplate();
