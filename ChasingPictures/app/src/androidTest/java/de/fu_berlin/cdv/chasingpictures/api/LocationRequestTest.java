@@ -50,6 +50,14 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
     }
 
     public void testLocationRequest() throws Exception {
+        // Register first
+        LoginRequestTest.registerUser(
+                getContext(),
+                "Tom",
+                LoginRequestTest.getUniqueEmail(),
+                "12345678"
+        );
+
         setMockLocation(MOCK_LOCATION_LAT, MOCK_LOCATION_LON);
         Location location = mLocationManager.getLastKnownLocation(MOCK_LOCATION_PROVIDER);
 
