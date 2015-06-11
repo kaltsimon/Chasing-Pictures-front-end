@@ -22,5 +22,9 @@ public abstract class ApiRequest<ResponseType> {
         this.restTemplate = ApiUtil.buildJsonRestTemplate();
     }
 
+    /**
+     * Sends this request to the API.
+     * @return A {@link ResponseEntity} with the result of the call.
+     */
     public abstract ResponseEntity<ResponseType> send();
 }
