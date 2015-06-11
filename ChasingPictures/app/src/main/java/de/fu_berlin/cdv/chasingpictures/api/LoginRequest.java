@@ -12,11 +12,11 @@ import de.fu_berlin.cdv.chasingpictures.R;
  * Login and registration requests.
  * @author Simon Kalt
  */
-public class LoginRequest<T> extends ApiRequest<T> {
+public class LoginRequest<ResponseType> extends ApiRequest<ResponseType> {
     protected final Data data;
-    protected final Class<T> type;
+    protected final Class<ResponseType> type;
 
-    protected LoginRequest(Context context, int endpointResID, Data data, Class<T> type) {
+    protected LoginRequest(Context context, int endpointResID, Data data, Class<ResponseType> type) {
         super(context, endpointResID);
         this.data = data;
         this.type = type;
@@ -33,7 +33,7 @@ public class LoginRequest<T> extends ApiRequest<T> {
     }
 
     @Override
-    public ResponseEntity<T> send() {
+    public ResponseEntity<ResponseType> send() {
         return restTemplate.exchange(
                 apiUri,
                 HttpMethod.POST,

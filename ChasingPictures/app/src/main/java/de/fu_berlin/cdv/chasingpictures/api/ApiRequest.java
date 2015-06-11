@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
  * Abstract class for API requests.
  * @author Simon Kalt
  */
-public abstract class ApiRequest<T> {
+public abstract class ApiRequest<ResponseType> {
     protected final ApiUtil apiUtil;
     protected final String apiUri;
     protected final RestTemplate restTemplate;
@@ -22,5 +22,5 @@ public abstract class ApiRequest<T> {
         this.restTemplate = ApiUtil.buildJsonRestTemplate();
     }
 
-    public abstract ResponseEntity<T> send();
+    public abstract ResponseEntity<ResponseType> send();
 }
