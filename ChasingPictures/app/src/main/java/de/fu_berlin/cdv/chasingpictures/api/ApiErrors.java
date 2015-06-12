@@ -1,8 +1,10 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,18 +13,18 @@ import java.util.Map;
 /**
  * Class into which errors from the API get deserialized.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ApiErrors {
-    @JsonProperty("full_messages")
-    private List<String> fullMessages;
-
+    private static final String TAG = "ApiErrors";
+    private List<String> errors;
     private Map<String, List<String>> errorMessages = new HashMap<>();
 
-    public List<String> getFullMessages() {
-        return fullMessages;
+    public List<String> getErrors() {
+        return errors;
     }
 
-    public void setFullMessages(List<String> fullMessages) {
-        this.fullMessages = fullMessages;
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
     }
 
     @JsonIgnore
@@ -36,7 +38,7 @@ public class ApiErrors {
             List<String> errors = (List<String>) value;
             errorMessages.put(key, errors);
         } catch (Exception ex) {
-            System.out.printf("Unrecognized error for (%s):%n%s", key, value);
+            Log.d(TAG, String.format("Unrecognized error for (%s):%n%s", key, value), ex);
         }
     }
 }

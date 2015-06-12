@@ -6,7 +6,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -58,7 +57,7 @@ public class PictureSelectionActivity extends Activity implements OnFragmentInte
                 return null;
 
             LocationRequest request = new LocationRequest(getApplicationContext(), params[0]);
-            ResponseEntity<PlacesApiResult> result = request.send();
+            ResponseEntity<PlacesApiResult> result = request.sendRequest();
             List<Place> places = result.getBody().getPlaces();
 
             for (Place place : places) {
