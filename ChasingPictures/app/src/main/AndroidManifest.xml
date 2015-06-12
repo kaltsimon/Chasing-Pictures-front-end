@@ -63,6 +63,10 @@
             android:name=".PictureSelectionActivity"
             android:label="@string/title_activity_picture_selection" >
         </activity>
+        <activity
+            android:name=".activity.SplashScreen"
+            android:label="@string/title_activity_splash_screen" >
+        </activity>
     </application>
 
 </manifest>
