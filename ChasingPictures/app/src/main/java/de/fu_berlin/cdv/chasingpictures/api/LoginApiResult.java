@@ -2,9 +2,6 @@ package de.fu_berlin.cdv.chasingpictures.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @author Simon Kalt
  */
