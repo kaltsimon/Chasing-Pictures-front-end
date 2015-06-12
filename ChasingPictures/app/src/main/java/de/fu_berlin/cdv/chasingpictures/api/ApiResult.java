@@ -1,7 +1,5 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * @author Simon Kalt
  */

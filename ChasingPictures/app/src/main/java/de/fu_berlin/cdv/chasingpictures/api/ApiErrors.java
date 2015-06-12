@@ -2,6 +2,7 @@ package de.fu_berlin.cdv.chasingpictures.api;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
@@ -11,18 +12,17 @@ import java.util.Map;
 /**
  * Class into which errors from the API get deserialized.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ApiErrors {
-    @JsonProperty("full_messages")
-    private List<String> fullMessages;
-
+    private List<String> errors;
     private Map<String, List<String>> errorMessages = new HashMap<>();
 
-    public List<String> getFullMessages() {
-        return fullMessages;
+    public List<String> getErrors() {
+        return errors;
     }
 
-    public void setFullMessages(List<String> fullMessages) {
-        this.fullMessages = fullMessages;
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
     }
 
     @JsonIgnore

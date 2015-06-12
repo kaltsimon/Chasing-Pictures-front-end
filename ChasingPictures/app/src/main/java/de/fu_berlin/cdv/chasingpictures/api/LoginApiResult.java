@@ -9,18 +9,10 @@ import java.util.List;
  * @author Simon Kalt
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoginApiResult {
-    private List<String> errors;
+public class LoginApiResult extends ApiResult {
     private UserData data;
 
-    public List<String> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(List<String> errors) {
-        this.errors = errors;
-    }
-
+    //region Getters & Setters
     public UserData getData() {
         return data;
     }
@@ -28,11 +20,5 @@ public class LoginApiResult {
     public void setData(UserData data) {
         this.data = data;
     }
-
-    @Override
-    public String toString() {
-        return "LoginApiResult{" +
-                "errors=" + Arrays.toString(errors.toArray()) +
-                '}';
-    }
+    //endregion
 }
