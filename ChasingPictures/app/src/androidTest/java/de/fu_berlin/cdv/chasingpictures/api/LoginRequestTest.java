@@ -29,7 +29,7 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
         Context context = getContext();
         ResponseEntity<LoginApiResult> responseEntity;
         responseEntity = registerUser(context, NAME, getUniqueEmail(), PASSWORD);
-        checkAccess(context, responseEntity);
+        checkAccess(context);
     }
 
     public void testResponseHeaders() throws Exception {
@@ -80,10 +80,9 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
         ResponseEntity<LoginApiResult> registerResult = registerUser(context, NAME, email, PASSWORD);
         assertEquals("Registration not successful.", registerResult.getStatusCode(), HttpStatus.OK);
 
-        LoginRequest request;
-        request = LoginRequest.makeLoginRequest(context, email, PASSWORD);
-        ResponseEntity<LoginApiResult> responseEntity = request.send();
-        checkAccess(context, responseEntity);
+        LoginRequest request = LoginRequest.makeLoginRequest(context, email, PASSWORD);
+        request.send();
+        checkAccess(context);
     }
 
     public void testInvalidLoginRequest() throws Exception {
@@ -102,8 +101,7 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
         assertEquals("Error message does not match.", "Invalid login credentials. Please try again.", errors.get(0));
     }
 
-    private void checkAccess(Context context, ResponseEntity<?> responseEntity) {
-        Access.setAccess(context, responseEntity);
+    private void checkAccess(Context context) {
         assertTrue("No access!", Access.hasAccess(context));
         Access.revokeAccess(context);
         assertFalse("Access where it shouldn't be!", Access.hasAccess(context));
@@ -113,7 +111,6 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
         LoginRequest request;
         request = LoginRequest.makeRegistrationRequest(context, name, email, password);
         ResponseEntity<LoginApiResult> responseEntity = request.send();
-        Access.setAccess(context, responseEntity);
         return responseEntity;
     }
 

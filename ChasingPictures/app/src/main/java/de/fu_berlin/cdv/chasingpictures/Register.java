@@ -86,8 +86,8 @@ public class Register extends Activity {
 
         @Override
         protected void onPostExecute(ResponseEntity<LoginApiResult> responseEntity) {
+            // TODO: Check for null!
             LoginApiResult apiResult = responseEntity.getBody();
-            Access.setAccess(getApplicationContext(), responseEntity);
 
             if (responseEntity.getStatusCode() == HttpStatus.OK
                     && Access.hasAccess(getApplicationContext())) {

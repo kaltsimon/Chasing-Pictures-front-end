@@ -37,12 +37,14 @@ public class LocationRequest extends ApiRequest<PlacesApiResult> {
         queryParameters.put("latitude", location.getLatitude());
         queryParameters.put("longitude", location.getLongitude());
 
-        return restTemplate.exchange(
+        ResponseEntity<PlacesApiResult> responseEntity = restTemplate.exchange(
                 apiUri,
                 HttpMethod.GET,
                 httpEntity,
                 PlacesApiResult.class,
                 queryParameters);
+        Access.setAccess(context, responseEntity);
+        return responseEntity;
     }
 
     public RestTemplate getRestTemplate() {

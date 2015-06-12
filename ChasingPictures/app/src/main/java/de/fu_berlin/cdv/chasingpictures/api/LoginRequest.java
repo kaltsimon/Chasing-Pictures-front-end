@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import de.fu_berlin.cdv.chasingpictures.R;
+import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 /**
  * Login and registration requests.
@@ -32,12 +33,14 @@ public class LoginRequest extends ApiRequest<LoginApiResult> {
 
     @Override
     public ResponseEntity<LoginApiResult> send() {
-        return restTemplate.exchange(
+        ResponseEntity<LoginApiResult> responseEntity = restTemplate.exchange(
                 apiUri,
                 HttpMethod.POST,
                 new HttpEntity<>(data, null),
                 LoginApiResult.class
         );
+        Access.setAccess(context, responseEntity);
+        return responseEntity;
     }
 
     /**

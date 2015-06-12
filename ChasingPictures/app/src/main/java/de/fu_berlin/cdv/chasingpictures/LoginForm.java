@@ -78,8 +78,6 @@ public class LoginForm extends Activity {
 
         @Override
         protected void onPostExecute(ResponseEntity<LoginApiResult> responseEntity) {
-            Access.setAccess(getApplicationContext(), responseEntity);
-
             if (responseEntity != null
                     && responseEntity.getStatusCode() == HttpStatus.OK
                     && Access.hasAccess(getApplicationContext())) {
