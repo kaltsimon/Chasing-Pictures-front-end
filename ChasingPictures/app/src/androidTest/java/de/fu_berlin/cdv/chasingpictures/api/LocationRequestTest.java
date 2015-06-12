@@ -65,7 +65,7 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
         responseErrorHandler.setExpectedStatusCode(200);
         locationRequest.getRestTemplate().setErrorHandler(responseErrorHandler);
 
-        ResponseEntity<PlacesApiResult> result = locationRequest.send();
+        ResponseEntity<PlacesApiResult> result = locationRequest.sendRequest();
 
         List<Place> places = result.getBody().getPlaces();
         assertNotNull(places);

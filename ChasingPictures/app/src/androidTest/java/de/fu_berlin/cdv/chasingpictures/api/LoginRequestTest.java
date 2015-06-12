@@ -36,7 +36,7 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
         LoginRequest request;
         request = LoginRequest.makeRegistrationRequest(
                 getContext(), NAME, getUniqueEmail(), PASSWORD);
-        ResponseEntity<LoginApiResult> response = request.send();
+        ResponseEntity<LoginApiResult> response = request.sendRequest();
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
         HttpHeaders headers = response.getHeaders();
@@ -81,7 +81,7 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
         assertEquals("Registration not successful.", registerResult.getStatusCode(), HttpStatus.OK);
 
         LoginRequest request = LoginRequest.makeLoginRequest(context, email, PASSWORD);
-        request.send();
+        request.sendRequest();
         checkAccess(context);
     }
 
@@ -92,7 +92,7 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
 
         LoginRequest request;
         request = LoginRequest.makeLoginRequest(context, email, PASSWORD);
-        ResponseEntity<LoginApiResult> responseEntity = request.send();
+        ResponseEntity<LoginApiResult> responseEntity = request.sendRequest();
 
         List<String> errors = (List<String>) responseEntity.getBody().getErrors();
         assertNotNull("No errors available.", errors);
@@ -110,7 +110,7 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
     public static ResponseEntity<LoginApiResult> registerUser(Context context, String name, String email, String password) {
         LoginRequest request;
         request = LoginRequest.makeRegistrationRequest(context, name, email, password);
-        ResponseEntity<LoginApiResult> responseEntity = request.send();
+        ResponseEntity<LoginApiResult> responseEntity = request.sendRequest();
         return responseEntity;
     }
 

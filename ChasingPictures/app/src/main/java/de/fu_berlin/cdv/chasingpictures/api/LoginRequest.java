@@ -32,15 +32,18 @@ public class LoginRequest extends ApiRequest<LoginApiResult> {
     }
 
     @Override
+    public void beforeSending() {
+        // This prevents currently stored access information to be sent.
+    }
+
+    @Override
     public ResponseEntity<LoginApiResult> send() {
-        ResponseEntity<LoginApiResult> responseEntity = restTemplate.exchange(
+        return restTemplate.exchange(
                 apiUri,
                 HttpMethod.POST,
                 new HttpEntity<>(data, null),
                 LoginApiResult.class
         );
-        Access.setAccess(context, responseEntity);
-        return responseEntity;
     }
 
     /**

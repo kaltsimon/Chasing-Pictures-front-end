@@ -73,7 +73,7 @@ public class LoginForm extends Activity {
 
         @Override
         protected ResponseEntity<LoginApiResult> doInBackground(LoginRequest... params) {
-            return params.length > 0 ? params[0].send() : null;
+            return params.length > 0 ? params[0].sendRequest() : null;
         }
 
         @Override
