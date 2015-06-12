@@ -12,33 +12,31 @@ import de.fu_berlin.cdv.chasingpictures.R;
  * Login and registration requests.
  * @author Simon Kalt
  */
-public class LoginRequest<ResponseType> extends ApiRequest<ResponseType> {
+public class LoginRequest extends ApiRequest<LoginApiResult> {
     protected final Data data;
-    protected final Class<ResponseType> type;
 
-    protected LoginRequest(Context context, int endpointResID, Data data, Class<ResponseType> type) {
+    protected LoginRequest(Context context, int endpointResID, Data data) {
         super(context, endpointResID);
         this.data = data;
-        this.type = type;
     }
 
-    public static LoginRequest<RegistrationApiResult> makeRegistrationRequest(Context context, String name, String email, String password) {
+    public static LoginRequest makeRegistrationRequest(Context context, String name, String email, String password) {
         Data data = new Data(name, email, password);
-        return new LoginRequest<>(context, R.string.api_path_register, data, RegistrationApiResult.class);
+        return new LoginRequest(context, R.string.api_path_register, data);
     }
 
-    public static LoginRequest<LoginApiResult> makeLoginRequest(Context context, String email, String password) {
+    public static LoginRequest makeLoginRequest(Context context, String email, String password) {
         Data data = new Data(email, password);
-        return new LoginRequest<>(context, R.string.api_path_login, data, LoginApiResult.class);
+        return new LoginRequest(context, R.string.api_path_login, data);
     }
 
     @Override
-    public ResponseEntity<ResponseType> send() {
+    public ResponseEntity<LoginApiResult> send() {
         return restTemplate.exchange(
                 apiUri,
                 HttpMethod.POST,
                 new HttpEntity<>(data, null),
-                type
+                LoginApiResult.class
         );
     }
 

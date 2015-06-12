@@ -27,16 +27,16 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
 
     public void testMakeRegistrationRequest() throws Exception {
         Context context = getContext();
-        ResponseEntity<RegistrationApiResult> responseEntity;
+        ResponseEntity<LoginApiResult> responseEntity;
         responseEntity = registerUser(context, NAME, getUniqueEmail(), PASSWORD);
         checkAccess(context, responseEntity);
     }
 
     public void testResponseHeaders() throws Exception {
-        LoginRequest<RegistrationApiResult> request;
+        LoginRequest request;
         request = LoginRequest.makeRegistrationRequest(
                 getContext(), NAME, getUniqueEmail(), PASSWORD);
-        ResponseEntity<RegistrationApiResult> response = request.send();
+        ResponseEntity<LoginApiResult> response = request.send();
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
         HttpHeaders headers = response.getHeaders();
@@ -59,7 +59,7 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
 
     public void testBlankEmailError() throws Exception {
         // Perform request
-        RegistrationApiResult apiResult = registerUser(getContext(), NAME, "", PASSWORD).getBody();
+        LoginApiResult apiResult = registerUser(getContext(), NAME, "", PASSWORD).getBody();
 
         assertEquals("API return status is wrong.", "error", apiResult.getStatus());
         assertEquals("Email error message is wrong.", "can't be blank", apiResult.getErrors().getErrorMessages().get("email").get(0));
@@ -67,7 +67,7 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
 
     public void testBlankPasswordError() throws Exception {
         // Perform request
-        RegistrationApiResult apiResult = registerUser(getContext(), NAME, getUniqueEmail(), "").getBody();
+        LoginApiResult apiResult = registerUser(getContext(), NAME, getUniqueEmail(), "").getBody();
 
         assertEquals("API return status is wrong.", "error", apiResult.getStatus());
         assertEquals("Password error message is wrong.", "can't be blank", apiResult.getErrors().getErrorMessages().get("password").get(0));
@@ -77,10 +77,10 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
         // Set up
         Context context = getContext();
         String email = getUniqueEmail();
-        ResponseEntity<RegistrationApiResult> registerResult = registerUser(context, NAME, email, PASSWORD);
+        ResponseEntity<LoginApiResult> registerResult = registerUser(context, NAME, email, PASSWORD);
         assertEquals("Registration not successful.", registerResult.getStatusCode(), HttpStatus.OK);
 
-        LoginRequest<LoginApiResult> request;
+        LoginRequest request;
         request = LoginRequest.makeLoginRequest(context, email, PASSWORD);
         ResponseEntity<LoginApiResult> responseEntity = request.send();
         checkAccess(context, responseEntity);
@@ -93,10 +93,10 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
         assertFalse("Access where it shouldn't be!", Access.hasAccess(context));
     }
 
-    public static ResponseEntity<RegistrationApiResult> registerUser(Context context, String name, String email, String password) {
-        LoginRequest<RegistrationApiResult> request;
+    public static ResponseEntity<LoginApiResult> registerUser(Context context, String name, String email, String password) {
+        LoginRequest request;
         request = LoginRequest.makeRegistrationRequest(context, name, email, password);
-        ResponseEntity<RegistrationApiResult> responseEntity = request.send();
+        ResponseEntity<LoginApiResult> responseEntity = request.send();
         Access.setAccess(context, responseEntity);
         return responseEntity;
     }

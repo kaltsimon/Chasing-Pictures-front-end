@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import de.fu_berlin.cdv.chasingpictures.api.ApiErrors;
+import de.fu_berlin.cdv.chasingpictures.api.LoginApiResult;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRequest;
-import de.fu_berlin.cdv.chasingpictures.api.RegistrationApiResult;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 
@@ -71,23 +71,22 @@ public class Register extends Activity {
 
         // TODO: salt & hash password?!
 
-        LoginRequest<RegistrationApiResult> registrationRequest = LoginRequest.makeRegistrationRequest(this, usernameString, emailString, passwordString);
+        LoginRequest registrationRequest = LoginRequest.makeRegistrationRequest(this, usernameString, emailString, passwordString);
         RegistrationRequestTask requestTask = new RegistrationRequestTask();
         //noinspection unchecked
         requestTask.execute(registrationRequest);
     }
 
-    private class RegistrationRequestTask extends AsyncTask<LoginRequest<RegistrationApiResult>, Void, ResponseEntity<RegistrationApiResult>> {
+    private class RegistrationRequestTask extends AsyncTask<LoginRequest, Void, ResponseEntity<LoginApiResult>> {
 
-        @SafeVarargs
         @Override
-        protected final ResponseEntity<RegistrationApiResult> doInBackground(LoginRequest<RegistrationApiResult>... params) {
+        protected ResponseEntity<LoginApiResult> doInBackground(LoginRequest... params) {
             return params.length > 0 ? params[0].send() : null;
         }
 
         @Override
-        protected void onPostExecute(ResponseEntity<RegistrationApiResult> responseEntity) {
-            RegistrationApiResult apiResult = responseEntity.getBody();
+        protected void onPostExecute(ResponseEntity<LoginApiResult> responseEntity) {
+            LoginApiResult apiResult = responseEntity.getBody();
             Access.setAccess(getApplicationContext(), responseEntity);
 
             if (responseEntity.getStatusCode() == HttpStatus.OK

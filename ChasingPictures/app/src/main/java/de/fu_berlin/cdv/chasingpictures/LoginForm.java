@@ -63,17 +63,16 @@ public class LoginForm extends Activity {
 
         // TODO: salt & hash password?!
 
-        LoginRequest<LoginApiResult> loginRequest = LoginRequest.makeLoginRequest(this, emailString, passwordString);
+        LoginRequest loginRequest = LoginRequest.makeLoginRequest(this, emailString, passwordString);
         LoginRequestTask loginRequestTask = new LoginRequestTask();
         //noinspection unchecked
         loginRequestTask.execute(loginRequest);
     }
 
-    private class LoginRequestTask extends AsyncTask<LoginRequest<LoginApiResult>, Void, ResponseEntity<LoginApiResult>> {
+    private class LoginRequestTask extends AsyncTask<LoginRequest, Void, ResponseEntity<LoginApiResult>> {
 
-        @SafeVarargs
         @Override
-        protected final ResponseEntity<LoginApiResult> doInBackground(LoginRequest<LoginApiResult>... params) {
+        protected ResponseEntity<LoginApiResult> doInBackground(LoginRequest... params) {
             return params.length > 0 ? params[0].send() : null;
         }
 
