@@ -37,7 +37,7 @@
     </style>
 
     <style name="Vertical.Button">
-        <item name="android:background">@drawable/test</item>
+        <item name="android:background">@drawable/button_background</item>
     </style>
 
     <style name="Vertical.TextField">
