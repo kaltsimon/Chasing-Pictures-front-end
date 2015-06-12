@@ -1,11 +1,14 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /**
  * @author Simon Kalt
  */
-public abstract class ApiResult {
+public abstract class ApiResult<Data> {
     private String status;
-    private ApiErrors errors;
+    private Object errors;
+    protected Data data;
 
     public String getStatus() {
         return status;
@@ -15,12 +18,20 @@ public abstract class ApiResult {
         this.status = status;
     }
 
-    public ApiErrors getErrors() {
+    public Object getErrors() {
         return errors;
     }
 
-    public void setErrors(ApiErrors errors) {
+    @JsonDeserialize(using = ApiErrorDeserializer.class)
+    public void setErrors(Object errors) {
         this.errors = errors;
     }
 
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
+    }
 }

@@ -95,7 +95,7 @@ public class Register extends Activity {
                 setResult(RESULT_OK);
                 finish();
             } else {
-                final ApiErrors errors = apiResult.getErrors();
+                final ApiErrors errors = (ApiErrors) apiResult.getErrors();
                 if (!errors.getErrorMessages().isEmpty()) {
                     for (Map.Entry<String, List<String>> entry : errors.getErrorMessages().entrySet()) {
                         String key = entry.getKey();

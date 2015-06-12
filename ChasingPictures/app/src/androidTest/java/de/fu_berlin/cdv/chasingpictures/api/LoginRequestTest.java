@@ -62,7 +62,7 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
         LoginApiResult apiResult = registerUser(getContext(), NAME, "", PASSWORD).getBody();
 
         assertEquals("API return status is wrong.", "error", apiResult.getStatus());
-        assertEquals("Email error message is wrong.", "can't be blank", apiResult.getErrors().getErrorMessages().get("email").get(0));
+        assertEquals("Email error message is wrong.", "can't be blank", ((ApiErrors) apiResult.getErrors()).getErrorMessages().get("email").get(0));
     }
 
     public void testBlankPasswordError() throws Exception {
@@ -70,7 +70,7 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
         LoginApiResult apiResult = registerUser(getContext(), NAME, getUniqueEmail(), "").getBody();
 
         assertEquals("API return status is wrong.", "error", apiResult.getStatus());
-        assertEquals("Password error message is wrong.", "can't be blank", apiResult.getErrors().getErrorMessages().get("password").get(0));
+        assertEquals("Password error message is wrong.", "can't be blank", ((ApiErrors) apiResult.getErrors()).getErrorMessages().get("password").get(0));
     }
 
     public void testMakeLoginRequest() throws Exception {
@@ -84,6 +84,22 @@ public class LoginRequestTest extends ApplicationTestCase<Application> {
         request = LoginRequest.makeLoginRequest(context, email, PASSWORD);
         ResponseEntity<LoginApiResult> responseEntity = request.send();
         checkAccess(context, responseEntity);
+    }
+
+    public void testInvalidLoginRequest() throws Exception {
+        // Set up
+        Context context = getContext();
+        String email = getUniqueEmail();
+
+        LoginRequest request;
+        request = LoginRequest.makeLoginRequest(context, email, PASSWORD);
+        ResponseEntity<LoginApiResult> responseEntity = request.send();
+
+        List<String> errors = (List<String>) responseEntity.getBody().getErrors();
+        assertNotNull("No errors available.", errors);
+        assertFalse("No errors available.", errors.isEmpty());
+        assertNotNull("Error is empty.", errors.get(0));
+        assertEquals("Error message does not match.", "Invalid login credentials. Please try again.", errors.get(0));
     }
 
     private void checkAccess(Context context, ResponseEntity<?> responseEntity) {
