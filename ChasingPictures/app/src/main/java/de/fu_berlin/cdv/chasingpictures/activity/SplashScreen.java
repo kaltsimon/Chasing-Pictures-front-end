@@ -10,7 +10,7 @@ import de.fu_berlin.cdv.chasingpictures.R;
 
 public class SplashScreen extends Activity {
 
-    private static final long SPLASH_DELAY_MILLIS = 300;
+    private static final long SPLASH_DELAY_MILLIS = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +28,7 @@ public class SplashScreen extends Activity {
                     @Override
                     public void run() {
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        finish();
                     }
                 },
                 SPLASH_DELAY_MILLIS
