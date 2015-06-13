@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.location.Location;
-import android.util.Log;
 import android.widget.TextView;
 
 import java.io.File;
@@ -96,10 +95,8 @@ public class PictureCard extends Fragment {
     // not actually delayed yet
     private void showDelayedPlaceInfo(int placeNr) {
         ((TextView) view.findViewById(R.id.place_info)).setText(
-                String.valueOf(Math.round(places[placeNr].distanceTo(userLocation)))
-                + "m"
+                String.valueOf(Math.round(places[placeNr].distanceTo(userLocation))) + "m"
         );
-
     }
 
     @Override
