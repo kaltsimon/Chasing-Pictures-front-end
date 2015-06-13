@@ -70,7 +70,7 @@ public class PictureSelectionActivity extends Activity implements OnFragmentInte
         @Override
         protected void onPostExecute(List<Place> places) {
             // Add the picture view Fragment
-            Fragment pictureCard = PictureCard.newInstance(places.toArray(new Place[places.size()]));
+            Fragment pictureCard = PictureCard.newInstance(mLastLocation, places.toArray(new Place[places.size()]));
 
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
