@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.location.Location;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -33,7 +34,7 @@ public class PictureCard extends Fragment {
     private Place[] places;
     private int currentPlace = 0;
     private SwipeDetector mSwipeDetector;
-    private ImageView mImageView;
+    private View view;
     private Location userLocation;
 
     private OnFragmentInteractionListener mListener;
@@ -73,13 +74,13 @@ public class PictureCard extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_picture_card, container, false);
+        view = inflater.inflate(R.layout.fragment_picture_card, container, false);
         view.setOnTouchListener(mSwipeDetector);
 
         view.setOnClickListener(new ClickListener());
 
-        mImageView = (ImageView) view.findViewById(R.id.picture_card_image);
         updatePicture();
+        showDelayedPlaceInfo(currentPlace);
 
         return view;
     }
@@ -88,12 +89,17 @@ public class PictureCard extends Fragment {
         File cachedFile = places[currentPlace].getPicture().getCachedFile();
         if (cachedFile != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
-            mImageView.setImageBitmap(bitmap);
+            ((ImageView) view.findViewById(R.id.picture_card_image)).setImageBitmap(bitmap);
         }
     }
 
+    // not actually delayed yet
     private void showDelayedPlaceInfo(int placeNr) {
-        Log.d("PictureCard", String.valueOf(places[placeNr].distanceTo(userLocation)));
+        ((TextView) view.findViewById(R.id.place_info)).setText(
+                String.valueOf(Math.round(places[placeNr].distanceTo(userLocation)))
+                + "m"
+        );
+
     }
 
     @Override
