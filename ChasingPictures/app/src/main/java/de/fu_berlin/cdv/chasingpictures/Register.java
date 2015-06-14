@@ -68,6 +68,7 @@ public class Register extends Activity {
             return;
         } else if (password.length() < MIN_PASSWORD_LENGTH) {
             password.setError(getString(R.string.register_error_password_too_short));
+            return;
         }
 
         // TODO: salt & hash password?!
