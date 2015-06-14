@@ -2,29 +2,24 @@ package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 
-public class MainActivity extends Activity {
-    private static final String TAG = "MainActivity";
+public class StartMenu extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.intro);
-        mediaPlayer.start(); // no need to call prepare(); create() does that for you
+        setContentView(R.layout.activity_start_menu);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_start_menu, menu);
         return true;
     }
 
@@ -58,5 +53,4 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, PictureSelectionActivity.class);
         startActivity(intent);
     }
-
 }
