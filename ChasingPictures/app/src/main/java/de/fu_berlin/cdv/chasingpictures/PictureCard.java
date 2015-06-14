@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.location.Location;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -26,11 +28,13 @@ import de.fu_berlin.cdv.chasingpictures.api.Place;
  */
 public class PictureCard extends Fragment {
     public static final String PLACE = "place_param";
+    public static final String USER_LOCATION = "user_location";
 
     private Place[] places;
     private int currentPlace = 0;
     private SwipeDetector mSwipeDetector;
-    private ImageView mImageView;
+    private View view;
+    private Location userLocation;
 
     private OnFragmentInteractionListener mListener;
 
@@ -42,10 +46,11 @@ public class PictureCard extends Fragment {
      * @return A new instance of fragment PictureCard.
      */
     // TODO: Rename and change types and number of parameters
-    public static PictureCard newInstance(Place... places) {
+    public static PictureCard newInstance(Location userLocation, Place... places) {
         PictureCard fragment = new PictureCard();
         Bundle args = new Bundle();
         args.putSerializable(PLACE, places);
+        args.putParcelable(USER_LOCATION, userLocation);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,6 +64,7 @@ public class PictureCard extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             this.places = (Place[]) getArguments().getSerializable(PLACE);
+            this.userLocation = getArguments().getParcelable(USER_LOCATION);
         }
         mSwipeDetector = new SwipeDetector();
     }
@@ -67,13 +73,13 @@ public class PictureCard extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_picture_card, container, false);
+        view = inflater.inflate(R.layout.fragment_picture_card, container, false);
         view.setOnTouchListener(mSwipeDetector);
 
         view.setOnClickListener(new ClickListener());
 
-        mImageView = (ImageView) view.findViewById(R.id.picture_card_image);
         updatePicture();
+        showDelayedPlaceInfo(currentPlace);
 
         return view;
     }
@@ -82,8 +88,15 @@ public class PictureCard extends Fragment {
         File cachedFile = places[currentPlace].getPicture().getCachedFile();
         if (cachedFile != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
-            mImageView.setImageBitmap(bitmap);
+            ((ImageView) view.findViewById(R.id.picture_card_image)).setImageBitmap(bitmap);
         }
+    }
+
+    // not actually delayed yet
+    private void showDelayedPlaceInfo(int placeNr) {
+        ((TextView) view.findViewById(R.id.place_info)).setText(
+                String.valueOf(Math.round(places[placeNr].distanceTo(userLocation))) + "m"
+        );
     }
 
     @Override
@@ -147,5 +160,6 @@ public class PictureCard extends Fragment {
         }
 
         updatePicture();
+        showDelayedPlaceInfo(currentPlace);
     }
 }
