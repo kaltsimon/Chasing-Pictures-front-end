@@ -86,10 +86,15 @@ public class PictureCard extends Fragment {
     }
 
     private void updatePicture() {
-        File cachedFile = places[currentPlace].getPicture().getCachedFile();
-        if (cachedFile != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
-            ((ImageView) view.findViewById(R.id.picture_card_image)).setImageBitmap(bitmap);
+        if (places.length > 0) {
+            File cachedFile = places[currentPlace].getPicture().getCachedFile();
+            if (cachedFile != null) {
+                Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
+                ((ImageView) view.findViewById(R.id.picture_card_image)).setImageBitmap(bitmap);
+            }
+        }
+        else {
+            // Show information that no places were found nearby... :(
         }
     }
 
