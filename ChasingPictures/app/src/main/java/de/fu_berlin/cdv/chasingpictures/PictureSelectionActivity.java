@@ -84,7 +84,7 @@ public class PictureSelectionActivity extends Activity implements OnFragmentInte
                     makeLocationRequest(
                             10000,
                             50000,
-                            HIGH_ACCURACY
+                            Accuracy.HIGH
                     ),
                     new LocationListener() {
                         @Override
