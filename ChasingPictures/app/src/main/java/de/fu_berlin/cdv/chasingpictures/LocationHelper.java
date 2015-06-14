@@ -81,6 +81,14 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
         );
     }
 
+    public void stopLocationUpdates(LocationListener listener) {
+        listeners.remove(listener);
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient,
+                listener
+        );
+    }
+
     public void stopAllLocationUpdates() {
         for (LocationListener listener : listeners) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
