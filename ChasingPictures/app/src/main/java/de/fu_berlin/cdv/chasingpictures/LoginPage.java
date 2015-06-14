@@ -66,7 +66,8 @@ public class LoginPage extends Activity {
 
             Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
 
-            // TODO: Continue to logged-in status
+            // Return to parent activity
+            finish();
         } else {
             Log.d(TAG, "Log in/Register result not OK!");
             // Do nothing
