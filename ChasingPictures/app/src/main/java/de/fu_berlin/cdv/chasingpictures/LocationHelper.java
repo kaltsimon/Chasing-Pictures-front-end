@@ -6,70 +6,40 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import java.lang.reflect.Method;
+import java.util.HashSet;
 
 /**
+ * A class that makes access to Google's Location API easier.
  * @author Simon Kalt
  */
 public abstract class LocationHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "LocationHelper";
-    protected final Context mContext;
+
+    public static final int HIGH_ACCURACY = LocationRequest.PRIORITY_HIGH_ACCURACY;
+
+    public static final int STD_INTERVAL = 5000;
+    public static final int STD_FASTEST_INTERVAL = 1000;
+    public static final int STD_ACCURACY = HIGH_ACCURACY;
+
     protected GoogleApiClient mGoogleApiClient;
+    protected HashSet<LocationListener> listeners;
 
-    private static final String MOCK_LOCATION_PROVIDER = "MockLocationProvider";
-    public LocationHelper(Context context) {
-        this.mContext = context;
-    }
-
-    public synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+    public synchronized LocationHelper buildGoogleApiClient(Context context) {
+        mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+        return this;
     }
 
-    public void connect() {
+    public LocationHelper connect() {
         mGoogleApiClient.connect();
-    }
-
-    /**
-     * Call only after Call only after connecting!
-     * M
-     * @param mockLocation
-     */
-    public void useMockLocation(Location mockLocation) {
-        LocationServices.FusedLocationApi.setMockMode(mGoogleApiClient, true);
-        LocationServices.FusedLocationApi.setMockLocation(mGoogleApiClient, mockLocation);
-    }
-
-    /**
-     * Call only after connecting!
-     * @param latitude
-     * @param longitude
-     */
-    public void useMockLocation(double latitude, double longitude) {
-        Location mockLocation = new Location(MOCK_LOCATION_PROVIDER);
-        mockLocation.setLatitude(latitude);
-        mockLocation.setLongitude(longitude);
-        mockLocation.setAccuracy(100);
-        mockLocation.setTime(System.currentTimeMillis());
-
-        //region Complete Mock Location
-        Method locationJellyBeanFixMethod;
-        try {
-            locationJellyBeanFixMethod = Location.class.getMethod("makeComplete");
-            if (locationJellyBeanFixMethod != null) {
-                locationJellyBeanFixMethod.invoke(mockLocation);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //endregion
-
-        useMockLocation(mockLocation);
+        return this;
     }
 
     public GoogleApiClient getGoogleApiClient() {
@@ -80,22 +50,58 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
         return LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
     }
 
-    /**
-     * Be aware that this call blocks until a location is available.
-     * @return
-     */
-    public Location waitForLastLocation() {
-        Location lastLocation = getLastLocation();
-        while (lastLocation == null) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Log.e(TAG, Log.getStackTraceString(e));
-            }
-            lastLocation = getLastLocation();
-        }
+    public void startLocationUpdates(LocationRequest request, LocationListener listener) {
+        addListener(listener);
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient,
+                request,
+                listener
+        );
+    }
 
-        return lastLocation;
+    public void stopAllLocationUpdates() {
+        for (LocationListener listener : listeners) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient,
+                    listener
+            );
+        }
+        listeners.clear();
+    }
+
+    /**
+     * Constructs a standard location request with the following parameters:
+     * - Interval: {@link #STD_INTERVAL}
+     * - Fastest Interval: {@link #STD_FASTEST_INTERVAL}
+     * - Accuracy: {@link #STD_ACCURACY}
+     */
+    public static LocationRequest makeLocationRequest() {
+        return makeLocationRequest(STD_INTERVAL, STD_FASTEST_INTERVAL, STD_ACCURACY);
+    }
+
+    /**
+     * Constructs a location request with the supplied parameters.
+     * @param interval
+     * @param fastestInterval
+     * @param accuracy
+     */
+    public static LocationRequest makeLocationRequest(int interval, int fastestInterval, int accuracy) {
+        return new LocationRequest()
+                .setInterval(interval)
+                .setFastestInterval(fastestInterval)
+                .setPriority(accuracy);
+    }
+
+    private void addListener(LocationListener listener) {
+        if (listeners == null)
+            listeners = new HashSet<>();
+
+        listeners.add(listener);
+    }
+
+    private void removeListener(LocationListener listener) {
+        if (listener != null)
+            listeners.remove(listener);
     }
 
     @Override
