@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 
 import com.mapbox.mapboxsdk.geometry.BoundingBox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -49,6 +50,7 @@ public class Maps extends FragmentActivity {
         m.setIcon(new Icon(this, Icon.Size.SMALL, "marker-stroked", "FF0000"));
         mv.addMarker(m);
 
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.maps_layout);
     }
 
     protected void replaceMapView(String layer) {
