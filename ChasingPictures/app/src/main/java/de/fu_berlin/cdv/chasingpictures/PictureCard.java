@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,10 +93,17 @@ public class PictureCard extends Fragment {
         }
     }
 
-    // not actually delayed yet
-    private void showDelayedPlaceInfo(int placeNr) {
-        ((TextView) view.findViewById(R.id.place_info)).setText(
-                String.valueOf(Math.round(places[placeNr].distanceTo(userLocation))) + "m"
+    private void showDelayedPlaceInfo(final int placeNr) {
+        final TextView placeInfo = (TextView) view.findViewById(R.id.place_info);
+        placeInfo.setText("");
+        new Handler().postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        placeInfo.setText(String.valueOf(Math.round(places[placeNr].distanceTo(userLocation))) + "m");
+                    }
+                },
+                1000
         );
     }
 
