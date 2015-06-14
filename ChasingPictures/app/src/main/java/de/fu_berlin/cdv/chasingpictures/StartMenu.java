@@ -1,12 +1,14 @@
 package de.fu_berlin.cdv.chasingpictures;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
-public class StartMenu extends ActionBarActivity {
+public class StartMenu extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,5 +36,21 @@ public class StartMenu extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showLoginPage(View view) {
+        Intent intent = new Intent(this, LoginPage.class);
+        startActivity(intent);
+    }
+
+    public void toNext(View view){
+        Intent intent = new Intent(this, Maps.class);
+        startActivity(intent);
+
+    }
+
+    public void showPictureSelectionPage(View view) {
+        Intent intent = new Intent(this, PictureSelectionActivity.class);
+        startActivity(intent);
     }
 }

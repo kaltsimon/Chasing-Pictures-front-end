@@ -1,8 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -16,6 +15,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.intro);
+        mediaPlayer.start(); // no need to call prepare(); create() does that for you
     }
 
     @Override
@@ -55,4 +57,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PictureSelectionActivity.class);
         startActivity(intent);
     }
+
 }
