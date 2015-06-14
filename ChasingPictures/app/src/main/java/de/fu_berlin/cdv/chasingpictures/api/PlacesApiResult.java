@@ -6,16 +6,12 @@ import java.util.List;
  * Class to receive results from searching for places.
  * @author Simon Kalt
  */
-public class PlacesApiResult extends ApiResult {
-    private List<Place> places;
-
+public class PlacesApiResult extends ApiResult<List<Place>> {
     public List<Place> getPlaces() {
-        return places;
+        return getData();
     }
 
     public void setPlaces(List<Place> places) {
-        this.places = places;
+        setData(places);
     }
-
-    // TODO: check if error handling is correct.
 }

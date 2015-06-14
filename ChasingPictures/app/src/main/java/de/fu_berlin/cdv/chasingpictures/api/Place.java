@@ -1,6 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
 import java.io.Serializable;
+import android.location.Location;
 
 /**
  * This class represents a place, a.k.a. the thing users have to search for.
@@ -51,6 +52,18 @@ public class Place implements Serializable {
 
     public void setPicture(Picture picture) {
         this.picture = picture;
+    }
+
+    public Location getLocation() {
+        Location location = new Location("");
+        location.setLatitude(latitude);
+        location.setLongitude(longitude);
+
+        return location;
+    }
+
+    public float distanceTo(Location location) {
+       return getLocation().distanceTo(location);
     }
 
     @Override

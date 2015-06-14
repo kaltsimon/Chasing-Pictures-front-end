@@ -4,16 +4,14 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationListener;
 
 import org.springframework.http.ResponseEntity;
 
@@ -27,22 +25,16 @@ import de.fu_berlin.cdv.chasingpictures.api.PlacesApiResult;
 
 public class PictureSelectionActivity extends Activity implements OnFragmentInteractionListener {
     private static final String TAG = "PictureSelection";
-
     private Location mLastLocation;
-
-    //region MockLocation
-    private static final double MOCK_LOCATION_LAT = 52.517072;
-    private static final double MOCK_LOCATION_LON = 13.388873;
-    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_selection);
 
-        LocationHelper locationHelper = new PictureViewLocationHelper(this);
-        locationHelper.buildGoogleApiClient();
-        locationHelper.connect();
+        new PictureViewLocationHelper()
+                .buildGoogleApiClient(getApplicationContext())
+                .connect();
     }
 
     @Override
@@ -58,7 +50,7 @@ public class PictureSelectionActivity extends Activity implements OnFragmentInte
                 return null;
 
             LocationRequest request = new LocationRequest(getApplicationContext(), params[0]);
-            ResponseEntity<PlacesApiResult> result = request.send();
+            ResponseEntity<PlacesApiResult> result = request.sendRequest();
             List<Place> places = result.getBody().getPlaces();
 
             for (Place place : places) {
@@ -70,8 +62,9 @@ public class PictureSelectionActivity extends Activity implements OnFragmentInte
 
         @Override
         protected void onPostExecute(List<Place> places) {
+            // TODO: Only do this once! Once a second location update comes in, this crashes the activity
             // Add the picture view Fragment
-            Fragment pictureCard = PictureCard.newInstance(places.toArray(new Place[places.size()]));
+            Fragment pictureCard = PictureCard.newInstance(mLastLocation, places.toArray(new Place[places.size()]));
 
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -82,16 +75,25 @@ public class PictureSelectionActivity extends Activity implements OnFragmentInte
     }
 
     private class PictureViewLocationHelper extends LocationHelper {
-        public PictureViewLocationHelper(Context context) {
-            super(context);
-        }
-
         @Override
         public void onConnected(Bundle connectionHint) {
-            Log.d(TAG, "Connected to Google API services.");
-            useMockLocation(MOCK_LOCATION_LAT, MOCK_LOCATION_LON);
-            mLastLocation = waitForLastLocation();
-            new LocationTask().execute(mLastLocation);
+            if (Debug.isDebuggerConnected())
+                Log.i(TAG, "Connected to Google API services.");
+
+            startLocationUpdates(
+                    makeLocationRequest(
+                            10000,
+                            50000,
+                            Accuracy.HIGH
+                    ),
+                    new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                            mLastLocation = location;
+                            new LocationTask().execute(location);
+                        }
+                    }
+            );
         }
     }
 }
