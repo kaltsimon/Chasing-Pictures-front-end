@@ -25,4 +25,5 @@
     <string name="registration_fail">Registration failed.</string>
     <string name="title_activity_picture_selection">PictureSelectionActivity</string>
     <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="access_mb">pk.eyJ1IjoibWlyaXdpZSIsImEiOiJjYjk5YWY3ZThjYWZlMmYxZjA0MmJlNWI1MTQwYzg4ZSJ9.GZIICvdQlnw5XxuDgI2dqA</string>
 </resources>
