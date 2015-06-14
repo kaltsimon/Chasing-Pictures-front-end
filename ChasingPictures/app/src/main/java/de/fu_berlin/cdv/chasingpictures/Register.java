@@ -24,6 +24,7 @@ import de.fu_berlin.cdv.chasingpictures.security.Access;
 public class Register extends Activity {
 
     private static final String TAG = "RegisterForm";
+    private final int MIN_PASSWORD_LENGTH = 8;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +66,8 @@ public class Register extends Activity {
         if (passwordString.isEmpty()) {
             password.setError(getString(R.string.empty_password));
             return;
-        } else if (password.length() < 8) { // TODO: Put MIN_PASS_LENGTH into field
-            password.setError("Password is too short");
+        } else if (password.length() < MIN_PASSWORD_LENGTH) {
+            password.setError(getString(R.string.register_error_password_too_short));
         }
 
         // TODO: salt & hash password?!
