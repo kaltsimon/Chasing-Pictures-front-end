@@ -58,4 +58,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void showCamera(View view){
+        Intent intent = new Intent(this, Camera.class);
+        startActivity(intent);
+    }
+
 }
