@@ -2,10 +2,21 @@ package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Date;
+
+import de.fu_berlin.cdv.chasingpictures.api.Picture;
+import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 
@@ -57,9 +68,29 @@ public class MainActivity extends Activity {
     }
 
     public void toNext(View view){
-        Intent intent = new Intent(this, Maps.class);
-        startActivity(intent);
+        //region Save picture
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.rathaus);
+        File tempFile = null;
+        try {
+            tempFile = File.createTempFile("rathaus", "png", getCacheDir());
+            FileOutputStream out = new FileOutputStream(tempFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.close();
+        } catch (IOException e) {
+            Log.e(TAG, "Image file could not be written.", e);
+        }
 
+        Picture picture = new Picture();
+        picture.setTime(new Date());
+        picture.setCachedFile(tempFile);
+        //endregion
+
+        Place dummy = new Place();
+        dummy.setPicture(picture);
+        dummy.setLatitude(52.5170716);
+        dummy.setLongitude(13.3888716);
+        Intent intent = Maps.createIntent(this, dummy);
+        startActivity(intent);
     }
 
     public void showPictureSelectionPage(View view) {
