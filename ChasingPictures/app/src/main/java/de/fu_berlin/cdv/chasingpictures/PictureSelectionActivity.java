@@ -1,6 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -191,13 +192,18 @@ public class PictureSelectionActivity extends Activity {
     private class ClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            boolean swiped = false;
             if (mSwipeDetector.swipeDetected()) {
-                showNextPlace(mSwipeDetector.getAction());
+                swiped = showNextPlace(mSwipeDetector.getAction());
+            }
+            if (!swiped && checkAndFixIndex()) {
+                Intent intent = Maps.createIntent(getApplicationContext(), places.get(currentPlace));
+                startActivity(intent);
             }
         }
     }
 
-    private void showNextPlace(SwipeDetector.Action direction) {
+    private boolean showNextPlace(SwipeDetector.Action direction) {
         switch (direction) {
             case LR:
                 if (places != null) {
@@ -216,10 +222,11 @@ public class PictureSelectionActivity extends Activity {
             case BT:
             case None:
             default:
-                break;
+                return false;
         }
 
         updatePicture();
         showDelayedPlaceInfo(currentPlace);
+        return true;
     }
 }
