@@ -20,7 +20,7 @@ public class SplashScreen extends Activity {
 
     @Override
     protected void onStart() {
-        super.onResume();
+        super.onStart();
 
         // Start the main activity after a short delay.
         new Handler().postDelayed(
