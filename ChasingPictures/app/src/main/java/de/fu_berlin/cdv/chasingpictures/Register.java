@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Patterns;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,13 +29,6 @@ public class Register extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_register, menu);
-        return true;
     }
 
     public void doRegister(View view) {
@@ -75,7 +67,6 @@ public class Register extends Activity {
 
         LoginRequest registrationRequest = LoginRequest.makeRegistrationRequest(this, usernameString, emailString, passwordString);
         RegistrationRequestTask requestTask = new RegistrationRequestTask();
-        //noinspection unchecked
         requestTask.execute(registrationRequest);
     }
 
