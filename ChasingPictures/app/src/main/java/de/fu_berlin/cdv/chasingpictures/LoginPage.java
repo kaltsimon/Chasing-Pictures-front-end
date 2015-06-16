@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
 import de.fu_berlin.cdv.chasingpictures.api.UserData;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
-import de.fu_berlin.cdv.chasingpictures.security.SecurePreferences;
 
 
 public class LoginPage extends Activity {
@@ -23,13 +21,6 @@ public class LoginPage extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login_page, menu);
-        return true;
     }
 
     public void showLoginForm(View view) {
