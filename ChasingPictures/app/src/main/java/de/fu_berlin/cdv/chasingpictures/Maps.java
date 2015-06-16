@@ -36,13 +36,12 @@ public class Maps extends Activity {
         // Set Default Map Type
         replaceMapView(street);
         currentLayer = "street";
-        mv.setUserLocationEnabled(true)
-                .setUserLocationTrackingMode(UserLocationOverlay.TrackingMode.FOLLOW);
+        mv.setUserLocationEnabled(true);
+        mv.setUserLocationTrackingMode(UserLocationOverlay.TrackingMode.FOLLOW);
         // Set a reasonable user location zoom level
         mv.setUserLocationRequiredZoom(18);
 
-        mv.loadFromGeoJSONURL("https://gist.githubusercontent.com/bleege/133920f60eb7a334430f/raw/5392bad4e09015d3995d6153db21869b02f34d27/map.geojson");
-        Marker m = new Marker(mv, "Berlin", "Germany", new LatLng(52.513578, 13.415124));
+        Marker m = new Marker(mv, "Berlin", "Germany", berlin);
 
 
         m.setIcon(new Icon(this, Icon.Size.SMALL, "marker-stroked", "FF0000"));
@@ -85,8 +84,6 @@ public class Maps extends Activity {
         mv.setMaxZoomLevel(mv.getTileProvider().getMaximumZoomLevel());
         mv.setCenter(berlin);
         mv.setZoom(10);
-        Log.d("MainActivity", "zoomToBoundingBox " + box.toString());
-        //        mv.zoomToBoundingBox(box);
     }
 
 }
