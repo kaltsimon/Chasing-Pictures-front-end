@@ -35,7 +35,7 @@ public class Camera extends Activity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // Image captured and saved to fileUri specified in the Intent
-                Toast.makeText(this, "Image saved to:\n" + data.getData(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Image saved", Toast.LENGTH_LONG).show();
                 Bitmap bp = (Bitmap) data.getExtras().get("data");
                 iv.setImageBitmap(bp);
             } else if (resultCode == RESULT_CANCELED) {
@@ -50,7 +50,7 @@ public class Camera extends Activity {
 
     }
 
-    public void showNextActivity(View view){
+    public void showEnd(View view){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
