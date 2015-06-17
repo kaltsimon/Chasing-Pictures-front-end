@@ -1,14 +1,20 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.geometry.BoundingBox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.overlay.GpsLocationProvider;
 import com.mapbox.mapboxsdk.overlay.Icon;
 import com.mapbox.mapboxsdk.overlay.Marker;
 import com.mapbox.mapboxsdk.overlay.UserLocationOverlay;
@@ -17,9 +23,13 @@ import com.mapbox.mapboxsdk.tileprovider.tilesource.MapboxTileLayer;
 import com.mapbox.mapboxsdk.tileprovider.tilesource.WebSourceTileLayer;
 import com.mapbox.mapboxsdk.views.MapView;
 
+import de.fu_berlin.cdv.chasingpictures.api.Place;
+
 
 public class Maps extends Activity {
 
+    private static final String EXTRA_PLACE = "de.fu_berlin.cdv.chasingpictures.EXTRA_PLACE";
+    private static final String TAG = "MapActivity";
     private com.mapbox.mapboxsdk.geometry.LatLng startingPoint = new LatLng(51f, 0f);
     private MapView mv;
     private String satellite = "brunosan.map-cyglrrfu";
@@ -28,10 +38,27 @@ public class Maps extends Activity {
     private String mMap = "miriwie.mf62fb97";
     private String currentLayer = "";
     private LatLng berlin =  new LatLng(52.513578, 13.415124);
+    private Place place;
+
+    public static Intent createIntent(Context context, Place target) {
+        Intent intent = new Intent(context, Maps.class);
+        intent.putExtra(EXTRA_PLACE, target);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Try to load the place from the intent's extra data
+        try {
+            place = (Place) getIntent().getSerializableExtra(EXTRA_PLACE);
+        } catch (Exception ex) {
+            Log.e(TAG, "Place could not be retrieved from intent", ex);
+            // TODO: Show error
+            // TODO: finish();
+        }
+
         setContentView(R.layout.activity_maps);
 
         mv =  (MapView) this.findViewById(R.id.mapview);
@@ -39,19 +66,37 @@ public class Maps extends Activity {
         // Set Default Map Type
         replaceMapView(mMap);
         currentLayer = "mMap";
-        mv.setUserLocationEnabled(true)
-                .setUserLocationTrackingMode(UserLocationOverlay.TrackingMode.FOLLOW);
-        // Set a reasonable user location zoom level
-        mv.setUserLocationRequiredZoom(18);
 
-        mv.loadFromGeoJSONURL("https://gist.githubusercontent.com/bleege/133920f60eb7a334430f/raw/5392bad4e09015d3995d6153db21869b02f34d27/map.geojson");
-        Marker m = new Marker(mv, "Berlin", "Germany", new LatLng(52.513578, 13.415124));
+        GpsLocationProvider provider = new GpsLocationProvider(this);
+        UserLocationOverlay overlay = new UserLocationOverlay(provider, mv) {
+            @Override
+            public void onLocationChanged(Location location, GpsLocationProvider source) {
+                super.onLocationChanged(location, source);
+                ((TextView) findViewById(R.id.buttonDistance)).setText(Math.round(place.distanceTo(location)) + "m");
+            }
+        };
+        overlay.setTrackingMode(UserLocationOverlay.TrackingMode.FOLLOW);
+        overlay.setRequiredZoom(18);
+        overlay.enableMyLocation();
+        mv.addOverlay(overlay);
+        provider.startLocationProvider(overlay);
+
+        Marker m = new Marker(mv, "Berlin", "Germany", berlin);
 
 
         m.setIcon(new Icon(this, Icon.Size.SMALL, "marker-stroked", "FF0000"));
         mv.addMarker(m);
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.maps_layout);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        String cachedFilePath = place.getPicture().getCachedFile().getPath();
+        Bitmap bitmap = BitmapFactory.decodeFile(cachedFilePath);
+        ImageView imageView = (ImageView) findViewById(R.id.imageSearch);
+        imageView.setImageBitmap(bitmap);
     }
 
     protected void replaceMapView(String layer) {
@@ -88,30 +133,6 @@ public class Maps extends Activity {
         mv.setMaxZoomLevel(mv.getTileProvider().getMaximumZoomLevel());
         mv.setCenter(berlin);
         mv.setZoom(10);
-        Log.d("MainActivity", "zoomToBoundingBox " + box.toString());
-        //        mv.zoomToBoundingBox(box);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_maps, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 }
