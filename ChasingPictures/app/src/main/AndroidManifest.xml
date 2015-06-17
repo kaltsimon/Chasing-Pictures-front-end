@@ -13,12 +13,22 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- Camera-Permissions-->
-    <uses-permission android:name="ANDROID.PERMISSION.CAMERA"/>
-    <user-feature android:name="android.hardware.camera"/>
+    <!-- Camera-Permissions -->
+    <uses-permission android:name="ANDROID.PERMISSION.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <user-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -74,8 +84,18 @@
             android:name=".StartMenu"
             android:label="@string/title_activity_start_menu" >
         </activity>
-        <activity android:name=".Camera"
-            android:label="@string/title_activity_camera">
+        <activity
+            android:name=".CameraExisting"
+            android:label="CameraExisting" >
+        </activity>
+        <activity
+            android:name=".OurCamera"
+            android:label="@string/title_activity_our_camera" >
+        </activity>
+        <activity
+            android:name=".OCam"
+            android:label="@string/title_activity_ocam"
+            android:screenOrientation="landscape">
         </activity>
     </application>
 
