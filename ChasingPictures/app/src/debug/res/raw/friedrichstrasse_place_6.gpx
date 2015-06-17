@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<gpx version="1.0" creator="http://gpx.geotags.com/cgi-bin/gpx.cgi" xmlns="http://www.topografix.com/GPX/1/0">
+  <trk>
+    <name>52.517072,13.388873 to 52.511931,13.386628 (destination)</name>
+    <trkseg>
+      <trkpt lat="52.517073" lon="13.388895">
+        <desc>Head north on Friedrichstraße toward Mittelstraße; go 110m</desc>
+      </trkpt>
+      <trkpt lat="52.517256" lon="13.388863"/>
+      <trkpt lat="52.517309" lon="13.388765"/>
+      <trkpt lat="52.518060" lon="13.388659">
+        <desc>Turn left onto Mittelstraße; go 210m</desc>
+      </trkpt>
+      <trkpt lat="52.517838" lon="13.385588">
+        <desc>Turn left at the 1st cross street onto Neustädtische Kirchstraße; go 99m</desc>
+      </trkpt>
+      <trkpt lat="52.516951" lon="13.385742">
+        <desc>Continue onto Glinkastraße; go 550m</desc>
+      </trkpt>
+      <trkpt lat="52.514958" lon="13.386192"/>
+      <trkpt lat="52.511932" lon="13.386652">
+        <desc>Arrive at: Glinkastraße</desc>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
