@@ -25,6 +25,7 @@ public class Maps extends Activity {
     private String satellite = "brunosan.map-cyglrrfu";
     private String street = "examples.map-i87786ca";
     private String terrain = "examples.map-zgrqqx0w";
+    private String mMap = "miriwie.mf62fb97";
     private String currentLayer = "";
     private LatLng berlin =  new LatLng(52.513578, 13.415124);
 
@@ -36,8 +37,8 @@ public class Maps extends Activity {
         mv =  (MapView) this.findViewById(R.id.mapview);
 
         // Set Default Map Type
-        replaceMapView(street);
-        currentLayer = "street";
+        replaceMapView(mMap);
+        currentLayer = "mMap";
         mv.setUserLocationEnabled(true)
                 .setUserLocationTrackingMode(UserLocationOverlay.TrackingMode.FOLLOW);
         // Set a reasonable user location zoom level
