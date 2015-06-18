@@ -6,19 +6,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Date;
 
 /**
  * This class represents a picture which is associated with a place.
  * @author Simon Kalt
  */
-public class Picture {
+public class Picture implements Serializable {
     private long id;
     private Date time;
     private String url; // TODO: Deserialize as URL?

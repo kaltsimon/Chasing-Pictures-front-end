@@ -55,14 +55,4 @@ public class ApiUtilTest extends ApplicationTestCase<Application> {
                 headers.get(getContext().getString(R.string.api_header_accessToken)).get(0)
         );
     }
-
-    public void testSetAccessTokenHeader() throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        apiUtil.setAccessTokenHeader(headers);
-        assertEquals(
-                "Stored header does not match input.",
-                Access.getAccessToken(getContext()),
-                headers.get(getContext().getString(R.string.api_header_accessToken)).get(0)
-        );
-    }
 }

@@ -22,4 +22,7 @@
     <string name="registration_success">Erfolgreich registriert.</string>
     <string name="registration_fail">Registrierung fehlgeschlagen.</string>
     <string name="register.invalid_username">Dieser Benutzername ist ungültig.</string>
+    <string name="register.error.password_too_short">Passwort ist zu kurz (mindestens 8 Zeichen)</string>
+    <string name="log_out">Ausloggen</string>
+    <string name="logout_success">Ausloggen erfolgreich</string>
 </resources>

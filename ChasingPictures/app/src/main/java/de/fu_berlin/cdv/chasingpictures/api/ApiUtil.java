@@ -65,7 +65,18 @@ public class ApiUtil {
      * @return A list of strings containing the values for this header field
      */
     public List<String> getHeaders(ResponseEntity<?> responseEntity, int resourceId) {
-        return responseEntity.getHeaders().get(context.getString(resourceId));
+        return ApiUtil.getHeaders(context, responseEntity, resourceId);
+    }
+
+    /**
+     * Returns all headers for the header field named by the given resource ID.
+     * @param context The current context
+     * @param responseEntity The request response
+     * @param nameResID The resource ID for the header field
+     * @return A list of strings containing the values for this header field
+     */
+    public static List<String> getHeaders(Context context, ResponseEntity<?> responseEntity, int nameResID) {
+        return getHeaders(responseEntity, context.getString(nameResID));
     }
 
     /**
@@ -75,8 +86,34 @@ public class ApiUtil {
      * @return A strings containing the value of this header field
      */
     public String getHeader(ResponseEntity<?> responseEntity, int resourceId) {
-        List<String> headers = getHeaders(responseEntity, resourceId);
+        return ApiUtil.getHeader(context, responseEntity, resourceId);
+    }
+
+    /**
+     * Returns <i>the first</i> header for the header field named by the given resource ID.
+     * @param context The current context
+     * @param responseEntity The request response
+     * @param nameResID The resource ID for the header field
+     * @return A list of strings containing the values for this header field
+     */
+    public static String getHeader(Context context, ResponseEntity<?> responseEntity, int nameResID) {
+        List<String> headers = ApiUtil.getHeaders(context, responseEntity, nameResID);
         return headers == null || headers.isEmpty() ? null : headers.get(0);
+    }
+
+    /**
+     * Returns <i>the first</i> header for the header field named by the given String.
+     * @param responseEntity The request response
+     * @param key The resource ID for the header field
+     * @return A list of strings containing the values for this header field
+     */
+    public static String getHeader(ResponseEntity<?> responseEntity, String key) {
+        List<String> headers = getHeaders(responseEntity, key);
+        return headers == null || headers.isEmpty() ? null : headers.get(0);
+    }
+
+    public static List<String> getHeaders(ResponseEntity<?> responseEntity, String key) {
+        return responseEntity.getHeaders().get(key);
     }
 
     /**
@@ -87,14 +124,6 @@ public class ApiUtil {
      */
     public void setHeader(HttpHeaders headers, int keyResID, String value) {
         headers.set(context.getResources().getString(keyResID), value);
-    }
-
-    /**
-     * Sets the access token field in the given headers to the current access token.
-     * @param headers HTTP headers
-     */
-    public void setAccessTokenHeader(HttpHeaders headers) {
-        setHeader(headers, R.string.api_header_accessToken, Access.getAccessToken(context));
     }
 
     /**
