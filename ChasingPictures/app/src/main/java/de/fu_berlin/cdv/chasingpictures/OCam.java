@@ -2,16 +2,15 @@ package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.hardware.Camera;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -21,19 +20,24 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class OCam extends Activity {
 
     private static final String TAG = "OCam";
+    private static final File pictureStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     private Camera mCamera;
     private CameraPreview mPreview;
-    protected static String iPath;
+    private Camera.PictureCallback mPictureCallback;
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ocam);
+        mPictureCallback = new PictureCallback();
     }
 
     @Override
@@ -79,7 +83,7 @@ public class OCam extends Activity {
 
     public void takePic(View view){
         // get an image from the camera
-        mCamera.takePicture(null, null, mPicture);
+        mCamera.takePicture(null, null, mPictureCallback);
 
         //Intent intent = new Intent(this, MainActivity.class);
         //startActivity(intent);
@@ -104,8 +108,8 @@ public class OCam extends Activity {
         return c;
     }
 
-    protected Camera.PictureCallback mPicture = new Camera.PictureCallback() {
 
+    private class PictureCallback implements Camera.PictureCallback {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
 
@@ -137,12 +141,23 @@ public class OCam extends Activity {
             } catch (IOException e) {
                 Log.d(TAG, "Error accessing file", e);
             }
+
+            // Refresh storage show our picture shows up in the gallery
+            Log.i(TAG, "Scanning for file: " + pictureFile);
+            MediaScannerConnection.scanFile(
+                    getApplicationContext(),
+                    new String[]{pictureFile.toString()},
+                    null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+                            Log.i("ExternalStorage", "Scanned " + path + ":");
+                            Log.i("ExternalStorage", "-> uri=" + uri);
+                        }
+                    }
+            );
         }
-    };
-
-
-    public static final int MEDIA_TYPE_IMAGE = 1;
-    public static final int MEDIA_TYPE_VIDEO = 2;
+    }
 
     /** Create a file Uri for saving an image or video */
     private Uri getOutputMediaFileUri(int type){
@@ -155,8 +170,9 @@ public class OCam extends Activity {
         // using Environment.getExternalStorageState() before doing this.
 
         File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                getString(R.string.app_name).replace(" ", ""));
+                pictureStorageDirectory,
+                getString(R.string.app_name).replace(" ", "")
+        );
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
@@ -169,7 +185,7 @@ public class OCam extends Activity {
         }
 
         // Create a media file name
-        String timeStamp = SimpleDateFormat.getDateInstance().format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date());
         if (type == MEDIA_TYPE_IMAGE){
             return new File(mediaStorageDir.getPath(), "IMG_"+ timeStamp + ".jpg");
         } else if (type == MEDIA_TYPE_VIDEO) {
