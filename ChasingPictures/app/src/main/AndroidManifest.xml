@@ -84,15 +84,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CameraExisting"
-            android:label="CameraExisting" >
-        </activity>
-        <activity
-            android:name=".OurCamera"
-            android:label="@string/title_activity_our_camera" >
-        </activity>
-        <activity
-            android:name=".OCam"
+            android:name=".camera.CameraActivity"
             android:label="@string/title_activity_ocam"
             android:screenOrientation="landscape">
         </activity>

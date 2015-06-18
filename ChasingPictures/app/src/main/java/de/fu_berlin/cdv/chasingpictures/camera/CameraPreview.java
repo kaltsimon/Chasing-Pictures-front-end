@@ -1,4 +1,4 @@
-package de.fu_berlin.cdv.chasingpictures;
+package de.fu_berlin.cdv.chasingpictures.camera;
 
 /**
  * Created by miri on 17.06.15.

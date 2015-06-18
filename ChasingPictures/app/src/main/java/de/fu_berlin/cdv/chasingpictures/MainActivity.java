@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +16,7 @@ import java.util.Date;
 
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
+import de.fu_berlin.cdv.chasingpictures.camera.CameraActivity;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 
@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
     }
 
     public void showCamera(View view){
-        Intent intent = new Intent(this, OCam.class);
+        Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }
 

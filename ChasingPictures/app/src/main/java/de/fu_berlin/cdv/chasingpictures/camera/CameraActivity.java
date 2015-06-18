@@ -1,4 +1,4 @@
-package de.fu_berlin.cdv.chasingpictures;
+package de.fu_berlin.cdv.chasingpictures.camera;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,10 +6,10 @@ import android.hardware.Camera;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -22,21 +22,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.fu_berlin.cdv.chasingpictures.MainActivity;
+import de.fu_berlin.cdv.chasingpictures.R;
 
-public class OCam extends Activity {
 
-    private static final String TAG = "OCam";
+public class CameraActivity extends Activity {
+
+    private static final String TAG = "CameraActivity";
     private static final File pictureStorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
     private Camera mCamera;
     private CameraPreview mPreview;
     private Camera.PictureCallback mPictureCallback;
+    private Camera.Parameters params;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ocam);
+        setContentView(R.layout.activity_camera_activity);
         mPictureCallback = new PictureCallback();
     }
 
@@ -48,15 +52,15 @@ public class OCam extends Activity {
 
         //region Autofocus
         // get Camera parameters
-        Camera.Parameters params = mCamera.getParameters();
+        params = mCamera.getParameters();
 
         List<String> focusModes = params.getSupportedFocusModes();
         if (focusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
             // Autofocus mode is supported
-
             // set the focus mode
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         }
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
 
         // set Camera parameters
         mCamera.setParameters(params);
@@ -85,14 +89,66 @@ public class OCam extends Activity {
         // get an image from the camera
         mCamera.takePicture(null, null, mPictureCallback);
 
-        //Intent intent = new Intent(this, MainActivity.class);
-        //startActivity(intent);
+        Button escape = (Button) findViewById(R.id.escapeButton);
+        Button take = (Button) findViewById(R.id.takePictureButton);
+        Button retry = (Button) findViewById(R.id.retryPictureButton);
+        Button finish = (Button) findViewById(R.id.finishCameraButton);
+        Button toAuto = (Button) findViewById(R.id.flashToAutoCameraButton);
+        Button toOn = (Button) findViewById(R.id.flashToOnCameraButton);
+        Button toOff = (Button) findViewById(R.id.flashToOffCameraButton);
+        escape.setVisibility(View.GONE);
+        take.setVisibility(View.GONE);
+        retry.setVisibility(View.VISIBLE);
+        finish.setVisibility(View.VISIBLE);
+        toAuto.setVisibility(View.GONE);
+        toOn.setVisibility(View.GONE);
+        toOff.setVisibility(View.GONE);
     }
 
     public void showMyPic(View view){
-        Intent intent = new Intent(this, OurCamera.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void retry(View view){
+        Intent intent = new Intent(this, CameraActivity.class);
+        startActivity(intent);
+    }
+
+    public void escape(View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void setFlashAuto(View view){
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+        Button toAuto = (Button) findViewById(R.id.flashToAutoCameraButton);
+        Button toOn = (Button) findViewById(R.id.flashToOnCameraButton);
+        Button toOff = (Button) findViewById(R.id.flashToOffCameraButton);
+        toAuto.setVisibility(View.GONE);
+        toOn.setVisibility(View.VISIBLE);
+        toOff.setVisibility(View.GONE);
+    }
+
+    public void setFlashOn(View view){
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+        Button toAuto = (Button) findViewById(R.id.flashToAutoCameraButton);
+        Button toOn = (Button) findViewById(R.id.flashToOnCameraButton);
+        Button toOff = (Button) findViewById(R.id.flashToOffCameraButton);
+        toAuto.setVisibility(View.GONE);
+        toOn.setVisibility(View.GONE);
+        toOff.setVisibility(View.VISIBLE);
+    }
+
+    public void setFlashOff(View view){
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        Button toAuto = (Button) findViewById(R.id.flashToAutoCameraButton);
+        Button toOn = (Button) findViewById(R.id.flashToOnCameraButton);
+        Button toOff = (Button) findViewById(R.id.flashToOffCameraButton);
+        toAuto.setVisibility(View.VISIBLE);
+        toOn.setVisibility(View.GONE);
+        toOff.setVisibility(View.GONE);
     }
 
 
