@@ -25,6 +25,7 @@ import java.util.List;
 
 public class OCam extends Activity {
 
+    private static final String TAG = "OCam";
     private Camera mCamera;
     private CameraPreview mPreview;
     protected static String iPath;
@@ -33,10 +34,15 @@ public class OCam extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ocam);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         // Create an instance of Camera
         mCamera = getCameraInstance();
 
+        //region Autofocus
         // get Camera parameters
         Camera.Parameters params = mCamera.getParameters();
 
@@ -50,12 +56,12 @@ public class OCam extends Activity {
 
         // set Camera parameters
         mCamera.setParameters(params);
+        //endregion
 
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mPreview);
-
     }
 
     @Override
@@ -105,7 +111,7 @@ public class OCam extends Activity {
 
             File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
             if (pictureFile == null){
-                //Log.d("d", "Error creating media file, check storage permissions: " + e.getMessage());
+                Log.e(TAG, "Error creating media file, check storage permissions.");
                 return;
             }
 
@@ -113,17 +119,23 @@ public class OCam extends Activity {
                 FileOutputStream fos = new FileOutputStream(pictureFile);
                 fos.write(data);
                 fos.close();
-                Toast t = Toast.makeText(getApplicationContext(),"Image Saved",Toast.LENGTH_SHORT);
-                t.show();
+
+
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Image Saved",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                /*
                 ImageView iv = (ImageView) findViewById(R.id.imageView);
-
-                Bitmap bmp = BitmapFactory.decodeFile(iPath);
-               // iv.setImageBitmap(bmp);
-
+                Bitmap bmp = BitmapFactory.decodeFile(pictureFile);
+                iv.setImageBitmap(bmp);
+                */
             } catch (FileNotFoundException e) {
-                Log.d("d", "File not found: " + e.getMessage());
+                Log.d(TAG, "File not found", e);
             } catch (IOException e) {
-                Log.d("d", "Error accessing file: " + e.getMessage());
+                Log.d(TAG, "Error accessing file", e);
             }
         }
     };
@@ -133,43 +145,38 @@ public class OCam extends Activity {
     public static final int MEDIA_TYPE_VIDEO = 2;
 
     /** Create a file Uri for saving an image or video */
-    private static Uri getOutputMediaFileUri(int type){
+    private Uri getOutputMediaFileUri(int type){
         return Uri.fromFile(getOutputMediaFile(type));
     }
 
     /** Create a File for saving an image or video */
-    private static File getOutputMediaFile(int type){
+    private File getOutputMediaFile(int type){
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
 
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "Miri");
+        File mediaStorageDir = new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                getString(R.string.app_name).replace(" ", ""));
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
         // Create the storage directory if it does not exist
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                Log.d("Miri", "failed to create directory");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.e(TAG, "failed to create directory");
                 return null;
             }
         }
 
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
+        String timeStamp = SimpleDateFormat.getDateInstance().format(new Date());
         if (type == MEDIA_TYPE_IMAGE){
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "IMG_"+ timeStamp + ".jpg");
-            iPath = mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".jpg";
-            Log.d("File:",mediaStorageDir.getPath());
-        } else if(type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_"+ timeStamp + ".mp4");
-        } else {
-            return null;
+            return new File(mediaStorageDir.getPath(), "IMG_"+ timeStamp + ".jpg");
+        } else if (type == MEDIA_TYPE_VIDEO) {
+            return new File(mediaStorageDir.getPath(), "VID_" + timeStamp + ".mp4");
         }
-        return mediaFile;
+
+        return null;
     }
 
 }
