@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * This class represents a place, a.k.a. the thing users have to search for.
  * @author Simon Kalt
  */
-@JsonIgnoreProperties(ignoreUnknown = true)g
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Place implements Serializable {
     private String name;
     private double latitude;
