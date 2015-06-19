@@ -3,6 +3,7 @@ package de.fu_berlin.cdv.chasingpictures.api;
 import android.util.Log;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.util.Date;
  * This class represents a picture which is associated with a place.
  * @author Simon Kalt
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Picture implements Serializable {
     private long id;
     private Date time;
