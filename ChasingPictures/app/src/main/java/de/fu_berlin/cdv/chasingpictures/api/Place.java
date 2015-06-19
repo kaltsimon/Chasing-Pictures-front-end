@@ -3,10 +3,13 @@ package de.fu_berlin.cdv.chasingpictures.api;
 import java.io.Serializable;
 import android.location.Location;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * This class represents a place, a.k.a. the thing users have to search for.
  * @author Simon Kalt
  */
+@JsonIgnoreProperties(ignoreUnknown = true)g
 public class Place implements Serializable {
     private String name;
     private double latitude;
