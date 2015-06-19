@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
 
     public void toNext(View view){
         //region Save picture
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.rathaus);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.rathaus);
         File tempFile = null;
         try {
             tempFile = File.createTempFile("rathaus", "png", getCacheDir());

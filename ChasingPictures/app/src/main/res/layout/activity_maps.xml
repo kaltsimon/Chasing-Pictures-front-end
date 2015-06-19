@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageSearch"
-        android:src="@mipmap/rathaus"
+        android:src="@drawable/rathaus"
         android:scaleType="fitEnd"
         android:adjustViewBounds="true"
         android:visibility="visible"
