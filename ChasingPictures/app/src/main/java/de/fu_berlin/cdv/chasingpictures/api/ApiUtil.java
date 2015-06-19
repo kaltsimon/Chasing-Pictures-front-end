@@ -41,15 +41,6 @@ public class ApiUtil {
     }
 
     /**
-     * Checks whether the call to the API was successful.
-     * @param result Response received from the API.
-     * @return {@code} true if the call was successful
-     */
-    public boolean callSuccessful(ApiResult result) {
-        return result.getStatus().equals(context.getString(R.string.api_status_success));
-    }
-
-    /**
      * Retrieves the API URI for the specified endpoint.
      * @param endpointId An android resource id pointing to an R.strings.api_path_* value
      * @return The URI to send your request to
