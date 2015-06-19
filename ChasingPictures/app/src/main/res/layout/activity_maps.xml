@@ -8,7 +8,6 @@
 
 
     <com.mapbox.mapboxsdk.views.MapView
-        android:layout_weight="4"
         android:id="@+id/mapview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
