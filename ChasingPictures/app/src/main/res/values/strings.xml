@@ -12,24 +12,16 @@
     <string name="hint_email">yourname@example.com</string>
     <string name="hint_username">Username</string>
     <string name="login_prompt">Please log in…</string>
-    <string name="toolbar.camera_button_label">Camera</string>
-    <string name="toolbar.distance_label">Distance</string>
-    <string name="toolbar.help_button_label">Help</string>
-    <string name="title_activity_maps">Maps</string>
+    <string name="title_activity_maps">Map</string>
     <string name="invalid_email">That is not a valid email address.</string>
     <string name="login_success">Login successful.</string>
     <string name="login_fail">Login failed.</string>
     <string name="empty_password">Password cannot be empty.</string>
     <string name="register.invalid_username">This name is invalid.</string>
-    <string name="registration_success">Successfully registered.</string>
     <string name="registration_fail">Registration failed.</string>
-    <string name="title_activity_picture_selection">PictureSelectionActivity</string>
-    <string name="title_activity_splash_screen">SplashScreen</string>
-    <string name="title_activity_start_menu">StartMenu</string>
+    <string name="title_activity_picture_selection">Picture Selection</string>
     <string name="title_activity_camera">Camera</string>
-    <string name="title_activity_our_camera">OurCamera</string>
-    <string name="title_activity_ocam">OCam</string>
-    <string name="access_mb">pk.eyJ1IjoibWlyaXdpZSIsImEiOiJjYjk5YWY3ZThjYWZlMmYxZjA0MmJlNWI1MTQwYzg4ZSJ9.GZIICvdQlnw5XxuDgI2dqA</string>
+    <string name="access_mb" translatable="false">pk.eyJ1IjoibWlyaXdpZSIsImEiOiJjYjk5YWY3ZThjYWZlMmYxZjA0MmJlNWI1MTQwYzg4ZSJ9.GZIICvdQlnw5XxuDgI2dqA</string>
     <string name="register.error.password_too_short">Password is too short (at least 8 characters)</string>
     <string name="logout_success">Logout successful.</string>
     <string name="log_out">Log out</string>

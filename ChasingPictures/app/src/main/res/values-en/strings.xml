@@ -12,17 +12,16 @@
     <string name="title_activity_login_form">Log in</string>
     <string name="title_activity_register">Register</string>
     <string name="login_prompt">Please log in…</string>
-    <string name="toolbar.camera_button_label">Camera</string>
-    <string name="toolbar.help_button_label">Help</string>
-    <string name="toolbar.distance_label">Distance</string>
     <string name="invalid_email">That is not a valid email address.</string>
     <string name="login_success">Login successful.</string>
     <string name="login_fail">Login failed.</string>
     <string name="empty_password">Password cannot be empty.</string>
     <string name="register.invalid_username">This name is invalid.</string>
-    <string name="registration_success">Successfully registered.</string>
     <string name="registration_fail">Registration failed.</string>
     <string name="register.error.password_too_short">Password is too short (at least 8 characters)</string>
     <string name="logout_success">Logout successful.</string>
     <string name="log_out">Log out</string>
+    <string name="title_activity_camera">Camera</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_picture_selection">Picture Selection</string>
 </resources>
