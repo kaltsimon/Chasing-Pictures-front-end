@@ -31,5 +31,6 @@
     <string name="register.error.password_too_short">Password is too short (at least 8 characters)</string>
     <string name="logout_success">Logout successful.</string>
     <string name="log_out">Log out</string>
+    <string name="title_activity_slideshow">Slideshow</string>
 
 </resources>
