@@ -37,7 +37,7 @@ public abstract class ApiRequest<ResponseType> {
      * This is executed before executing a request.
      * By default it loads the stored access info into the HTTP headers.
      */
-    public void beforeSending() {
+    protected void beforeSending() {
         // Store access info in HTTP headers
         Access.getAccess(context, headers);
     }
@@ -46,7 +46,7 @@ public abstract class ApiRequest<ResponseType> {
      * This is executed after executing a request.
      * By default it stores the received access info in the application.
      */
-    public void afterSending(ResponseEntity<ResponseType> responseEntity) {
+    protected void afterSending(ResponseEntity<ResponseType> responseEntity) {
         Access.setAccess(context, responseEntity);
     }
 
