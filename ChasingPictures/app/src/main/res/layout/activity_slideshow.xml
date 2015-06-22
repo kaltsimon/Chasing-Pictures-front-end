@@ -13,5 +13,14 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/title_activity_slideshow"
-        android:scaleType="centerInside"/>
+        android:scaleType="centerInside"
+        android:visibility="invisible"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/slideshowProgressBar"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
