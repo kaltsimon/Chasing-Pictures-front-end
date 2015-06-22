@@ -39,7 +39,7 @@ public class PictureRequestTest extends AndroidTestCase {
         PictureApiResult body = responseEntity.getBody();
         assertNotNull("API response contains no data.", body);
         List<Picture> pictures = body.getData();
-        assertFalse("Picture list is empty", pictures == null || pictures.size() == 0);
+        assertFalse("Picture list is empty", pictures == null || pictures.isEmpty());
 
         // TODO: More testing
     }
