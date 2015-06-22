@@ -13,6 +13,7 @@ import de.fu_berlin.cdv.chasingpictures.api.Picture;
 public class Slideshow extends Activity {
 
     private static final String PICTURES_EXTRA = "de.fu_berlin.cdv.chasingpictures.EXTRA_PICTURES";
+    protected List<Picture> pictures;
 
     public static Intent createIntent(Context context, List<Picture> pictures) {
         Intent intent = new Intent(context, Slideshow.class);
@@ -24,5 +25,9 @@ public class Slideshow extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slideshow);
+
+        // Retrieve list of pictures from intent
+        pictures = (List<Picture>) getIntent().getSerializableExtra(PICTURES_EXTRA);
+
     }
 }
