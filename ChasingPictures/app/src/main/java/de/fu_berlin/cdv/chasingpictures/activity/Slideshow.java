@@ -12,11 +12,23 @@ import de.fu_berlin.cdv.chasingpictures.PictureDownloader;
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 
+/**
+ * Display a slideshow of the given pictures.
+ *
+ * @author Simon Kalt
+ */
 public class Slideshow extends Activity {
 
     private static final String PICTURES_EXTRA = "de.fu_berlin.cdv.chasingpictures.EXTRA_PICTURES";
     protected List<Picture> pictures;
 
+    /**
+     * Creates an {@link Intent} for a slideshow using the given pictures.
+     *
+     * @param context  The current context
+     * @param pictures A {@link Serializable} list of pictures
+     * @return An intent to be used with {@link #startActivity(Intent)}.
+     */
     public static Intent createIntent(Context context, List<Picture> pictures) {
         Intent intent = new Intent(context, Slideshow.class);
         intent.putExtra(PICTURES_EXTRA, (Serializable) pictures);
