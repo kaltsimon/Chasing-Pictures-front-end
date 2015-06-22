@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import java.io.Serializable;
 import java.util.List;
+
+import de.fu_berlin.cdv.chasingpictures.PictureDownloader;
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 
@@ -28,6 +30,10 @@ public class Slideshow extends Activity {
 
         // Retrieve list of pictures from intent
         pictures = (List<Picture>) getIntent().getSerializableExtra(PICTURES_EXTRA);
+
+        // Download pictures
+        PictureDownloader pd = new PictureDownloader(getCacheDir());
+        pd.execute(pictures.toArray(new Picture[pictures.size()]));
 
     }
 }
