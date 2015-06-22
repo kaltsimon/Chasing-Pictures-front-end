@@ -14,7 +14,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
+import de.fu_berlin.cdv.chasingpictures.activity.Slideshow;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
@@ -103,4 +105,9 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    public void showSlideshow(View view) {
+        List<Picture> demoPictures = DebugUtilities.getDemoPictures();
+        Intent intent = Slideshow.createIntent(this, demoPictures);
+        startActivity(intent);
+    }
 }
