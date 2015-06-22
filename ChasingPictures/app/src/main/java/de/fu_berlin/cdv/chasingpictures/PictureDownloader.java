@@ -8,8 +8,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 
@@ -50,14 +50,37 @@ public class PictureDownloader extends AsyncTask<Picture, Object, Void> {
     }
 
     private void downloadUrlToFile(URL url, File destinationFile) throws IOException {
-        URLConnection urlConnection = url.openConnection();
+        String location;
+        HttpURLConnection urlConnection;
+
+        // Follow redirects
+        while (true) {
+            urlConnection = ((HttpURLConnection) url.openConnection());
+
+            /*
+            urlConnection.setConnectTimeout(15000);
+            urlConnection.setReadTimeout(15000);
+            urlConnection.setInstanceFollowRedirects(false);
+             */
+
+            switch (urlConnection.getResponseCode()) {
+                case HttpURLConnection.HTTP_MOVED_PERM:
+                case HttpURLConnection.HTTP_MOVED_TEMP:
+                    location = urlConnection.getHeaderField("Location");
+                    url = new URL(url, location);  // Deal with relative URLs
+                    continue;
+            }
+
+            break;
+        }
+
         int contentLength = urlConnection.getContentLength();
 
         InputStream in = new BufferedInputStream(urlConnection.getInputStream());
         FileOutputStream fos = new FileOutputStream(destinationFile);
         byte[] buffer;
 
-        if (contentLength >= 0) {
+        if (contentLength > 0) {
             buffer = new byte[contentLength];
         } else {
             buffer = new byte[BUFFER_SIZE];
