@@ -5,10 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,9 +31,10 @@ public class Slideshow extends Activity {
 
     private static final String PICTURES_EXTRA = "de.fu_berlin.cdv.chasingpictures.EXTRA_PICTURES";
     protected List<Picture> pictures;
-    private int slideShowIndex;
-    private ImageView mImageView;
     private ProgressBar mProgressBar;
+    private ViewGroup mContainerView;
+    private RelativeLayout currentImageLayout;
+    private Handler mHandler;
 
     /**
      * Creates an {@link Intent} for a slideshow using the given pictures.
@@ -47,7 +53,8 @@ public class Slideshow extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slideshow);
-        mImageView = (ImageView) findViewById(R.id.slideshowImage);
+        mContainerView = (ViewGroup) findViewById(R.id.slideshowLayout);
+
         mProgressBar = (ProgressBar) findViewById(R.id.slideshowProgressBar);
 
         // Since we don't receive progress updates from the downloader yet,
@@ -56,6 +63,8 @@ public class Slideshow extends Activity {
 
         // Retrieve list of pictures from intent
         pictures = (List<Picture>) getIntent().getSerializableExtra(PICTURES_EXTRA);
+
+        mHandler = new Handler();
 
         // Download pictures
         PictureDownloader pd = new PictureDownloader(getCacheDir()) {
@@ -66,23 +75,65 @@ public class Slideshow extends Activity {
 
             @Override
             protected void onPostExecute(Void aVoid) {
-                // pictures have now been downloaded
-                slideShowIndex = 0;
-                updateImageView();
-                hideProgressBarShowImage();
+                hideProgressBar();
+                new SlideshowTask().executeOnExecutor(THREAD_POOL_EXECUTOR);
             }
         };
+
         pd.execute(pictures.toArray(new Picture[pictures.size()]));
     }
 
-    private void hideProgressBarShowImage() {
-        mProgressBar.setVisibility(View.GONE);
-        mImageView.setVisibility(View.VISIBLE);
+    private class SlideshowTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            for(int i = 0; i < pictures.size(); i++) {
+                final int finalI = i;
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setNewPicture(finalI);
+                    }
+                });
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
     }
 
-    private void updateImageView() {
-        String file = pictures.get(slideShowIndex).getCachedFile().getPath();
-        Bitmap bitmap = BitmapFactory.decodeFile(file);
-        mImageView.setImageBitmap(bitmap);
+    /**
+     * Replace the currently displayed picture with the one with the given index.
+     * @param index Index of the picture in the {@link #pictures} list
+     */
+    private void setNewPicture(int index) {
+        RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(this).inflate(
+                R.layout.slideshow_image,
+                mContainerView,
+                false
+        );
+
+        ImageView newImageView = (ImageView) relativeLayout.getChildAt(0);
+
+        newImageView.setImageBitmap(getBitmapForIndex(index));
+
+        if (currentImageLayout != null) {
+            currentImageLayout.setVisibility(View.INVISIBLE);
+            mContainerView.removeView(currentImageLayout);
+        }
+
+        currentImageLayout = relativeLayout;
+        mContainerView.addView(relativeLayout, 0);
+    }
+
+    private void hideProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    private Bitmap getBitmapForIndex(int idx) {
+        String file = pictures.get(idx).getCachedFile().getPath();
+        return BitmapFactory.decodeFile(file);
     }
 }

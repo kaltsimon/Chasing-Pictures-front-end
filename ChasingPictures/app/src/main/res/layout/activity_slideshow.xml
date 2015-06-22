@@ -4,17 +4,9 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:animateLayoutChanges="true"
+    android:id="@+id/slideshowLayout"
     tools:context="de.fu_berlin.cdv.chasingpictures.activity.Slideshow">
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/slideshowImage"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="@string/title_activity_slideshow"
-        android:scaleType="centerInside"
-        android:visibility="invisible"/>
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
