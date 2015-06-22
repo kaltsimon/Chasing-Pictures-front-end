@@ -78,7 +78,8 @@
         </activity>
         <activity
             android:name=".activity.Slideshow"
-            android:label="@string/title_activity_slideshow" >
+            android:label="@string/title_activity_slideshow"
+            android:screenOrientation="landscape" >
         </activity>
     </application>
 
