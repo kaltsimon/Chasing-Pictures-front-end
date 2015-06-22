@@ -16,7 +16,7 @@ import de.fu_berlin.cdv.chasingpictures.api.Picture;
 /**
  * @author Simon
  */
-public class PictureDownloader extends AsyncTask<Picture, Object, Void> {
+public class PictureDownloader extends AsyncTask<Picture, PictureDownloader.Progress, Void> {
     private static final String TAG = "PictureDownloader";
     private static final int BUFFER_SIZE = 1024 * 100; // 100 KB
     private final File targetDirectory;
@@ -27,6 +27,8 @@ public class PictureDownloader extends AsyncTask<Picture, Object, Void> {
 
     @Override
     protected Void doInBackground(Picture... params) {
+        Progress progress = new Progress(params.length);
+
         for (Picture picture : params) {
 
             try {
@@ -45,6 +47,8 @@ public class PictureDownloader extends AsyncTask<Picture, Object, Void> {
                 Log.e(TAG, Log.getStackTraceString(e));
                 picture.setCachedFile(null);
             }
+
+            publishProgress(progress.advance());
         }
         return null;
     }
@@ -96,6 +100,29 @@ public class PictureDownloader extends AsyncTask<Picture, Object, Void> {
         } finally {
             in.close();
             fos.close();
+        }
+    }
+
+    public static class Progress {
+        protected int current;
+        public final int max;
+
+        public Progress(int max) {
+            this.max = max;
+            this.current = 0;
+        }
+
+        public Progress advance() {
+            current++;
+            return this;
+        }
+
+        public double getPercent() {
+            return (100.0 * current) / max;
+        }
+
+        public int getCurrent() {
+            return current;
         }
     }
 }

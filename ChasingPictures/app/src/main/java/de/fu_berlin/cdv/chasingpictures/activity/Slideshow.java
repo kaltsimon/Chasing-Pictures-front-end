@@ -55,22 +55,20 @@ public class Slideshow extends Activity {
         setContentView(R.layout.activity_slideshow);
         mContainerView = (ViewGroup) findViewById(R.id.slideshowLayout);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.slideshowProgressBar);
-
-        // Since we don't receive progress updates from the downloader yet,
-        // make the progress bar indeterminate
-        mProgressBar.setIndeterminate(true);
-
         // Retrieve list of pictures from intent
         pictures = (List<Picture>) getIntent().getSerializableExtra(PICTURES_EXTRA);
+
+        mProgressBar = (ProgressBar) findViewById(R.id.slideshowProgressBar);
+        mProgressBar.setMax(pictures.size());
 
         mHandler = new Handler();
 
         // Download pictures
         PictureDownloader pd = new PictureDownloader(getCacheDir()) {
             @Override
-            protected void onProgressUpdate(Object... values) {
-                // TODO: Update mProgressBar
+            protected void onProgressUpdate(Progress... values) {
+                if (values.length > 0)
+                    mProgressBar.setProgress(values[0].getCurrent());
             }
 
             @Override
