@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -14,8 +15,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
+import de.fu_berlin.cdv.chasingpictures.activity.Slideshow;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
+import de.fu_berlin.cdv.chasingpictures.api.PictureRequest;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
 
@@ -103,4 +107,22 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    public void showSlideshow(View view) {
+        final AsyncTask<PictureRequest, Void, List<Picture>> task = new AsyncTask<PictureRequest, Void, List<Picture>>() {
+            @Override
+            protected List<Picture> doInBackground(PictureRequest... params) {
+                return params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
+            }
+
+            @Override
+            protected void onPostExecute(List<Picture> pictures) {
+                Intent intent = Slideshow.createIntent(getApplicationContext(), pictures);
+                startActivity(intent);
+            }
+        };
+
+        Place place = new Place();
+        place.setId(6);
+        task.execute(new PictureRequest(this, place));
+    }
 }

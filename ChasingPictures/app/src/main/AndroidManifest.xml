@@ -76,6 +76,11 @@
         <activity android:name=".Camera"
             android:label="@string/title_activity_camera">
         </activity>
+        <activity
+            android:name=".activity.Slideshow"
+            android:label="@string/title_activity_slideshow"
+            android:screenOrientation="landscape" >
+        </activity>
     </application>
 
 </manifest>

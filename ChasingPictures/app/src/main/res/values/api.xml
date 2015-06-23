@@ -4,6 +4,7 @@
     <string name="api.path.login" translatable="false">auth/sign_in</string>
     <string name="api.path.register" translatable="false">auth</string>
     <string name="api.path.location_request" translatable="false">places/find?latitude={latitude}&amp;longitude={longitude}</string>
+    <string name="api.path.picture" translatable="false">places/{placeId}</string>
     <string name="api.header.accessToken" translatable="false">Access-Token</string>
     <string name="api.error.email" translatable="false">email</string>
     <string name="api.error.password" translatable="false">password</string>
