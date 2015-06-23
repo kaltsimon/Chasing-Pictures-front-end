@@ -100,10 +100,6 @@ public class Slideshow extends Activity {
         mContainerView.addView(relativeLayout, 0);
     }
 
-    private void hideProgressBar() {
-        mProgressBar.setVisibility(View.GONE);
-    }
-
     private Bitmap getBitmapForIndex(int idx) {
         String file = mPictures.get(idx).getCachedFile().getPath();
         return BitmapFactory.decodeFile(file);
@@ -150,7 +146,7 @@ public class Slideshow extends Activity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            hideProgressBar();
+            mProgressBar.setVisibility(View.GONE);
             new SlideshowTask().executeOnExecutor(THREAD_POOL_EXECUTOR);
         }
     }
