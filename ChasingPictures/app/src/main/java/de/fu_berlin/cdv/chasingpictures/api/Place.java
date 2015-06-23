@@ -22,6 +22,8 @@ public class Place implements Serializable {
     private double longitude;
     private String description;
     private List<Picture> pictures;
+    private Double bearing;
+    private Double distance;
 
     public String getName() {
         return name;
@@ -69,6 +71,43 @@ public class Place implements Serializable {
 
     public void setPictures(List<Picture> pictures) {
         this.pictures = pictures;
+    }
+
+    /**
+     * If this place was requested from the API with a given location,
+     * returns the bearing from that location to this place.
+     */
+    public Double getBearing() {
+        return bearing;
+    }
+
+    /**
+     * Set the bearing to this place. Value will be
+     * automatically wrapped into the range [0, 360).
+     */
+    public void setBearing(double bearing) {
+        while (bearing < 0.0f) {
+            bearing += 360.0f;
+        }
+        while (bearing >= 360.0f) {
+            bearing -= 360.0f;
+        }
+        this.bearing = bearing;
+    }
+
+    /**
+     * If this place was requested from the API with a given location,
+     * returns the distance from that location to this place.
+     * <p/>
+     * Since this is the distance to the location at request time,
+     * consider using {@link #distanceTo(Location)}.
+     */
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
     /**
