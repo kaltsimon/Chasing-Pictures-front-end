@@ -1,8 +1,12 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
+
 import android.location.Location;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -16,7 +20,7 @@ public class Place implements Serializable {
     private double latitude;
     private double longitude;
     private String description;
-    private Picture picture;
+    private List<Picture> pictures;
 
     public String getName() {
         return name;
@@ -50,20 +54,30 @@ public class Place implements Serializable {
         this.description = description;
     }
 
-    public Picture getPicture() {
-        return picture;
-    }
-
-    public void setPicture(Picture picture) {
-        this.picture = picture;
-    }
-
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public List<Picture> getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(List<Picture> pictures) {
+        this.pictures = pictures;
+    }
+
+    @JsonIgnore
+    public Picture getPicture() {
+        return pictures.get(0);
+    }
+
+    @JsonIgnore
+    public void setPicture(Picture picture) {
+        this.pictures = Collections.singletonList(picture);
     }
 
     public Location getLocation() {
@@ -90,7 +104,7 @@ public class Place implements Serializable {
         if (name != null ? !name.equals(place.name) : place.name != null) return false;
         if (description != null ? !description.equals(place.description) : place.description != null)
             return false;
-        return !(picture != null ? !picture.equals(place.picture) : place.picture != null);
+        return !(pictures != null ? !pictures.equals(place.pictures) : place.pictures != null);
 
     }
 
@@ -104,7 +118,7 @@ public class Place implements Serializable {
         temp = Double.doubleToLongBits(longitude);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (picture != null ? picture.hashCode() : 0);
+        result = 31 * result + (pictures != null ? pictures.hashCode() : 0);
         return result;
     }
 
@@ -115,7 +129,7 @@ public class Place implements Serializable {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", description='" + description + '\'' +
-                ", picture=" + picture +
+                ", pictures=" + pictures +
                 '}';
     }
 }

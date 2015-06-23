@@ -14,7 +14,7 @@ import de.fu_berlin.cdv.chasingpictures.R;
 /**
  * @author Simon Kalt
  */
-public class PictureRequest extends ApiRequest<PictureApiResult> {
+public class PictureRequest extends ApiRequest<PlacesApiResult> {
     private final Place place;
 
     protected PictureRequest(Context context, Place place) {
@@ -23,7 +23,7 @@ public class PictureRequest extends ApiRequest<PictureApiResult> {
     }
 
     @Override
-    protected ResponseEntity<PictureApiResult> send() {
+    protected ResponseEntity<PlacesApiResult> send() {
         Map<String, Integer> queryParameters = new HashMap<>(2);
         queryParameters.put("placeId", place.getId());
 
@@ -31,7 +31,7 @@ public class PictureRequest extends ApiRequest<PictureApiResult> {
                 apiUri,
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
-                PictureApiResult.class,
+                PlacesApiResult.class,
                 queryParameters
         );
     }

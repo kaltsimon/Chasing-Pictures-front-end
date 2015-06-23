@@ -106,8 +106,17 @@ public class MainActivity extends Activity {
     }
 
     public void showSlideshow(View view) {
-        List<Picture> demoPictures = DebugUtilities.getDemoPictures();
-        Intent intent = Slideshow.createIntent(this, demoPictures);
-        startActivity(intent);
+        Place placeWithPictures = DebugUtilities.getPlaceWithPictures();
+        if (placeWithPictures != null) {
+            List<Picture> demoPictures = placeWithPictures.getPictures();
+            Intent intent = Slideshow.createIntent(this, demoPictures);
+            startActivity(intent);
+        } else {
+            Toast.makeText(
+                    this,
+                    "Did not receive any pictures for slideshow",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
     }
 }

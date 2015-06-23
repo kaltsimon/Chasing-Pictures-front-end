@@ -34,11 +34,11 @@ public class PictureRequestTest extends AndroidTestCase {
 
         PictureRequest request = new PictureRequest(getContext(), p);
 
-        ResponseEntity<PictureApiResult> responseEntity = request.sendRequest();
+        ResponseEntity<PlacesApiResult> responseEntity = request.sendRequest();
         assertEquals("HTTP Status not OK", responseEntity.getStatusCode(), HttpStatus.OK);
-        PictureApiResult body = responseEntity.getBody();
+        PlacesApiResult body = responseEntity.getBody();
         assertNotNull("API response contains no data.", body);
-        List<Picture> pictures = body.getData();
+        List<Picture> pictures = body.getPlaces().get(0).getPictures();
         assertFalse("Picture list is empty", pictures == null || pictures.isEmpty());
 
         // TODO: More testing
