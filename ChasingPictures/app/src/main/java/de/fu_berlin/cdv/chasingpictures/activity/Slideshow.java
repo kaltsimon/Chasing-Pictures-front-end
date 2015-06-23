@@ -96,21 +96,21 @@ public class Slideshow extends Activity {
             ).show();
             finish();
         }
-            // TODO: Send an API request for the images
-            final AsyncTask<PictureRequest, Void, List<Picture>> task = new AsyncTask<PictureRequest, Void, List<Picture>>() {
-                @Override
-                protected List<Picture> doInBackground(PictureRequest... params) {
-                    return params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
-                }
+        // TODO: Send an API request for the images
+        final AsyncTask<PictureRequest, Void, List<Picture>> task = new AsyncTask<PictureRequest, Void, List<Picture>>() {
+            @Override
+            protected List<Picture> doInBackground(PictureRequest... params) {
+                return params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
+            }
 
-                @Override
-                protected void onPostExecute(List<Picture> pictures) {
-                    mPictures = pictures;
-                    mProgressBar.setMax(mPictures.size());
-                    downloader.execute(mPictures.toArray(new Picture[mPictures.size()]));
-                }
-            };
-            task.execute(new PictureRequest(this, mPlace));
+            @Override
+            protected void onPostExecute(List<Picture> pictures) {
+                mPictures = pictures;
+                mProgressBar.setMax(mPictures.size());
+                downloader.execute(mPictures.toArray(new Picture[mPictures.size()]));
+            }
+        };
+        task.execute(new PictureRequest(this, mPlace));
     }
 
     private class SlideshowTask extends AsyncTask<Void, Void, Void> {
