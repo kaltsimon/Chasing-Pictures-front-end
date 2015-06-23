@@ -28,7 +28,7 @@ import de.fu_berlin.cdv.chasingpictures.api.Place;
 
 public class Maps extends Activity {
 
-    private static final String EXTRA_PLACE = "de.fu_berlin.cdv.chasingpictures.EXTRA_PLACE";
+    public static final String EXTRA_PLACE = "de.fu_berlin.cdv.chasingpictures.EXTRA_PLACE";
     private static final String TAG = "MapActivity";
     private com.mapbox.mapboxsdk.geometry.LatLng startingPoint = new LatLng(51f, 0f);
     private MapView mv;
