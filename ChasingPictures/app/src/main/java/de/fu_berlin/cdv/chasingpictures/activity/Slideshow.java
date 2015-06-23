@@ -41,6 +41,27 @@ public class Slideshow extends Activity {
     private Handler mHandler;
     private Place mPlace;
 
+    private class SlideshowTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            for(int i = 0; i < mPictures.size(); i++) {
+                final int finalI = i;
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setNewPicture(finalI);
+                    }
+                });
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+    }
+
     /**
      * A background task for downloading the given pictures
      * and, when finished, starting the slideshow.
@@ -62,7 +83,6 @@ public class Slideshow extends Activity {
             new SlideshowTask().executeOnExecutor(THREAD_POOL_EXECUTOR);
         }
     }
-
 
     /**
      * Creates an {@link Intent} for a slideshow using the given place.
@@ -114,27 +134,6 @@ public class Slideshow extends Activity {
             }
         };
         task.execute(new PictureRequest(this, mPlace));
-    }
-
-    private class SlideshowTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            for(int i = 0; i < mPictures.size(); i++) {
-                final int finalI = i;
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setNewPicture(finalI);
-                    }
-                });
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
     }
 
     /**
