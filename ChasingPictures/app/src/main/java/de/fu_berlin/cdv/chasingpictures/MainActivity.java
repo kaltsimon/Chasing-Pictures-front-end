@@ -73,7 +73,6 @@ public class MainActivity extends Activity {
                         if (place == null) {
                             place = new Place();
                             place.setId(6);
-                            place.setPictures(new ArrayList<Picture>());
                         }
 
                         final Place finalPlace = place;
@@ -88,20 +87,13 @@ public class MainActivity extends Activity {
                             @Override
                             protected void onPostExecute(ResponseEntity<Picture> response) {
                                 if (response != null && response.getStatusCode() == HttpStatus.OK) {
-                                    // TODO: Give Slideshow a single place and make it send a request for the pictures
-                                    Picture uploaded = response.getBody();
-                                    uploaded.setCachedFile(imageFile);
-                                    finalPlace.getPictures().add(uploaded);
-
                                     // Start the slideshow-activity with the
                                     Intent intent = Slideshow.createIntent(
                                             getApplicationContext(),
-                                            finalPlace.getPictures()
+                                            finalPlace
                                     );
 
-                                    // Currently crashes since the downloader tries to
-                                    // download the newly taken photo for which we don't have a URL
-                                    // startActivity(intent);
+                                    startActivity(intent);
                                 } else {
                                     Toast.makeText(
                                             getApplicationContext(),
