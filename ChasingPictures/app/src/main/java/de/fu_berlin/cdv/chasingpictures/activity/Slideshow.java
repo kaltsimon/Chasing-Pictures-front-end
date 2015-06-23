@@ -41,6 +41,9 @@ public class Slideshow extends Activity {
     private Handler mHandler;
     private Place mPlace;
 
+    /**
+     * A background task for animating the transition between images.
+     */
     private class SlideshowTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
