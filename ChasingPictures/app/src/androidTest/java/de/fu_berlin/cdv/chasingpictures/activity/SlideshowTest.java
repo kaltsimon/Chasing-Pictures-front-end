@@ -20,15 +20,12 @@ public class SlideshowTest extends ActivityInstrumentationTestCase2<Slideshow> {
 
     public void setUp() throws Exception {
         super.setUp();
-        Place placeWithPictures = DebugUtilities.getPlaceWithPictures();
-        if (placeWithPictures != null) {
-            Place place = new Place();
-            place.setId(6);
+        Place place = new Place();
+        place.setId(6);
 
-            // Set up activity intent
-            Intent intent = Slideshow.createIntent(getInstrumentation().getContext(), place);
-            setActivityIntent(intent);
-        }
+        // Set up activity intent
+        Intent intent = Slideshow.createIntent(getInstrumentation().getContext(), place);
+        setActivityIntent(intent);
     }
 
     public void testIntentDataReceived() throws Exception {
