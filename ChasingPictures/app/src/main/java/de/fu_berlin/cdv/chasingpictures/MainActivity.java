@@ -10,13 +10,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.activity.Slideshow;
+import de.fu_berlin.cdv.chasingpictures.api.PhotoUploadRequest;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.PictureRequest;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
@@ -51,11 +56,72 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == LoginPage.LOGIN
-                && resultCode == RESULT_OK
-                && Access.hasAccess(this)) {
-            Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
-            findViewById(R.id.show_login_page_button).setEnabled(false);
+        switch (requestCode) {
+            case LoginPage.LOGIN:
+                if (resultCode == RESULT_OK && Access.hasAccess(this)) {
+                    Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                    findViewById(R.id.show_login_page_button).setEnabled(false);
+                }
+                break;
+            case REQUEST_TAKE_PICTURE:
+                if (resultCode == RESULT_OK) {
+                    final File imageFile = (File) data.getSerializableExtra(CameraActivity.EXTRA_IMAGE_FILE);
+                    Place place = (Place) data.getSerializableExtra(Maps.EXTRA_PLACE);
+
+                    // Check if the file exists
+                    if (imageFile != null && imageFile.exists()) {
+                        // FIXME: This is only for testing purposes, usually we should only arrive here with a valid place!
+                        // TODO: Check in outer if-condition
+                        if (place == null) {
+                            place = new Place();
+                            place.setId(6);
+                            place.setPictures(new ArrayList<Picture>());
+                        }
+
+                        final Place finalPlace = place;
+                        new AsyncTask<Place, Void, ResponseEntity<Picture>>() {
+
+                            @Override
+                            protected ResponseEntity<Picture> doInBackground(Place... params) {
+                                PhotoUploadRequest request = new PhotoUploadRequest(getApplicationContext(), params[0], imageFile);
+                                return request.sendRequest();
+                            }
+
+                            @Override
+                            protected void onPostExecute(ResponseEntity<Picture> response) {
+                                if (response != null && response.getStatusCode() == HttpStatus.OK) {
+                                    // TODO: Give Slideshow a single place and make it send a request for the pictures
+                                    Picture uploaded = response.getBody();
+                                    uploaded.setCachedFile(imageFile);
+                                    finalPlace.getPictures().add(uploaded);
+
+                                    // Start the slideshow-activity with the
+                                    Intent intent = Slideshow.createIntent(
+                                            getApplicationContext(),
+                                            finalPlace.getPictures()
+                                    );
+
+                                    // Currently crashes since the downloader tries to
+                                    // download the newly taken photo for which we don't have a URL
+                                    // startActivity(intent);
+                                } else {
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            "Error uploading photo",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                            }
+                        }.execute(place);
+                    } else {
+                        Toast.makeText(
+                                this,
+                                "Received no photo",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                }
+                break;
         }
     }
 
