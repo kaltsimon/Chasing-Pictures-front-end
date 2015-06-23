@@ -42,76 +42,6 @@ public class Slideshow extends Activity {
     private Place mPlace;
 
     /**
-     * A background task for animating the transition between images.
-     */
-    private class SlideshowTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            for(int i = 0; i < mPictures.size(); i++) {
-                final int finalI = i;
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setNewPicture(finalI);
-                    }
-                });
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-    }
-
-    /**
-     * A background task for downloading the given pictures
-     * and, when finished, starting the slideshow.
-     */
-    private class SlideshowPictureDownloader extends PictureDownloader {
-        public SlideshowPictureDownloader(File targetDirectory) {
-            super(targetDirectory);
-        }
-
-        @Override
-        protected void onProgressUpdate(Progress... values) {
-            if (values.length > 0)
-                mProgressBar.setProgress(values[0].getCurrent());
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            hideProgressBar();
-            new SlideshowTask().executeOnExecutor(THREAD_POOL_EXECUTOR);
-        }
-    }
-
-    /**
-     * A background task for requesting all the available pictures for the current place.
-     */
-    private class PictureRequestTask extends AsyncTask<PictureRequest, Void, List<Picture>> {
-        private final PictureDownloader downloader;
-
-        public PictureRequestTask(PictureDownloader downloader) {
-            this.downloader = downloader;
-        }
-
-        @Override
-        protected List<Picture> doInBackground(PictureRequest... params) {
-            // FIXME: Check for null, if yes, display error and exit
-            return params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
-        }
-
-        @Override
-        protected void onPostExecute(List<Picture> pictures) {
-            mPictures = pictures;
-            mProgressBar.setMax(mPictures.size());
-            downloader.execute(mPictures.toArray(new Picture[mPictures.size()]));
-        }
-    }
-
-    /**
      * Creates an {@link Intent} for a slideshow using the given place.
      *
      * @param context  The current context
@@ -178,5 +108,75 @@ public class Slideshow extends Activity {
     private Bitmap getBitmapForIndex(int idx) {
         String file = mPictures.get(idx).getCachedFile().getPath();
         return BitmapFactory.decodeFile(file);
+    }
+
+    /**
+     * A background task for requesting all the available pictures for the current place.
+     */
+    private class PictureRequestTask extends AsyncTask<PictureRequest, Void, List<Picture>> {
+        private final PictureDownloader downloader;
+
+        public PictureRequestTask(PictureDownloader downloader) {
+            this.downloader = downloader;
+        }
+
+        @Override
+        protected List<Picture> doInBackground(PictureRequest... params) {
+            // FIXME: Check for null, if yes, display error and exit
+            return params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
+        }
+
+        @Override
+        protected void onPostExecute(List<Picture> pictures) {
+            mPictures = pictures;
+            mProgressBar.setMax(mPictures.size());
+            downloader.execute(mPictures.toArray(new Picture[mPictures.size()]));
+        }
+    }
+
+    /**
+     * A background task for downloading the given pictures
+     * and, when finished, starting the slideshow.
+     */
+    private class SlideshowPictureDownloader extends PictureDownloader {
+        public SlideshowPictureDownloader(File targetDirectory) {
+            super(targetDirectory);
+        }
+
+        @Override
+        protected void onProgressUpdate(Progress... values) {
+            if (values.length > 0)
+                mProgressBar.setProgress(values[0].getCurrent());
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            hideProgressBar();
+            new SlideshowTask().executeOnExecutor(THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    /**
+     * A background task for animating the transition between images.
+     */
+    private class SlideshowTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            for(int i = 0; i < mPictures.size(); i++) {
+                final int finalI = i;
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setNewPicture(finalI);
+                    }
+                });
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
     }
 }
