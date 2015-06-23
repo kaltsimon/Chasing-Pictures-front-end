@@ -17,7 +17,7 @@ import de.fu_berlin.cdv.chasingpictures.R;
 public class PictureRequest extends ApiRequest<PlacesApiResult> {
     private final Place place;
 
-    protected PictureRequest(Context context, Place place) {
+    public PictureRequest(Context context, Place place) {
         super(context, R.string.api_path_picture);
         this.place = place;
     }
