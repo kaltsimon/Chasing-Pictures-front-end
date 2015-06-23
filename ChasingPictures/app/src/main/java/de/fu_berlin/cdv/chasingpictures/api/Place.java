@@ -174,12 +174,16 @@ public class Place implements Serializable {
 
         Place place = (Place) o;
 
+        if (id != place.id) return false;
         if (Double.compare(place.latitude, latitude) != 0) return false;
         if (Double.compare(place.longitude, longitude) != 0) return false;
         if (name != null ? !name.equals(place.name) : place.name != null) return false;
         if (description != null ? !description.equals(place.description) : place.description != null)
             return false;
-        return !(pictures != null ? !pictures.equals(place.pictures) : place.pictures != null);
+        if (pictures != null ? !pictures.equals(place.pictures) : place.pictures != null)
+            return false;
+        if (bearing != null ? !bearing.equals(place.bearing) : place.bearing != null) return false;
+        return !(distance != null ? !distance.equals(place.distance) : place.distance != null);
 
     }
 
@@ -187,24 +191,30 @@ public class Place implements Serializable {
     public int hashCode() {
         int result;
         long temp;
-        result = name != null ? name.hashCode() : 0;
+        result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         temp = Double.doubleToLongBits(latitude);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(longitude);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (pictures != null ? pictures.hashCode() : 0);
+        result = 31 * result + (bearing != null ? bearing.hashCode() : 0);
+        result = 31 * result + (distance != null ? distance.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "Place{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", description='" + description + '\'' +
                 ", pictures=" + pictures +
+                ", bearing=" + bearing +
+                ", distance=" + distance +
                 '}';
     }
 }
