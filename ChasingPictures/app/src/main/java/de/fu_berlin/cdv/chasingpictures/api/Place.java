@@ -70,16 +70,41 @@ public class Place implements Serializable {
         this.pictures = pictures;
     }
 
+    /**
+     * Get the first picture.
+     * @return The first picture associated with this place.
+     * @deprecated Use {@link #getFirstPicture()} instead
+     */
     @JsonIgnore
+    @Deprecated
     public Picture getPicture() {
-        return pictures.get(0);
+        return getFirstPicture();
     }
 
+    /**
+     * Get the first picture.
+     * @return The first picture associated with this place.
+     */
+    private Picture getFirstPicture() {
+        return pictures == null || pictures.isEmpty() ? null : pictures.get(0);
+    }
+
+    /**
+     * Sets the list of pictures associated with this place
+     * to the single picture provided.
+     * @param picture The picture to set
+     * @deprecated Use {@link #setPictures(List)} instead
+     */
     @JsonIgnore
+    @Deprecated
     public void setPicture(Picture picture) {
         this.pictures = Collections.singletonList(picture);
     }
 
+    /**
+     * Returns a {@link Location} describing latitude and longitude of this place.
+     * @return A {@link Location} object describing this place
+     */
     public Location getLocation() {
         Location location = new Location("");
         location.setLatitude(latitude);
@@ -88,6 +113,11 @@ public class Place implements Serializable {
         return location;
     }
 
+    /**
+     * Calculates the distance of this place to another location.
+     * @param location (Own) location
+     * @return Distance to the given location (in meters)
+     */
     public float distanceTo(Location location) {
        return getLocation().distanceTo(location);
     }
