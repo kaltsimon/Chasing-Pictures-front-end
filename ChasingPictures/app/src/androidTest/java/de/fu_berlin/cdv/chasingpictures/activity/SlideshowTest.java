@@ -31,7 +31,7 @@ public class SlideshowTest extends ActivityInstrumentationTestCase2<Slideshow> {
     }
 
     public void testIntentDataReceived() throws Exception {
-        List<Picture> pictures = getActivity().pictures;
+        List<Picture> pictures = getActivity().mPictures;
         assertFalse("Received no pictures from Intent", pictures == null || pictures.isEmpty());
     }
 }
