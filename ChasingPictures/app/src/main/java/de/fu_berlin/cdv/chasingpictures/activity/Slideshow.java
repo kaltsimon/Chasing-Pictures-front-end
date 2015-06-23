@@ -34,7 +34,6 @@ import de.fu_berlin.cdv.chasingpictures.api.Place;
  */
 public class Slideshow extends Activity {
 
-    private static final String PICTURES_EXTRA = "de.fu_berlin.cdv.chasingpictures.EXTRA_PICTURES";
     protected List<Picture> mPictures;
     private ProgressBar mProgressBar;
     private ViewGroup mContainerView;
