@@ -87,6 +87,9 @@ public class Slideshow extends Activity {
         }
     }
 
+    /**
+     * A background task for requesting all the available pictures for the current place.
+     */
     private class PictureRequestTask extends AsyncTask<PictureRequest, Void, List<Picture>> {
         private final PictureDownloader downloader;
 
