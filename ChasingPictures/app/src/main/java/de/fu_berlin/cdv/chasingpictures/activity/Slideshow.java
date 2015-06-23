@@ -28,7 +28,7 @@ import de.fu_berlin.cdv.chasingpictures.api.PictureRequest;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 
 /**
- * Display a slideshow of the given pictures.
+ * Display a slideshow of all the pictures for a place.
  *
  * @author Simon Kalt
  */
@@ -41,7 +41,10 @@ public class Slideshow extends Activity {
     private Handler mHandler;
     private Place mPlace;
 
-    // Downloader for pictures
+    /**
+     * A background task for downloading the given pictures
+     * and, when finished, starting the slideshow.
+     */
     private class SlideshowPictureDownloader extends PictureDownloader {
         public SlideshowPictureDownloader(File targetDirectory) {
             super(targetDirectory);
@@ -95,10 +98,11 @@ public class Slideshow extends Activity {
             ).show();
             finish();
         }
-        // TODO: Send an API request for the images
+
         final AsyncTask<PictureRequest, Void, List<Picture>> task = new AsyncTask<PictureRequest, Void, List<Picture>>() {
             @Override
             protected List<Picture> doInBackground(PictureRequest... params) {
+                // FIXME: Check for null, if yes, display error and exit
                 return params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
             }
 
