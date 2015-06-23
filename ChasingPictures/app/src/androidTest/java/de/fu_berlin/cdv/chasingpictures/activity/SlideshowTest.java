@@ -22,10 +22,11 @@ public class SlideshowTest extends ActivityInstrumentationTestCase2<Slideshow> {
         super.setUp();
         Place placeWithPictures = DebugUtilities.getPlaceWithPictures();
         if (placeWithPictures != null) {
-            List<Picture> pictures = placeWithPictures.getPictures();
+            Place place = new Place();
+            place.setId(6);
 
             // Set up activity intent
-            Intent intent = Slideshow.createIntent(getInstrumentation().getContext(), pictures);
+            Intent intent = Slideshow.createIntent(getInstrumentation().getContext(), place);
             setActivityIntent(intent);
         }
     }
