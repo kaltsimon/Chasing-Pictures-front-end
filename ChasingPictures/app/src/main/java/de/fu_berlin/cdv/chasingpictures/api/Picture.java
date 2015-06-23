@@ -32,6 +32,13 @@ public class Picture implements Serializable {
     @JsonIgnore
     private File cachedFile;
 
+    // TODO: Split up these properties into a separate object
+    private String file_file_name;
+    private String file_content_type;
+    private Integer file_file_size;
+    private Date file_updated_at;
+    private Integer user_id;
+
     public long getId() {
         return id;
     }
@@ -98,6 +105,46 @@ public class Picture implements Serializable {
 
     public void setCachedFile(File cachedFile) {
         this.cachedFile = cachedFile;
+    }
+
+    public String getFile_file_name() {
+        return file_file_name;
+    }
+
+    public void setFile_file_name(String file_file_name) {
+        this.file_file_name = file_file_name;
+    }
+
+    public String getFile_content_type() {
+        return file_content_type;
+    }
+
+    public void setFile_content_type(String file_content_type) {
+        this.file_content_type = file_content_type;
+    }
+
+    public Integer getFile_file_size() {
+        return file_file_size;
+    }
+
+    public void setFile_file_size(Integer file_file_size) {
+        this.file_file_size = file_file_size;
+    }
+
+    public Date getFile_updated_at() {
+        return file_updated_at;
+    }
+
+    public void setFile_updated_at(Date file_updated_at) {
+        this.file_updated_at = file_updated_at;
+    }
+
+    public Integer getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
     }
 
     @Override
