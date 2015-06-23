@@ -17,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.Maps;
