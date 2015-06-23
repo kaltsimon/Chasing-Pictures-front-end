@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.Serializable;
@@ -60,18 +61,6 @@ public class Slideshow extends Activity {
         }
     }
 
-    /**
-     * Creates an {@link Intent} for a slideshow using the given pictures.
-     *
-     * @param context  The current context
-     * @param pictures A {@link Serializable} list of pictures
-     * @return An intent to be used with {@link #startActivity(Intent)}.
-     */
-    public static Intent createIntent(Context context, List<Picture> pictures) {
-        Intent intent = new Intent(context, Slideshow.class);
-        intent.putExtra(PICTURES_EXTRA, (Serializable) pictures);
-        return intent;
-    }
 
     /**
      * Creates an {@link Intent} for a slideshow using the given place.
@@ -100,11 +89,13 @@ public class Slideshow extends Activity {
         mPlace = (Place) getIntent().getSerializableExtra(Maps.EXTRA_PLACE);
 
         if (mPlace == null) {
-            // TODO: Remove this branch when no longer needed
-            // Retrieve list of pictures from intent
-            mPictures = (List<Picture>) getIntent().getSerializableExtra(PICTURES_EXTRA);
-            downloader.execute(mPictures.toArray(new Picture[mPictures.size()]));
-        } else {
+            Toast.makeText(
+                    this,
+                    "Did not receive a place",
+                    Toast.LENGTH_SHORT
+            ).show();
+            finish();
+        }
             // TODO: Send an API request for the images
             final AsyncTask<PictureRequest, Void, List<Picture>> task = new AsyncTask<PictureRequest, Void, List<Picture>>() {
                 @Override
@@ -120,7 +111,6 @@ public class Slideshow extends Activity {
                 }
             };
             task.execute(new PictureRequest(this, mPlace));
-        }
     }
 
     private class SlideshowTask extends AsyncTask<Void, Void, Void> {
