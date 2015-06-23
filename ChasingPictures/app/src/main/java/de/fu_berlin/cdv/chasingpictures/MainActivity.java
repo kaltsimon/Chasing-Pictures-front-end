@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -27,6 +26,7 @@ import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
+    public static final int REQUEST_TAKE_PICTURE = 123411235;
     private boolean triedLogin = false;
 
     @Override
@@ -105,7 +105,7 @@ public class MainActivity extends Activity {
 
     public void showCamera(View view){
         Intent intent = new Intent(this, CameraActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_TAKE_PICTURE);
     }
 
     public void showSlideshow(View view) {
