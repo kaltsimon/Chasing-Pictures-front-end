@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.activity.Slideshow;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
+import de.fu_berlin.cdv.chasingpictures.api.PictureRequest;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
 
@@ -106,17 +108,30 @@ public class MainActivity extends Activity {
     }
 
     public void showSlideshow(View view) {
-        Place placeWithPictures = DebugUtilities.getPlaceWithPictures();
-        if (placeWithPictures != null) {
-            List<Picture> demoPictures = placeWithPictures.getPictures();
-            Intent intent = Slideshow.createIntent(this, demoPictures);
-            startActivity(intent);
-        } else {
-            Toast.makeText(
-                    this,
-                    "Did not receive any pictures for slideshow",
-                    Toast.LENGTH_SHORT
-            ).show();
-        }
+        Place place = new Place();
+        place.setId(6);
+
+        final PictureRequest pictureRequest = new PictureRequest(this, place);
+
+        final Handler handler = new Handler();
+
+        final AsyncTask<PictureRequest, Void, Void> task = new AsyncTask<PictureRequest, Void, Void>() {
+            @Override
+            protected Void doInBackground(PictureRequest... params) {
+                List<Picture> pictures = params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
+                final Intent intent = Slideshow.createIntent(getApplicationContext(), pictures);
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(intent);
+                    }
+                });
+
+                return null;
+            }
+        };
+
+        task.execute(pictureRequest);
     }
 }
