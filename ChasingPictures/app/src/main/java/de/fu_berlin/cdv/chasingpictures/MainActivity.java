@@ -108,30 +108,21 @@ public class MainActivity extends Activity {
     }
 
     public void showSlideshow(View view) {
-        Place place = new Place();
-        place.setId(6);
-
-        final PictureRequest pictureRequest = new PictureRequest(this, place);
-
-        final Handler handler = new Handler();
-
-        final AsyncTask<PictureRequest, Void, Void> task = new AsyncTask<PictureRequest, Void, Void>() {
+        final AsyncTask<PictureRequest, Void, List<Picture>> task = new AsyncTask<PictureRequest, Void, List<Picture>>() {
             @Override
-            protected Void doInBackground(PictureRequest... params) {
-                List<Picture> pictures = params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
-                final Intent intent = Slideshow.createIntent(getApplicationContext(), pictures);
+            protected List<Picture> doInBackground(PictureRequest... params) {
+                return params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
+            }
 
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        startActivity(intent);
-                    }
-                });
-
-                return null;
+            @Override
+            protected void onPostExecute(List<Picture> pictures) {
+                Intent intent = Slideshow.createIntent(getApplicationContext(), pictures);
+                startActivity(intent);
             }
         };
 
-        task.execute(pictureRequest);
+        Place place = new Place();
+        place.setId(6);
+        task.execute(new PictureRequest(this, place));
     }
 }
