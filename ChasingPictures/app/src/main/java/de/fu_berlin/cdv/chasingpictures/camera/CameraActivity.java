@@ -36,12 +36,15 @@ public class CameraActivity extends Activity {
     private Camera.Parameters params;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    public static final String EXTRA_IMAGE_FILE = "de.fu_berlin.cdv.chasingpictures.EXTRA_IMAGE_FILE";
+    private Intent mResultData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_activity);
         mPictureCallback = new PictureCallback();
+        mResultData = new Intent();
     }
 
     @Override
@@ -106,8 +109,15 @@ public class CameraActivity extends Activity {
     }
 
     public void showMyPic(View view){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        doFinish();
+    }
+
+    /**
+     * Return to the previous activity, and return
+     * the taken picture (if available).
+     */
+    public void doFinish() {
+        setResult(RESULT_OK, mResultData);
         finish();
     }
 
@@ -212,6 +222,9 @@ public class CameraActivity extends Activity {
                         }
                     }
             );
+
+            // Put picture into result data
+            mResultData.putExtra(EXTRA_IMAGE_FILE, pictureFile);
         }
     }
 
