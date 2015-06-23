@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 
 import de.fu_berlin.cdv.chasingpictures.activity.Slideshow;
@@ -36,9 +35,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.intro);
-//        mediaPlayer.start(); // no need to call prepare(); create() does that for you
     }
 
     @Override
@@ -87,7 +83,6 @@ public class MainActivity extends Activity {
                             @Override
                             protected void onPostExecute(ResponseEntity<Picture> response) {
                                 if (response != null && response.getStatusCode() == HttpStatus.OK) {
-                                    // Start the slideshow-activity with the
                                     Intent intent = Slideshow.createIntent(
                                             getApplicationContext(),
                                             finalPlace
