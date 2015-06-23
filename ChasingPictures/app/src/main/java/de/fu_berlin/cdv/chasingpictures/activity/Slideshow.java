@@ -87,6 +87,27 @@ public class Slideshow extends Activity {
         }
     }
 
+    private class PictureRequestTask extends AsyncTask<PictureRequest, Void, List<Picture>> {
+        private final PictureDownloader downloader;
+
+        public PictureRequestTask(PictureDownloader downloader) {
+            this.downloader = downloader;
+        }
+
+        @Override
+        protected List<Picture> doInBackground(PictureRequest... params) {
+            // FIXME: Check for null, if yes, display error and exit
+            return params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
+        }
+
+        @Override
+        protected void onPostExecute(List<Picture> pictures) {
+            mPictures = pictures;
+            mProgressBar.setMax(mPictures.size());
+            downloader.execute(mPictures.toArray(new Picture[mPictures.size()]));
+        }
+    }
+
     /**
      * Creates an {@link Intent} for a slideshow using the given place.
      *
@@ -107,10 +128,6 @@ public class Slideshow extends Activity {
         mContainerView = (ViewGroup) findViewById(R.id.slideshowLayout);
         mProgressBar = (ProgressBar) findViewById(R.id.slideshowProgressBar);
         mHandler = new Handler();
-
-        final PictureDownloader downloader = new SlideshowPictureDownloader(getCacheDir());
-
-        // Try to get the place first
         mPlace = (Place) getIntent().getSerializableExtra(Maps.EXTRA_PLACE);
 
         if (mPlace == null) {
@@ -122,21 +139,9 @@ public class Slideshow extends Activity {
             finish();
         }
 
-        final AsyncTask<PictureRequest, Void, List<Picture>> task = new AsyncTask<PictureRequest, Void, List<Picture>>() {
-            @Override
-            protected List<Picture> doInBackground(PictureRequest... params) {
-                // FIXME: Check for null, if yes, display error and exit
-                return params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
-            }
-
-            @Override
-            protected void onPostExecute(List<Picture> pictures) {
-                mPictures = pictures;
-                mProgressBar.setMax(mPictures.size());
-                downloader.execute(mPictures.toArray(new Picture[mPictures.size()]));
-            }
-        };
-        task.execute(new PictureRequest(this, mPlace));
+        PictureDownloader downloader = new SlideshowPictureDownloader(getCacheDir());
+        PictureRequestTask pictureRequestTask = new PictureRequestTask(downloader);
+        pictureRequestTask.execute(new PictureRequest(this, mPlace));
     }
 
     /**
