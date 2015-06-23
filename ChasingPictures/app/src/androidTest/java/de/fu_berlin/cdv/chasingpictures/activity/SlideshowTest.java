@@ -20,7 +20,7 @@ public class SlideshowTest extends ActivityInstrumentationTestCase2<Slideshow> {
 
     public void setUp() throws Exception {
         super.setUp();
-        Place placeWithPictures = DebuggUtilities.getPlaceWithPictures();
+        Place placeWithPictures = DebugUtilities.getPlaceWithPictures();
         if (placeWithPictures != null) {
             List<Picture> pictures = placeWithPictures.getPictures();
 
