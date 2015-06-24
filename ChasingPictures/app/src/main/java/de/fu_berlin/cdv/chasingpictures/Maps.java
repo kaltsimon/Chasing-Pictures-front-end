@@ -141,7 +141,7 @@ public class Maps extends Activity {
         if (iv.getVisibility() == View.VISIBLE){
             iv.setVisibility(View.GONE);
         }
-        if (iv.getVisibility() == View.GONE){
+        else if (iv.getVisibility() == View.GONE){
             iv.setVisibility(View.VISIBLE);
         }
     }
