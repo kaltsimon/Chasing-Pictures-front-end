@@ -14,38 +14,42 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
-import java.io.Serializable;
+import java.io.File;
 import java.util.List;
 
+import de.fu_berlin.cdv.chasingpictures.Maps;
 import de.fu_berlin.cdv.chasingpictures.PictureDownloader;
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
+import de.fu_berlin.cdv.chasingpictures.api.PictureRequest;
+import de.fu_berlin.cdv.chasingpictures.api.Place;
 
 /**
- * Display a slideshow of the given pictures.
+ * Display a slideshow of all the pictures for a place.
  *
  * @author Simon Kalt
  */
 public class Slideshow extends Activity {
 
-    private static final String PICTURES_EXTRA = "de.fu_berlin.cdv.chasingpictures.EXTRA_PICTURES";
-    protected List<Picture> pictures;
+    protected List<Picture> mPictures;
     private ProgressBar mProgressBar;
     private ViewGroup mContainerView;
     private RelativeLayout currentImageLayout;
     private Handler mHandler;
+    private Place mPlace;
 
     /**
-     * Creates an {@link Intent} for a slideshow using the given pictures.
+     * Creates an {@link Intent} for a slideshow using the given place.
      *
      * @param context  The current context
-     * @param pictures A {@link Serializable} list of pictures
+     * @param place A place for which to show the slideshow
      * @return An intent to be used with {@link #startActivity(Intent)}.
      */
-    public static Intent createIntent(Context context, List<Picture> pictures) {
+    public static Intent createIntent(Context context, Place place) {
         Intent intent = new Intent(context, Slideshow.class);
-        intent.putExtra(PICTURES_EXTRA, (Serializable) pictures);
+        intent.putExtra(Maps.EXTRA_PLACE, place);
         return intent;
     }
 
@@ -54,57 +58,27 @@ public class Slideshow extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slideshow);
         mContainerView = (ViewGroup) findViewById(R.id.slideshowLayout);
-
-        // Retrieve list of pictures from intent
-        pictures = (List<Picture>) getIntent().getSerializableExtra(PICTURES_EXTRA);
-
         mProgressBar = (ProgressBar) findViewById(R.id.slideshowProgressBar);
-        mProgressBar.setMax(pictures.size());
-
         mHandler = new Handler();
+        mPlace = (Place) getIntent().getSerializableExtra(Maps.EXTRA_PLACE);
 
-        // Download pictures
-        PictureDownloader pd = new PictureDownloader(getCacheDir()) {
-            @Override
-            protected void onProgressUpdate(Progress... values) {
-                if (values.length > 0)
-                    mProgressBar.setProgress(values[0].getCurrent());
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                hideProgressBar();
-                new SlideshowTask().executeOnExecutor(THREAD_POOL_EXECUTOR);
-            }
-        };
-
-        pd.execute(pictures.toArray(new Picture[pictures.size()]));
-    }
-
-    private class SlideshowTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            for(int i = 0; i < pictures.size(); i++) {
-                final int finalI = i;
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setNewPicture(finalI);
-                    }
-                });
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
+        if (mPlace == null) {
+            Toast.makeText(
+                    this,
+                    "Did not receive a place",
+                    Toast.LENGTH_SHORT
+            ).show();
+            finish();
         }
+
+        PictureDownloader downloader = new SlideshowPictureDownloader(getCacheDir());
+        PictureRequestTask pictureRequestTask = new PictureRequestTask(downloader);
+        pictureRequestTask.execute(new PictureRequest(this, mPlace));
     }
 
     /**
      * Replace the currently displayed picture with the one with the given index.
-     * @param index Index of the picture in the {@link #pictures} list
+     * @param index Index of the picture in the {@link #mPictures} list
      */
     private void setNewPicture(int index) {
         RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(this).inflate(
@@ -126,12 +100,78 @@ public class Slideshow extends Activity {
         mContainerView.addView(relativeLayout, 0);
     }
 
-    private void hideProgressBar() {
-        mProgressBar.setVisibility(View.GONE);
+    private Bitmap getBitmapForIndex(int idx) {
+        String file = mPictures.get(idx).getCachedFile().getPath();
+        return BitmapFactory.decodeFile(file);
     }
 
-    private Bitmap getBitmapForIndex(int idx) {
-        String file = pictures.get(idx).getCachedFile().getPath();
-        return BitmapFactory.decodeFile(file);
+    /**
+     * A background task for requesting all the available pictures for the current place.
+     */
+    private class PictureRequestTask extends AsyncTask<PictureRequest, Void, List<Picture>> {
+        private final PictureDownloader downloader;
+
+        public PictureRequestTask(PictureDownloader downloader) {
+            this.downloader = downloader;
+        }
+
+        @Override
+        protected List<Picture> doInBackground(PictureRequest... params) {
+            // FIXME: Check for null, if yes, display error and exit
+            return params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
+        }
+
+        @Override
+        protected void onPostExecute(List<Picture> pictures) {
+            mPictures = pictures;
+            mProgressBar.setMax(mPictures.size());
+            downloader.execute(mPictures.toArray(new Picture[mPictures.size()]));
+        }
+    }
+
+    /**
+     * A background task for downloading the given pictures
+     * and, when finished, starting the slideshow.
+     */
+    private class SlideshowPictureDownloader extends PictureDownloader {
+        public SlideshowPictureDownloader(File targetDirectory) {
+            super(targetDirectory);
+        }
+
+        @Override
+        protected void onProgressUpdate(Progress... values) {
+            if (values.length > 0)
+                mProgressBar.setProgress(values[0].getCurrent());
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mProgressBar.setVisibility(View.GONE);
+            new SlideshowTask().executeOnExecutor(THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    /**
+     * A background task for animating the transition between images.
+     */
+    private class SlideshowTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            for(int i = 0; i < mPictures.size(); i++) {
+                final int finalI = i;
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setNewPicture(finalI);
+                    }
+                });
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
     }
 }
