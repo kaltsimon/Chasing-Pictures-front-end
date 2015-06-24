@@ -13,43 +13,39 @@
         android:layout_height="match_parent"
         mapbox:accessToken="@string/access_mb" />
 
-
-    <ImageView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/imageSearch"
-        android:src="@drawable/rathaus"
-        android:scaleType="fitEnd"
-        android:adjustViewBounds="true"
-        android:visibility="visible"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="23m"
-        android:id="@+id/buttonDistance"
-        android:background="@color/text_error_color"
-        android:layout_gravity="right"
-        android:layout_above="@id/imageSearch"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="false"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonUp"
+            android:text="23"
+            android:background="@drawable/distanz_angabe"
+            android:layout_gravity="right"
+            android:onClick="pictureOverlay"/>
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="8dp"
-        android:id="@+id/buttonUp"
-        android:text=""
-        android:background="@color/background_material_dark"
-        android:layout_gravity="right"
-        android:layout_above="@id/buttonDistance"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        <Button
+            style="@style/ButtonLine"
+            android:layout_width="match_parent"
+            android:layout_height="10dip"
+            android:id="@+id/buttonDistance"
+            android:layout_gravity="right"
+            android:onClick="pictureOverlay"/>
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageSearch"
+            android:src="@drawable/rathaus"
+            android:scaleType="fitEnd"
+            android:adjustViewBounds="true"
+            android:visibility="gone"
+            android:onClick="pictureOverlay"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

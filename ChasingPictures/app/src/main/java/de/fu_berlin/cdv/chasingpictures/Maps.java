@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,7 +36,7 @@ public class Maps extends Activity {
     private String satellite = "brunosan.map-cyglrrfu";
     private String street = "examples.map-i87786ca";
     private String terrain = "examples.map-zgrqqx0w";
-    private String mMap = "miriwie.mf62fb97";
+    private String mMap = "miriwie.130123ed";
     private String currentLayer = "";
     private LatLng berlin =  new LatLng(52.513578, 13.415124);
     private Place place;
@@ -135,4 +136,13 @@ public class Maps extends Activity {
         mv.setZoom(10);
     }
 
+    public void pictureOverlay(View view){
+        ImageView iv = (ImageView) findViewById(R.id.imageSearch);
+        if (iv.getVisibility() == View.VISIBLE){
+            iv.setVisibility(View.GONE);
+        }
+        if (iv.getVisibility() == View.GONE){
+            iv.setVisibility(View.VISIBLE);
+        }
+    }
 }
