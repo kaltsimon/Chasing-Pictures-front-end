@@ -9,6 +9,8 @@ import android.view.View;
 /**
  * This activity presents a page where the user can choose to
  * either log in or register a new account.
+ *
+ * @author Simon Kalt
  */
 public class LoginPage extends Activity {
     public static final String TAG = "LoginPage";
