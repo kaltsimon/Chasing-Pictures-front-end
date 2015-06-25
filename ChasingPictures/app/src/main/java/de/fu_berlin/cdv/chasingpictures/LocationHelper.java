@@ -14,22 +14,29 @@ import com.google.android.gms.location.LocationServices;
 import java.util.HashSet;
 
 /**
- * A class that makes access to Google's Location API easier.
+ * A class that makes access to Google's Location API easier.<br>
  * Usage:
- *      Subclass this class and implement the method {@link com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks#onConnected(Bundle)}.
- *      There you can request location updates.
+ * <ol>
+ * <li>Subclass this class and implement the method {@link com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks#onConnected(Bundle)}.</li>
+ * <li>Request location updates in that callback method.</li>
+ * <li>Create an instance and connect like this:
+ * <pre><code>
+ * new MyLocationHelper()
+ *      .buildGoogleApiClient(getApplicationContext())
+ *      .connect();
+ * </code></pre></li>
+ * </ol>
  *
- *      Then create an instance and connect like this:
- *      <code>
- *          new MyLocationHelper()
- *               .buildGoogleApiClient(getApplicationContext())
- *               .connect();
- *      </code>
  * @author Simon Kalt
  */
 public abstract class LocationHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "LocationHelper";
 
+    /**
+     * Different values for the accuracy of a location request.
+     * See the <a href="https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest">Google Documentation</a>
+     * for details.
+     */
     public enum Accuracy {
         HIGH(LocationRequest.PRIORITY_HIGH_ACCURACY),
         BALANCED_POWER(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY),
@@ -43,12 +50,25 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
         }
     }
 
+    /**
+     * The standard value for the interval in which to receive location updates (5 seconds).
+     */
     public static final int STD_INTERVAL = 5000;
+
+    /**
+     * The standard value for the smallest interval in which to receive location updates (1 second).
+     */
     public static final int STD_FASTEST_INTERVAL = 1000;
 
     protected GoogleApiClient mGoogleApiClient;
     protected HashSet<LocationListener> listeners;
 
+    /**
+     * Build the Google API client.
+     *
+     * @param context The current context.
+     * @return The object itself for method-chaining.
+     */
     public synchronized LocationHelper buildGoogleApiClient(Context context) {
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
@@ -58,21 +78,41 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
         return this;
     }
 
+    /**
+     * Connect to the Google API client.
+     * Be sure to call {@link #buildGoogleApiClient(Context)} first,
+     * otherwise this method does nothing.
+     *
+     * @return The object itself for method-chaining.
+     */
     public LocationHelper connect() {
         if (mGoogleApiClient != null)
             mGoogleApiClient.connect();
         return this;
     }
 
+    /**
+     * Returns the Google API client, if available.
+     */
     public GoogleApiClient getGoogleApiClient() {
         return mGoogleApiClient;
     }
 
+    /**
+     * Returns the last known location known to the {@link LocationServices#FusedLocationApi}.
+     */
     public Location getLastLocation() {
         return LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
     }
 
     //region Starting and stopping location updates
+
+    /**
+     * Start location updates.
+     *
+     * @param request  A location request, for example created with {@link #makeLocationRequest()}.
+     * @param listener A location listener to call, when an update comes in.
+     */
     public void startLocationUpdates(LocationRequest request, LocationListener listener) {
         addListener(listener);
         LocationServices.FusedLocationApi.requestLocationUpdates(
@@ -82,6 +122,11 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
         );
     }
 
+    /**
+     * Stop location updates for the given listener.
+     *
+     * @param listener Listener to stop updates for.
+     */
     public void stopLocationUpdates(LocationListener listener) {
         if (listeners != null)
             listeners.remove(listener);
@@ -92,6 +137,9 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
         );
     }
 
+    /**
+     * Stop location updates on all registered listeners.
+     */
     public void stopAllLocationUpdates() {
         if (listeners != null) {
             for (LocationListener listener : listeners) {
@@ -106,11 +154,14 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
     //endregion
 
     //region Constructing location requests
+
     /**
      * Constructs a standard location request with the following parameters:
-     * - Interval: {@link #STD_INTERVAL}
-     * - Fastest Interval: {@link #STD_FASTEST_INTERVAL}
-     * - Accuracy: {@link de.fu_berlin.cdv.chasingpictures.LocationHelper.Accuracy#HIGH}
+     * <ul>
+     * <li>Interval to receive updates in (ms): {@link #STD_INTERVAL}</li>
+     * <li>Fastest interval to receive updates in (ms): {@link #STD_FASTEST_INTERVAL}</li>
+     * <li>Accuracy: {@link de.fu_berlin.cdv.chasingpictures.LocationHelper.Accuracy#HIGH}</li>
+     * </ul>
      */
     public static LocationRequest makeLocationRequest() {
         return makeLocationRequest(STD_INTERVAL, STD_FASTEST_INTERVAL, Accuracy.HIGH);
@@ -118,9 +169,10 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
 
     /**
      * Constructs a location request with the supplied parameters.
-     * @param interval Interval (in milliseconds) to receive updates in
+     *
+     * @param interval        Interval (in milliseconds) to receive updates in
      * @param fastestInterval Fastest interval in which you want to handle updates
-     * @param accuracy The accuracy with which to receive updates
+     * @param accuracy        The accuracy with which to receive updates
      */
     public static LocationRequest makeLocationRequest(int interval, int fastestInterval, Accuracy accuracy) {
         return new LocationRequest()
@@ -131,6 +183,12 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
     //endregion
 
     //region Internals
+
+    /**
+     * Add a listener to the local reference of listeners.
+     *
+     * @param listener Listener to add
+     */
     private void addListener(LocationListener listener) {
         if (listeners == null)
             listeners = new HashSet<>();
@@ -138,6 +196,11 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
         listeners.add(listener);
     }
 
+    /**
+     * Remove a listener from the local reference of listeners.
+     *
+     * @param listener Listener to removeg
+     */
     private void removeListener(LocationListener listener) {
         if (listener != null)
             listeners.remove(listener);
