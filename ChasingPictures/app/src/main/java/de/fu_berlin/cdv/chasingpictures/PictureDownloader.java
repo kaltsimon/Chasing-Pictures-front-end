@@ -1,6 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -27,9 +28,11 @@ public class PictureDownloader extends AsyncTask<Picture, PictureDownloader.Prog
 
     @Override
     protected Void doInBackground(Picture... params) {
-        Progress progress = new Progress(params.length);
+        int count = 0;
 
         for (Picture picture : params) {
+            final Progress progress = new Progress(count, null);
+
             if (isCancelled())
                 return null;
 
@@ -49,9 +52,11 @@ public class PictureDownloader extends AsyncTask<Picture, PictureDownloader.Prog
             } catch (IOException e) {
                 Log.e(TAG, Log.getStackTraceString(e));
                 picture.setCachedFile(null);
+                progress.setException(e);
             }
 
-            publishProgress(progress.advance());
+            publishProgress(progress);
+            count++;
         }
         return null;
     }
@@ -106,26 +111,45 @@ public class PictureDownloader extends AsyncTask<Picture, PictureDownloader.Prog
         }
     }
 
+    /**
+     * Class indicating the progress of downloading.
+     * If an exception happened, it can be retrieved using {@link #getException()}.
+     */
     public static class Progress {
-        protected int current;
-        public final int max;
+        private final int state;
+        @Nullable
+        private Throwable exception;
 
-        public Progress(int max) {
-            this.max = max;
-            this.current = 0;
+        public Progress(int state) {
+            this.state = state;
         }
 
-        public Progress advance() {
-            current++;
-            return this;
+        public Progress(int state, @Nullable Throwable exception) {
+            this.state = state;
+            this.exception = exception;
         }
 
-        public double getPercent() {
-            return (100.0 * current) / max;
+        public int getState() {
+            return state;
         }
 
+        @Deprecated
         public int getCurrent() {
-            return current;
+            return state;
+        }
+
+        /**
+         * Returns the exception published with this progress update.
+         *
+         * @return A {@link Throwable} describing the error, or {@code null} if no exception occurred.
+         */
+        @Nullable
+        public Throwable getException() {
+            return exception;
+        }
+
+        public void setException(@Nullable Throwable exception) {
+            this.exception = exception;
         }
     }
 }
