@@ -127,7 +127,7 @@ public class Access {
     /**
      * Salts and hashes the given password.
      */
-    public String saltAndHash(Context context, String password) {
+    public static String saltAndHash(Context context, String password) {
         // TODO: actually do something
         return password;
     }
