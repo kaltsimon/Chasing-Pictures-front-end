@@ -1,23 +1,14 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import de.fu_berlin.cdv.chasingpictures.api.LoginApiResult;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRequest;
-import de.fu_berlin.cdv.chasingpictures.api.UserData;
+import de.fu_berlin.cdv.chasingpictures.api.LoginRequestTask;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
-import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 
 public class LoginForm extends Activity {
@@ -57,37 +48,7 @@ public class LoginForm extends Activity {
         passwordString = Access.saltAndHash(this, passwordString);
 
         LoginRequest loginRequest = LoginRequest.makeLoginRequest(this, emailString, passwordString);
-        LoginRequestTask loginRequestTask = new LoginRequestTask();
+        LoginRequestTask loginRequestTask = LoginRequestTask.makeLoginTask(this);
         loginRequestTask.execute(loginRequest);
-    }
-
-    private class LoginRequestTask extends AsyncTask<LoginRequest, Void, ResponseEntity<LoginApiResult>> {
-
-        @Override
-        protected ResponseEntity<LoginApiResult> doInBackground(LoginRequest... params) {
-            return params.length > 0 ? params[0].sendRequest() : null;
-        }
-
-        @Override
-        protected void onPostExecute(ResponseEntity<LoginApiResult> responseEntity) {
-            if (responseEntity != null
-                    && responseEntity.getStatusCode() == HttpStatus.OK
-                    && Access.hasAccess(getApplicationContext())) {
-
-                // TODO: save user data in storage, e.g. SQLite DB
-                UserData userData = responseEntity.getBody().getData();
-
-                // Return to previous view
-                setResult(RESULT_OK);
-                finish();
-            } else {
-                if (responseEntity != null) {
-                    Log.d(TAG, "Status: " + responseEntity.getStatusCode());
-                    Log.d(TAG, "Response Body: " + responseEntity.getBody());
-                }
-                Utilities.showError(getApplicationContext(), R.string.login_fail);
-            }
-
-        }
     }
 }
