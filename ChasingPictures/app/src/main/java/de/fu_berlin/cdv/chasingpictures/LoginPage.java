@@ -13,7 +13,6 @@ import android.view.View;
  * @author Simon Kalt
  */
 public class LoginPage extends Activity {
-    public static final String TAG = "LoginPage";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
