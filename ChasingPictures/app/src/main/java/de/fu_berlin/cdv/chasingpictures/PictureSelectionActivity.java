@@ -168,7 +168,7 @@ public class PictureSelectionActivity extends Activity {
     }
 
     private boolean checkAndFixIndex() {
-        if (places == null || places.size() == 0)
+        if (places == null || places.isEmpty())
             return false;
 
         // Fix the index, if necessary
