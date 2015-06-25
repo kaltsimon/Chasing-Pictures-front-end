@@ -155,7 +155,6 @@ public class PictureSelectionActivity extends Activity {
             }
 
             // Download the pictures
-            // TODO: Somehow show progress?
             new MyPictureDownloader().execute(pictures);
         }
     }
@@ -167,8 +166,8 @@ public class PictureSelectionActivity extends Activity {
             if (cachedFile != null) {
                 Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
                 mImageView.setImageBitmap(bitmap);
-                mImageView.setVisibility(View.VISIBLE);
                 mImageProgressBar.setVisibility(View.GONE);
+                mImageView.setVisibility(View.VISIBLE);
             }
         }
         else {
