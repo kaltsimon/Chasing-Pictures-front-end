@@ -62,12 +62,10 @@ public class PictureDownloader extends AsyncTask<Picture, PictureDownloader.Prog
                 picture.setCachedFile(destinationFile);
 
                 // If file already exists, (and isn't empty) skip the download.
-                if (destinationFile.exists() && destinationFile.length() > 0) {
-                    continue;
+                if (!(destinationFile.exists() && destinationFile.length() > 0)) {
+                    URL url = picture.getASCIIUrl();
+                    downloadUrlToFile(url, destinationFile);
                 }
-
-                URL url = picture.getASCIIUrl();
-                downloadUrlToFile(url, destinationFile);
             } catch (IOException e) {
                 Log.e(TAG, Log.getStackTraceString(e));
                 picture.setCachedFile(null);
