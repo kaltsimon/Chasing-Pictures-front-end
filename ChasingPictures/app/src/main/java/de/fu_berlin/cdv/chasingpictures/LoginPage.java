@@ -5,10 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
-
-import de.fu_berlin.cdv.chasingpictures.api.UserData;
-import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 
 public class LoginPage extends Activity {
