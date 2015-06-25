@@ -33,7 +33,7 @@ public abstract class Access {
         /**
          * Load the value of this header from the secure preferences.
          * @param prefs The preferences to use
-         * @return
+         * @return The stored value of the header, or {@code null} if it is not stored
          */
         public String load(SecurePreferences prefs) {
             return prefs.get(field);
@@ -43,7 +43,7 @@ public abstract class Access {
          * Store the value of this header received in the given response entity
          * in the given secure preferences.
          * @param prefs The preferences to use
-         * @param responseEntity
+         * @param responseEntity The entity received from the API
          */
         public void store(SecurePreferences prefs, ResponseEntity<?> responseEntity) {
             prefs.put(field, ApiUtil.getHeader(responseEntity, field));
@@ -52,7 +52,7 @@ public abstract class Access {
         /**
          * Gets the stored value of this header and sets it in the given HTTP headers.
          * @param prefs The preferences to use
-         * @param headers
+         * @param headers The headers to be sent to the API
          */
         public void loadAndSet(SecurePreferences prefs, HttpHeaders headers) {
             headers.set(field, load(prefs));
@@ -93,8 +93,8 @@ public abstract class Access {
 
     /**
      * Stores the received access information in the application
-     * @param context
-     * @param responseEntity
+     * @param context The current context
+     * @param responseEntity The response received from the API request
      */
     public static void setAccess(Context context, ResponseEntity<?> responseEntity) {
         SecurePreferences prefs = getSecurePreferences(context);
@@ -106,8 +106,8 @@ public abstract class Access {
     /**
      * Retrieves the saved access information and puts it in
      * the given HTTP headers.
-     * @param context
-     * @param headers
+     * @param context The current context
+     * @param headers The HTTP headers to be sent to the API
      */
     public static void getAccess(Context context, HttpHeaders headers) {
         SecurePreferences prefs = getSecurePreferences(context);
