@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,6 +29,7 @@ import de.fu_berlin.cdv.chasingpictures.api.LocationRequest;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.api.PlacesApiResult;
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 
 public class PictureSelectionActivity extends Activity {
@@ -78,56 +81,63 @@ public class PictureSelectionActivity extends Activity {
 
             LocationRequest request = new LocationRequest(getApplicationContext(), params[0]);
             ResponseEntity<PlacesApiResult> result = request.sendRequest();
-            List<Place> places = result.getBody().getPlaces();
-
-            if (places != null && places.size() > 0) {
-                // Since we have places now, deregister the listener
-                mLocationHelper.stopLocationUpdates(placeFinderListener);
-                // And register the distance calculator
-                LocationServices.FusedLocationApi.requestLocationUpdates(
-                        mLocationHelper.getGoogleApiClient(),
-                        LocationHelper.makeLocationRequest(),
-                        distanceCalculatorListener,
-                        getMainLooper() // We need to do this on the Main looper, otherwise our application will crash
-                );
-
-                // Download the first picture and update the image view
-                // as soon as we have it.
-                new PictureDownloader(getCacheDir()) {
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        updatePicture();
-                        showDelayedPlaceInfo(currentPlace);
-                    }
-                }.execute();
-
-                // Download the rest of the pictures
-                Picture[] pictures = new Picture[places.size()];
-                for (int i = 0; i < places.size(); i++) {
-                    pictures[i] = places.get(i).getPicture();
-                }
-
-                new PictureDownloader(getCacheDir())
-                        .execute(pictures);
-            }
-
-            return places;
+            return result.getBody().getPlaces();
         }
 
         @Override
         protected void onPostExecute(List<Place> resultPlaces) {
-            if (resultPlaces != null)
-                places = resultPlaces;
-            updatePicture();
-            showDelayedPlaceInfo(currentPlace);
+            if (resultPlaces == null || resultPlaces.isEmpty()) {
+                Utilities.showError(getApplicationContext(), "No places found nearby");
+                finish();
+                return;
+            }
+            places = resultPlaces;
+
+            // Since we have places now, de-register the listener
+            mLocationHelper.stopLocationUpdates(placeFinderListener);
+            // And register the distance calculator
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mLocationHelper.getGoogleApiClient(),
+                    LocationHelper.makeLocationRequest(),
+                    distanceCalculatorListener
+            );
+
+            // Download the first picture and update the image view as soon as we have it.
+            // TODO: Put in inner class
+            new PictureDownloader(getCacheDir(), true) {
+                @Override
+                protected void handleProgressUpdate(@NonNull Progress progress) {
+
+                }
+
+                @Override
+                protected void handleException(@Nullable Throwable exception) {
+                    super.handleException(exception);
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    updatePicture();
+                    showDelayedPlaceInfo(currentPlace);
+                }
+            }.execute(places.get(0).getFirstPicture());
+
+            // Collect the pictures
+            Picture[] pictures = new Picture[places.size()];
+            for (int i = 0; i < places.size(); i++) {
+                pictures[i] = places.get(i).getFirstPicture();
+            }
+
+            // Download the rest of the pictures
+            // TODO: Somehow show progress?
+            new PictureDownloader(getCacheDir()).execute(pictures);
         }
     }
 
     private class PictureViewLocationHelper extends LocationHelper {
         @Override
         public void onConnected(Bundle connectionHint) {
-            if (Debug.isDebuggerConnected())
-                Log.i(TAG, "Connected to Google API services.");
+            Log.d(TAG, "Connected to Google API services.");
 
             startLocationUpdates(
                     makeLocationRequest(),
@@ -138,18 +148,14 @@ public class PictureSelectionActivity extends Activity {
 
     private void updatePicture() {
         if (checkAndFixIndex()) {
-            File cachedFile = places.get(currentPlace).getPicture().getCachedFile();
+            File cachedFile = places.get(currentPlace).getFirstPicture().getCachedFile();
             if (cachedFile != null) {
                 Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
                 mImageView.setImageBitmap(bitmap);
             }
         }
         else {
-            Toast.makeText(
-                    this,
-                    "No places found nearby",
-                    Toast.LENGTH_SHORT
-            ).show();
+            Log.e(TAG, "No places available");
         }
     }
 
