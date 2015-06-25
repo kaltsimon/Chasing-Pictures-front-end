@@ -118,6 +118,7 @@ public class PictureSelectionActivity extends Activity {
             }
 
             places = resultPlaces;
+            checkAndFixIndex();
 
             // Since we have places now, de-register the listener
             mLocationHelper.stopLocationUpdates(placeFinderListener);
