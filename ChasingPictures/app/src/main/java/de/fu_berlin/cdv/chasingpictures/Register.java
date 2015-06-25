@@ -18,6 +18,7 @@ import de.fu_berlin.cdv.chasingpictures.api.ApiErrors;
 import de.fu_berlin.cdv.chasingpictures.api.LoginApiResult;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRequest;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 
 public class Register extends Activity {
@@ -79,33 +80,29 @@ public class Register extends Activity {
 
         @Override
         protected void onPostExecute(ResponseEntity<LoginApiResult> responseEntity) {
-            // TODO: Check for null!
-            LoginApiResult apiResult = responseEntity.getBody();
-
-            if (responseEntity.getStatusCode() == HttpStatus.OK
+            if (responseEntity != null
+                    && responseEntity.getStatusCode() == HttpStatus.OK
                     && Access.hasAccess(getApplicationContext())) {
-
                 setResult(RESULT_OK);
                 finish();
             } else {
-                final ApiErrors errors = (ApiErrors) apiResult.getErrors();
-                if (!errors.getErrorMessages().isEmpty()) {
-                    for (Map.Entry<String, List<String>> entry : errors.getErrorMessages().entrySet()) {
-                        String key = entry.getKey();
-                        if (key.equals(getString(R.string.api_error_email))) {
-                            ((EditText) findViewById(R.id.LoginEmailAddress)).setError(entry.getValue().get(0));
-                        } else if (key.equals(getString(R.string.api_error_password))) {
-                            ((EditText) findViewById(R.id.LoginPassword)).setError(entry.getValue().get(0));
-                        } else if (key.equals(getString(R.string.api_error_username))) {
-                            ((EditText) findViewById(R.id.LoginUsername)).setError(entry.getValue().get(0));
+                try {
+                    final ApiErrors errors = (ApiErrors) responseEntity.getBody().getErrors();
+                    if (!errors.getErrorMessages().isEmpty()) {
+                        for (Map.Entry<String, List<String>> entry : errors.getErrorMessages().entrySet()) {
+                            String key = entry.getKey();
+                            if (key.equals(getString(R.string.api_error_email))) {
+                                ((EditText) findViewById(R.id.LoginEmailAddress)).setError(entry.getValue().get(0));
+                            } else if (key.equals(getString(R.string.api_error_password))) {
+                                ((EditText) findViewById(R.id.LoginPassword)).setError(entry.getValue().get(0));
+                            } else if (key.equals(getString(R.string.api_error_username))) {
+                                ((EditText) findViewById(R.id.LoginUsername)).setError(entry.getValue().get(0));
+                            }
                         }
                     }
-                }
-                Toast.makeText(
-                        getApplicationContext(),
-                        R.string.registration_fail,
-                        Toast.LENGTH_SHORT
-                ).show();
+                } catch (NullPointerException ex) {}
+
+                Utilities.showError(getApplicationContext(), R.string.registration_fail);
             }
         }
     }
