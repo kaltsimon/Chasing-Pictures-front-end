@@ -72,6 +72,31 @@ public class PictureSelectionActivity extends Activity {
         mImageView.setOnClickListener(new ClickListener());
     }
 
+    private class MyPictureDownloader extends PictureDownloader {
+        public MyPictureDownloader() {
+            super(getCacheDir(), true);
+        }
+
+        @Override
+        protected void handleProgressUpdate(@NonNull Progress progress) {
+            if (progress.getState() == currentPlace) {
+                updatePicture();
+                showDelayedPlaceInfo(currentPlace);
+            }
+        }
+
+        @Override
+        protected void handleException(@Nullable Throwable exception) {
+            super.handleException(exception);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            updatePicture();
+            showDelayedPlaceInfo(currentPlace);
+        }
+    }
+
     private class LocationTask extends AsyncTask<Location, Object, List<Place>> {
 
         @Override
@@ -91,10 +116,12 @@ public class PictureSelectionActivity extends Activity {
                 finish();
                 return;
             }
+
             places = resultPlaces;
 
             // Since we have places now, de-register the listener
             mLocationHelper.stopLocationUpdates(placeFinderListener);
+
             // And register the distance calculator
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mLocationHelper.getGoogleApiClient(),
@@ -102,35 +129,15 @@ public class PictureSelectionActivity extends Activity {
                     distanceCalculatorListener
             );
 
-            // Download the first picture and update the image view as soon as we have it.
-            // TODO: Put in inner class
-            new PictureDownloader(getCacheDir(), true) {
-                @Override
-                protected void handleProgressUpdate(@NonNull Progress progress) {
-
-                }
-
-                @Override
-                protected void handleException(@Nullable Throwable exception) {
-                    super.handleException(exception);
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    updatePicture();
-                    showDelayedPlaceInfo(currentPlace);
-                }
-            }.execute(places.get(0).getFirstPicture());
-
             // Collect the pictures
             Picture[] pictures = new Picture[places.size()];
             for (int i = 0; i < places.size(); i++) {
                 pictures[i] = places.get(i).getFirstPicture();
             }
 
-            // Download the rest of the pictures
+            // Download the pictures
             // TODO: Somehow show progress?
-            new PictureDownloader(getCacheDir()).execute(pictures);
+            new MyPictureDownloader().execute(pictures);
         }
     }
 
