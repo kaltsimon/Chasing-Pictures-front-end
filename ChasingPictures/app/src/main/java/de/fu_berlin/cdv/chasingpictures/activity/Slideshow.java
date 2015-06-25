@@ -8,13 +8,16 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+
+import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 import java.util.List;
@@ -25,6 +28,8 @@ import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.PictureRequest;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
+import de.fu_berlin.cdv.chasingpictures.api.PlacesApiResult;
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 /**
  * Display a slideshow of all the pictures for a place.
@@ -33,12 +38,16 @@ import de.fu_berlin.cdv.chasingpictures.api.Place;
  */
 public class Slideshow extends Activity {
 
+    private static final String TAG = "SlideshowActivity";
     protected List<Picture> mPictures;
     private ProgressBar mProgressBar;
     private ViewGroup mContainerView;
     private RelativeLayout currentImageLayout;
     private Handler mHandler;
     private Place mPlace;
+    private SlideshowTask mSlideshowTask;
+    private PictureDownloader mDownloader;
+    private PictureRequestTask mPictureRequestTask;
 
     /**
      * Creates an {@link Intent} for a slideshow using the given place.
@@ -63,21 +72,38 @@ public class Slideshow extends Activity {
         mPlace = (Place) getIntent().getSerializableExtra(Maps.EXTRA_PLACE);
 
         if (mPlace == null) {
-            Toast.makeText(
-                    this,
-                    "Did not receive a place",
-                    Toast.LENGTH_SHORT
-            ).show();
+            Utilities.showError(this, "Did not receive a place");
+            setResult(RESULT_CANCELED);
             finish();
         }
 
-        PictureDownloader downloader = new SlideshowPictureDownloader(getCacheDir());
-        PictureRequestTask pictureRequestTask = new PictureRequestTask(downloader);
-        pictureRequestTask.execute(new PictureRequest(this, mPlace));
+        mDownloader = new SlideshowPictureDownloader(getCacheDir());
+        mPictureRequestTask = new PictureRequestTask(mDownloader);
+        mPictureRequestTask.execute(new PictureRequest(this, mPlace));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // TODO: Resume slideshow, if possible
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Cancel anything still running
+
+        if (mDownloader != null)
+            mDownloader.cancel(true);
+
+        if (mSlideshowTask != null)
+            mSlideshowTask.cancel(true);
     }
 
     /**
-     * Replace the currently displayed picture with the one with the given index.
+     * Replace the currently displayed picture with the one at the given index.
+     *
      * @param index Index of the picture in the {@link #mPictures} list
      */
     private void setNewPicture(int index) {
@@ -100,9 +126,30 @@ public class Slideshow extends Activity {
         mContainerView.addView(relativeLayout, 0);
     }
 
-    private Bitmap getBitmapForIndex(int idx) {
-        String file = mPictures.get(idx).getCachedFile().getPath();
-        return BitmapFactory.decodeFile(file);
+    /**
+     * Return the bitmap at the given index of available pictures.
+     *
+     * @param index Index of the picture
+     * @return A bitmap of the picture or {@code null} if an error occurred.
+     */
+    @Nullable
+    private Bitmap getBitmapForIndex(int index) {
+        Bitmap bitmap = null;
+        try {
+            Picture picture = mPictures.get(index);
+            File cachedFile = picture.getCachedFile();
+            String filePath = cachedFile.getPath();
+            bitmap = BitmapFactory.decodeFile(filePath);
+
+            if (bitmap == null)
+                throw new NullPointerException("File " + filePath + " could not be read.");
+
+        } catch (NullPointerException | IndexOutOfBoundsException ex) {
+            Log.e(TAG, "Could not read picture at slideshow index " + index + ".", ex);
+            Utilities.showError(this, String.format("Photo %d unavailable", index));
+        }
+
+        return bitmap;
     }
 
     /**
@@ -117,15 +164,35 @@ public class Slideshow extends Activity {
 
         @Override
         protected List<Picture> doInBackground(PictureRequest... params) {
-            // FIXME: Check for null, if yes, display error and exit
-            return params[0].sendRequest().getBody().getPlaces().get(0).getPictures();
+            if (params.length == 0)
+                return null;
+
+            List<Picture> pictures = null;
+            try {
+                ResponseEntity<PlacesApiResult> responseEntity = params[0].sendRequest();
+                PlacesApiResult body = responseEntity.getBody();
+                List<Place> places = body.getPlaces();
+                Place place = places.get(0);
+                pictures = place.getPictures();
+            } catch (NullPointerException | IndexOutOfBoundsException ex) {
+                Log.e(TAG, "Did not receive any pictures", ex);
+            }
+
+            return pictures;
         }
 
         @Override
         protected void onPostExecute(List<Picture> pictures) {
-            mPictures = pictures;
-            mProgressBar.setMax(mPictures.size());
-            downloader.execute(mPictures.toArray(new Picture[mPictures.size()]));
+            if (pictures == null) {
+                // We have no reason to stay here...
+                Utilities.showError(getApplicationContext(), "Did not receive any pictures");
+                finish();
+            }
+            else {
+                mPictures = pictures;
+                mProgressBar.setMax(mPictures.size());
+                downloader.execute(mPictures.toArray(new Picture[mPictures.size()]));
+            }
         }
     }
 
@@ -147,7 +214,8 @@ public class Slideshow extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             mProgressBar.setVisibility(View.GONE);
-            new SlideshowTask().executeOnExecutor(THREAD_POOL_EXECUTOR);
+            mSlideshowTask = new SlideshowTask();
+            mSlideshowTask.execute();
         }
     }
 
@@ -158,6 +226,9 @@ public class Slideshow extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
             for(int i = 0; i < mPictures.size(); i++) {
+                if (isCancelled())
+                    return null;
+
                 final int finalI = i;
                 mHandler.post(new Runnable() {
                     @Override
@@ -165,10 +236,11 @@ public class Slideshow extends Activity {
                         setNewPicture(finalI);
                     }
                 });
+
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Could not sleep.", e);
                 }
             }
             return null;
