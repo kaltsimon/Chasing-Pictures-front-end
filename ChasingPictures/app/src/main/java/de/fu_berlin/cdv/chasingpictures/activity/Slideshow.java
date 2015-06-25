@@ -146,7 +146,7 @@ public class Slideshow extends Activity {
 
         } catch (NullPointerException | IndexOutOfBoundsException ex) {
             Log.e(TAG, "Could not read picture at slideshow index " + index + ".", ex);
-            Utilities.showError(this, String.format("Photo %d unavailable", index));
+            Utilities.showError(this, "Photo %d unavailable", index);
         }
 
         return bitmap;
