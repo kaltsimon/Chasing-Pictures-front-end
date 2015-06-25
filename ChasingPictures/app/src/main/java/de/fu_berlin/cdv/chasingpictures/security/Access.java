@@ -5,8 +5,6 @@ import android.content.Context;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Date;
-
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
 
@@ -18,7 +16,7 @@ import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
  *
  * @author Simon Kalt
  */
-public class Access {
+public abstract class Access {
 
     public enum Headers {
         ACCESS_TOKEN("Access-Token"),
