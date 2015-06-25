@@ -59,6 +59,19 @@ public class PictureSelectionActivity extends Activity {
         }
     };
 
+    private class PictureViewLocationHelper extends LocationHelper {
+        @Override
+        public void onConnected(Bundle connectionHint) {
+            Log.d(TAG, "Connected to Google API services.");
+
+            // TODO: Find sensible values for location updates, i.e. when do we want to search for new places
+            startLocationUpdates(
+                    makeLocationRequest(),
+                    placeFinderListener
+            );
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,17 +160,6 @@ public class PictureSelectionActivity extends Activity {
         }
     }
 
-    private class PictureViewLocationHelper extends LocationHelper {
-        @Override
-        public void onConnected(Bundle connectionHint) {
-            Log.d(TAG, "Connected to Google API services.");
-
-            startLocationUpdates(
-                    makeLocationRequest(),
-                    placeFinderListener
-            );
-        }
-    }
 
     private void updatePicture() {
         if (checkAndFixIndex()) {
