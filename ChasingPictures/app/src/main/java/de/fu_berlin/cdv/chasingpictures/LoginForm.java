@@ -56,7 +56,7 @@ public class LoginForm extends Activity {
             return;
         }
 
-        // TODO: salt & hash password?!
+        passwordString = Access.saltAndHash(this, passwordString);
 
         LoginRequest loginRequest = LoginRequest.makeLoginRequest(this, emailString, passwordString);
         LoginRequestTask loginRequestTask = new LoginRequestTask();

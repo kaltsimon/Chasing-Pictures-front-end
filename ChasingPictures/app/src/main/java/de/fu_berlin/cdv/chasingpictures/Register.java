@@ -63,7 +63,7 @@ public class Register extends Activity {
             return;
         }
 
-        // TODO: salt & hash password?!
+        passwordString = Access.saltAndHash(this, passwordString);
 
         LoginRequest registrationRequest = LoginRequest.makeRegistrationRequest(this, usernameString, emailString, passwordString);
         RegistrationRequestTask requestTask = new RegistrationRequestTask();
