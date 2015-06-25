@@ -10,48 +10,44 @@ import android.widget.Toast;
  * @author Simon Kalt
  */
 public class Utilities {
-
     /**
      *
      * @param context The current context
-     * @param message The message to be displayed
-     * @deprecated Use {@link #showError(Context, int)} if possible.
+     * @param formatString The message to be displayed
+     * @param args Arguments to be formatted into the string
+     * @deprecated Use {@link #showError(Context, int, Object...)} if possible.
      */
     @Deprecated
-    public static void showError(Context context, String message) {
+    public static void showError(Context context, String formatString, Object... args) {
         Toast.makeText(
                 context,
-                message,
+                String.format(formatString, args),
                 Toast.LENGTH_SHORT
         ).show();
     }
 
     /**
      * Displays an error to the user.
-     * Currently does the same thing as {@link #showToast(Context, int)} but
+     * Currently does the same thing as {@link #showToast(Context, int, Object...)} but
      * could later be changed to look differently.
-     *
      * @param context The current context
      * @param resID A string resource to be displayed
+     * @param args Arguments to be formatted into the string
      */
-    public static void showError(Context context, @StringRes int resID) {
-        Toast.makeText(
-                context,
-                resID,
-                Toast.LENGTH_SHORT
-        ).show();
+    public static void showError(Context context, @StringRes int resID, Object... args) {
+        showToast(context, resID, args);
     }
 
     /**
      * Displays a message to the user.
-     *
      * @param context The current context
      * @param resID A string resource to be displayed
+     * @param args Arguments to be formatted into the string
      */
-    public static void showToast(Context context, @StringRes int resID) {
+    public static void showToast(Context context, @StringRes int resID, Object... args) {
         Toast.makeText(
                 context,
-                resID,
+                String.format(context.getString(resID), args),
                 Toast.LENGTH_SHORT
         ).show();
     }
