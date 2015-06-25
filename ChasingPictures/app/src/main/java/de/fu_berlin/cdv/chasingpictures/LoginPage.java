@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 
 
+/**
+ * This activity presents a page where the user can choose to
+ * either log in or register a new account.
+ */
 public class LoginPage extends Activity {
 
     public static final int LOGIN = 1;
@@ -18,11 +22,17 @@ public class LoginPage extends Activity {
         setContentView(R.layout.activity_login_page);
     }
 
+    /**
+     * On tapping the log in button, go to the log in form.
+     */
     public void showLoginForm(View view) {
         Intent intent = new Intent(this, LoginForm.class);
         startActivityForResult(intent, LOGIN);
     }
 
+    /**
+     * On tapping the register button, go to the registration form.
+     */
     public void showRegisterForm(View view) {
         Intent intent = new Intent(this, Register.class);
         startActivityForResult(intent, REGISTER);
@@ -30,6 +40,7 @@ public class LoginPage extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // If the sub-activity says that log in/registration succeeded, pass on that result
         if (resultCode == RESULT_OK) {
             setResult(RESULT_OK);
             finish();
