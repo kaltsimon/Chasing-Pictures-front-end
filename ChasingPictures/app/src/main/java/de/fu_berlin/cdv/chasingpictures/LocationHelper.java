@@ -59,7 +59,8 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
     }
 
     public LocationHelper connect() {
-        mGoogleApiClient.connect();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
         return this;
     }
 
@@ -82,7 +83,9 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
     }
 
     public void stopLocationUpdates(LocationListener listener) {
-        listeners.remove(listener);
+        if (listeners != null)
+            listeners.remove(listener);
+
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 mGoogleApiClient,
                 listener
@@ -90,13 +93,15 @@ public abstract class LocationHelper implements GoogleApiClient.ConnectionCallba
     }
 
     public void stopAllLocationUpdates() {
-        for (LocationListener listener : listeners) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(
-                    mGoogleApiClient,
-                    listener
-            );
+        if (listeners != null) {
+            for (LocationListener listener : listeners) {
+                LocationServices.FusedLocationApi.removeLocationUpdates(
+                        mGoogleApiClient,
+                        listener
+                );
+            }
+            listeners.clear();
         }
-        listeners.clear();
     }
     //endregion
 
