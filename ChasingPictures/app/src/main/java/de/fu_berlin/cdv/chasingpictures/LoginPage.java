@@ -3,7 +3,6 @@ package de.fu_berlin.cdv.chasingpictures;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 
@@ -34,9 +33,8 @@ public class LoginPage extends Activity {
         if (resultCode == RESULT_OK) {
             setResult(RESULT_OK);
             finish();
-        } else {
-            Log.d(TAG, "Log in/Register result not OK!");
-            // Do nothing
         }
+
+        // Otherwise, stay here and let the user decide what to do
     }
 }
