@@ -30,6 +30,8 @@ public class PictureDownloader extends AsyncTask<Picture, PictureDownloader.Prog
         Progress progress = new Progress(params.length);
 
         for (Picture picture : params) {
+            if (isCancelled())
+                return null;
 
             try {
                 String fileName = picture.getId() + "_" + picture.getUpdatedAt().getTime();
