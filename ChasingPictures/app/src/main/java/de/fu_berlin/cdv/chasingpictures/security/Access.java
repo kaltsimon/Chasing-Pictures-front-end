@@ -11,6 +11,11 @@ import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
 
 /**
+ * Utility class to handle API access information.
+ *
+ * Using this class, the access headers for the back end API can
+ * easily be stored and retrieved.
+ *
  * @author Simon Kalt
  */
 public class Access {
@@ -126,9 +131,14 @@ public class Access {
 
     /**
      * Salts and hashes the given password.
+     * <strong style="color: red;">Currently does not do anything!</strong>
+     *
+     * @param context Current context
+     * @param password Password to be hashed
+     * @return (eventually) salted and hashed version of the password
      */
     public static String saltAndHash(Context context, String password) {
-        // TODO: actually do something
+        // FIXME: actually do something
         return password;
     }
 }
