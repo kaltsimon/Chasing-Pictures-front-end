@@ -207,8 +207,17 @@ public class Slideshow extends Activity {
 
         @Override
         protected void onProgressUpdate(Progress... values) {
-            if (values.length > 0)
-                mProgressBar.setProgress(values[0].getCurrent());
+            if (values.length > 0) {
+                Progress progress = values[0];
+                int state = progress.getState();
+                mProgressBar.setProgress(state);
+                Throwable exception = progress.getException();
+                if (exception != null) {
+                    Log.e(TAG, "Exception during download.", exception);
+                    Utilities.showError(getApplicationContext(), "Download #%d failed.", state);
+                    // TODO: Cancel and exit?
+                }
+            }
         }
 
         @Override
