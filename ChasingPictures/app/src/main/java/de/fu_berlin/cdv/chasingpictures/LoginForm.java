@@ -17,14 +17,12 @@ import de.fu_berlin.cdv.chasingpictures.api.LoginApiResult;
 import de.fu_berlin.cdv.chasingpictures.api.LoginRequest;
 import de.fu_berlin.cdv.chasingpictures.api.UserData;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 
 public class LoginForm extends Activity {
 
     public static final String TAG = "LoginForm";
-
-    // Returned Data
-    public static final String RETURN_USER_DATA = "return_user_data";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,25 +73,19 @@ public class LoginForm extends Activity {
             if (responseEntity != null
                     && responseEntity.getStatusCode() == HttpStatus.OK
                     && Access.hasAccess(getApplicationContext())) {
-                UserData userData = responseEntity.getBody().getData();
 
                 // TODO: save user data in storage, e.g. SQLite DB
-                Intent resultData = new Intent();
-                resultData.putExtra(RETURN_USER_DATA, userData);
+                UserData userData = responseEntity.getBody().getData();
 
                 // Return to previous view
-                setResult(RESULT_OK, resultData);
+                setResult(RESULT_OK);
                 finish();
             } else {
                 if (responseEntity != null) {
                     Log.d(TAG, "Status: " + responseEntity.getStatusCode());
                     Log.d(TAG, "Response Body: " + responseEntity.getBody());
                 }
-                Toast.makeText(
-                        getApplicationContext(),
-                        R.string.login_fail,
-                        Toast.LENGTH_SHORT
-                ).show();
+                Utilities.showError(getApplicationContext(), R.string.login_fail);
             }
 
         }
