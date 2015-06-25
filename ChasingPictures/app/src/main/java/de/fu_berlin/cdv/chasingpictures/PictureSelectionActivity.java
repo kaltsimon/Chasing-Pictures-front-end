@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,9 @@ public class PictureSelectionActivity extends Activity {
     private List<Place> places;
     private int currentPlace = 0;
     private LocationHelper mLocationHelper;
+    private ProgressBar mLocationProgressBar;
+    private ProgressBar mImageProgressBar;
+
     private LocationListener placeFinderListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -47,7 +51,6 @@ public class PictureSelectionActivity extends Activity {
             new LocationTask().execute(location);
         }
     };
-
     private LocationListener distanceCalculatorListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -68,8 +71,10 @@ public class PictureSelectionActivity extends Activity {
         mSwipeDetector = new SwipeDetector();
         mImageView = (ImageView) findViewById(R.id.picture_card_image);
         mImageView.setOnTouchListener(mSwipeDetector);
-
         mImageView.setOnClickListener(new ClickListener());
+
+        mLocationProgressBar = (ProgressBar) findViewById(R.id.locationProgressBar);
+        mImageProgressBar = (ProgressBar) findViewById(R.id.imageProgressBar);
     }
 
     private class MyPictureDownloader extends PictureDownloader {
@@ -124,11 +129,11 @@ public class PictureSelectionActivity extends Activity {
             mLocationHelper.stopLocationUpdates(placeFinderListener);
 
             // And register the distance calculator
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mLocationHelper.getGoogleApiClient(),
-                    LocationHelper.makeLocationRequest(),
-                    distanceCalculatorListener
-            );
+            mLocationHelper.startLocationUpdates(LocationHelper.makeLocationRequest(), distanceCalculatorListener);
+
+            // Hide the location progress bar
+            mLocationProgressBar.setVisibility(View.GONE);
+            mImageProgressBar.setVisibility(View.VISIBLE);
 
             // Collect the pictures
             Picture[] pictures = new Picture[places.size()];
@@ -160,6 +165,8 @@ public class PictureSelectionActivity extends Activity {
             if (cachedFile != null) {
                 Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
                 mImageView.setImageBitmap(bitmap);
+                mImageView.setVisibility(View.VISIBLE);
+                mImageProgressBar.setVisibility(View.GONE);
             }
         }
         else {

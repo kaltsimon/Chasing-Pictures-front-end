@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -7,16 +7,17 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     tools:context="de.fu_berlin.cdv.chasingpictures.PictureSelectionActivity"
-    android:id="@+id/picture_selection_layout"
-    android:weightSum="1">
+    android:id="@+id/picture_selection_layout">
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:contentDescription="Picture"
         android:id="@+id/picture_card_image"
+        android:src="@drawable/rathaus"
         android:scaleType="centerInside"
-        android:layout_weight="0.50" />
+        android:visibility="invisible"
+        android:layout_alignBottom="@+id/locationProgressBar" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,7 +25,27 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text=""
         android:id="@+id/place_info"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_below="@id/picture_card_image"
+        android:layout_centerHorizontal="true" />
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/locationProgressBar"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminate="true"/>
 
-</LinearLayout>
+    <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageProgressBar"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="105dp"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+</RelativeLayout>
