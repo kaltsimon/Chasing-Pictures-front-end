@@ -32,6 +32,9 @@ public class LoginForm extends Activity {
         setContentView(R.layout.activity_login_form);
     }
 
+    /**
+     * Perform the actual log in, if the input is acceptable.
+     */
     public void doLogin(View view) {
         // Retrieve text fields
         EditText email = (EditText) findViewById(R.id.LoginEmailAddress);
@@ -57,7 +60,6 @@ public class LoginForm extends Activity {
 
         LoginRequest loginRequest = LoginRequest.makeLoginRequest(this, emailString, passwordString);
         LoginRequestTask loginRequestTask = new LoginRequestTask();
-        //noinspection unchecked
         loginRequestTask.execute(loginRequest);
     }
 
