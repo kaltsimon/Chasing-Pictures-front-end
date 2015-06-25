@@ -37,9 +37,10 @@ public class PictureDownloader extends AsyncTask<Picture, PictureDownloader.Prog
                 String fileName = picture.getId() + "_" + picture.getUpdatedAt().getTime();
                 File destinationFile = new File(targetDirectory, fileName);
 
-                // If file already exists, skip the download.
                 picture.setCachedFile(destinationFile);
-                if (destinationFile.exists()) {
+
+                // If file already exists, (and isn't empty) skip the download.
+                if (destinationFile.exists() && destinationFile.length() > 0) {
                     continue;
                 }
 
