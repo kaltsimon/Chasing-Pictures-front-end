@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -206,17 +207,17 @@ public class Slideshow extends Activity {
         }
 
         @Override
-        protected void onProgressUpdate(Progress... values) {
-            if (values.length > 0) {
-                Progress progress = values[0];
-                int state = progress.getState();
-                mProgressBar.setProgress(state);
-                Throwable exception = progress.getException();
-                if (exception != null) {
-                    Log.e(TAG, "Exception during download.", exception);
-                    Utilities.showError(getApplicationContext(), "Download #%d failed.", state);
-                    // TODO: Cancel and exit?
-                }
+        protected void handleProgressUpdate(@NonNull Progress progress) {
+            super.handleProgressUpdate(progress);
+            mProgressBar.setProgress(progress.getState());
+        }
+
+        @Override
+        protected void handleException(@Nullable Throwable exception) {
+            super.handleException(exception);
+            if (exception != null) {
+                Utilities.showError(getApplicationContext(), "Download failed.");
+                // TODO: Cancel and exit?
             }
         }
 
