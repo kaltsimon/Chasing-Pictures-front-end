@@ -28,7 +28,8 @@ import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
-    public static final int REQUEST_TAKE_PICTURE = 123411235;
+    public static final int REQUEST_LOGIN_REGISTER = 1;
+    public static final int REQUEST_TAKE_PICTURE = 2;
     private boolean triedLogin = false;
 
     @Override
@@ -44,14 +45,14 @@ public class MainActivity extends Activity {
         if (!triedLogin && !Access.hasAccess(this)) {
             triedLogin = true;
             Intent intent = new Intent(this, LoginPage.class);
-            startActivityForResult(intent, LoginPage.LOGIN);
+            startActivityForResult(intent, REQUEST_LOGIN_REGISTER);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case LoginPage.LOGIN:
+            case REQUEST_LOGIN_REGISTER:
                 if (resultCode == RESULT_OK && Access.hasAccess(this)) {
                     Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
                     findViewById(R.id.show_login_page_button).setEnabled(false);

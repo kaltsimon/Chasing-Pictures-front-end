@@ -11,9 +11,6 @@ import android.view.View;
  * either log in or register a new account.
  */
 public class LoginPage extends Activity {
-
-    public static final int LOGIN = 1;
-    public static final int REGISTER = 2;
     public static final String TAG = "LoginPage";
 
     @Override
@@ -27,7 +24,7 @@ public class LoginPage extends Activity {
      */
     public void showLoginForm(View view) {
         Intent intent = new Intent(this, LoginForm.class);
-        startActivityForResult(intent, LOGIN);
+        startActivityForResult(intent, MainActivity.REQUEST_LOGIN_REGISTER);
     }
 
     /**
@@ -35,7 +32,7 @@ public class LoginPage extends Activity {
      */
     public void showRegisterForm(View view) {
         Intent intent = new Intent(this, Register.class);
-        startActivityForResult(intent, REGISTER);
+        startActivityForResult(intent, MainActivity.REQUEST_LOGIN_REGISTER);
     }
 
     @Override
