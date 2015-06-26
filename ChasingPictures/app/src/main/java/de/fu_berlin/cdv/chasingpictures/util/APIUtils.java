@@ -1,4 +1,4 @@
-package de.fu_berlin.cdv.chasingpictures.api;
+package de.fu_berlin.cdv.chasingpictures.util;
 
 import android.content.Context;
 import android.support.annotation.StringRes;
@@ -19,7 +19,7 @@ import de.fu_berlin.cdv.chasingpictures.R;
 /**
  * @author Simon Kalt
  */
-public abstract class ApiUtil {
+public abstract class APIUtils {
 
     /**
      * Builds a basic JSON rest template for sending requests.

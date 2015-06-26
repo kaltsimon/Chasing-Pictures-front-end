@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import de.fu_berlin.cdv.chasingpictures.security.Access;
+import de.fu_berlin.cdv.chasingpictures.util.APIUtils;
 
 /**
  * Abstract class for API requests.
@@ -20,8 +21,8 @@ public abstract class ApiRequest<ResponseType> {
 
     protected ApiRequest(Context context, int endpointResID) {
         this.context = context;
-        this.apiUri = ApiUtil.getURIforEndpoint(context, endpointResID);
-        this.restTemplate = ApiUtil.buildJsonRestTemplate();
+        this.apiUri = APIUtils.getURIforEndpoint(context, endpointResID);
+        this.restTemplate = APIUtils.buildJsonRestTemplate();
         this.headers = new HttpHeaders();
     }
 

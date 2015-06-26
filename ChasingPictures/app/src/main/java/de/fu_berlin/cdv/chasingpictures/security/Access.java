@@ -6,7 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 import de.fu_berlin.cdv.chasingpictures.R;
-import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
+import de.fu_berlin.cdv.chasingpictures.util.APIUtils;
 
 /**
  * Utility class to handle API access information.
@@ -128,7 +128,7 @@ public abstract class Access {
          * @param responseEntity The entity received from the API
          */
         public void store(SecurePreferences prefs, ResponseEntity<?> responseEntity) {
-            prefs.put(field, ApiUtil.getHeader(responseEntity, field));
+            prefs.put(field, APIUtils.getHeader(responseEntity, field));
         }
 
         /**
