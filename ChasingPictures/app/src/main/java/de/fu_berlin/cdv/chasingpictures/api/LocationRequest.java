@@ -17,12 +17,21 @@ import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 /**
+ * API request to find places near a given location.
+ * TODO: Rename this class to something like PlaceRequest?
+ *
  * @author Simon Kalt
  */
 public class LocationRequest extends ApiRequest<PlacesApiResult> {
     @NonNull
     private final Location location;
 
+    /**
+     * Create a new request.
+     *
+     * @param context The current context
+     * @param location The location from which to search for places
+     */
     public LocationRequest(Context context, @NonNull Location location) {
         super(context, R.string.api_path_location_request);
         this.location = location;
