@@ -42,8 +42,8 @@ public class ApiUtil {
      * @param endpointId An android resource id pointing to an R.strings.api_path_* value
      * @return The URI to send your request to
      */
-    public String getURIforEndpoint(int endpointId) {
-        return context.getString(R.string.api_url) + context.getString(endpointId);
+    public String getURIforEndpoint(@StringRes int endpointResID) {
+        return context.getString(R.string.api_url) + context.getString(endpointResID);
     }
 
     /**
@@ -58,7 +58,8 @@ public class ApiUtil {
     }
 
     public static List<String> getHeaders(ResponseEntity<?> responseEntity, String key) {
-        return responseEntity.getHeaders().get(key);
+        HttpHeaders headers = responseEntity.getHeaders();
+        return headers == null ? null : headers.get(key);
     }
 
     /**
