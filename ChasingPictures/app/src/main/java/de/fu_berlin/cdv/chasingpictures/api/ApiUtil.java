@@ -28,6 +28,7 @@ public class ApiUtil {
 
     /**
      * Builds a basic JSON rest template for sending requests.
+     *
      * @return A RestTemplate with a {@link org.springframework.http.converter.json.MappingJackson2HttpMessageConverter} attached.
      */
     public static RestTemplate buildJsonRestTemplate() {
@@ -39,7 +40,8 @@ public class ApiUtil {
 
     /**
      * Retrieves the API URI for the specified endpoint.
-     * @param endpointId An android resource id pointing to an R.strings.api_path_* value
+     *
+     * @param endpointResID A resource id pointing to an R.strings.api_path_* value
      * @return The URI to send your request to
      */
     public String getURIforEndpoint(@StringRes int endpointResID) {
@@ -47,16 +49,24 @@ public class ApiUtil {
     }
 
     /**
-     * Returns <i>the first</i> header for the header field named by the given String.
+     * Returns the <em>first</em> header value for the given key.
+     *
      * @param responseEntity The request response
-     * @param key The resource ID for the header field
-     * @return A list of strings containing the values for this header field
+     * @param key            The name of the header field
+     * @return A string containing the first value for this header field
      */
     public static String getHeader(ResponseEntity<?> responseEntity, String key) {
         List<String> headers = getHeaders(responseEntity, key);
         return headers == null || headers.isEmpty() ? null : headers.get(0);
     }
 
+    /**
+     * Returns all available header values for the given key.
+     *
+     * @param responseEntity The request response
+     * @param key            The name of the header field
+     * @return A list of strings containing the values for this header field
+     */
     public static List<String> getHeaders(ResponseEntity<?> responseEntity, String key) {
         HttpHeaders headers = responseEntity.getHeaders();
         return headers == null ? null : headers.get(key);
