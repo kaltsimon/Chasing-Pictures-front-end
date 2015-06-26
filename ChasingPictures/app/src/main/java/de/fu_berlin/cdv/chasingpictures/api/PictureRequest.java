@@ -25,7 +25,7 @@ public class PictureRequest extends ApiRequest<PlacesApiResult> {
 
     @Override
     protected ResponseEntity<PlacesApiResult> send() {
-        Map<String, Integer> queryParameters = new HashMap<>(2);
+        Map<String, Integer> queryParameters = new HashMap<>(1);
         queryParameters.put("placeId", place.getId());
 
         return restTemplate.exchange(
