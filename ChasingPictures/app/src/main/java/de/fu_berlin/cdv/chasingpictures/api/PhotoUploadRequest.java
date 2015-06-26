@@ -1,6 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
@@ -24,7 +25,7 @@ public class PhotoUploadRequest extends ApiRequest<Picture> {
     private final Place place;
     private final File picture;
 
-    public PhotoUploadRequest(Context context, Place place, File picture) {
+    public PhotoUploadRequest(Context context, @NonNull Place place, @NonNull File picture) {
         super(context, R.string.api_path_upload);
         this.place = place;
         this.picture = picture;
