@@ -17,6 +17,8 @@ import java.util.List;
 import de.fu_berlin.cdv.chasingpictures.R;
 
 /**
+ * Class that provides utility methods for API connections.
+ *
  * @author Simon Kalt
  */
 public abstract class APIUtils {
