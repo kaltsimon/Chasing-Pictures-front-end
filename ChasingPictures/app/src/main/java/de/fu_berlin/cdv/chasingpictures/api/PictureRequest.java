@@ -13,11 +13,19 @@ import java.util.Map;
 import de.fu_berlin.cdv.chasingpictures.R;
 
 /**
+ * API request for retrieving all available pictures for a given place.
+ *
  * @author Simon Kalt
  */
 public class PictureRequest extends ApiRequest<PlacesApiResult> {
     private final Place place;
 
+    /**
+     * Create a new request.
+     *
+     * @param context The current context
+     * @param place   The place for which to get the pictures
+     */
     public PictureRequest(Context context, @NonNull Place place) {
         super(context, R.string.api_path_picture);
         this.place = place;
