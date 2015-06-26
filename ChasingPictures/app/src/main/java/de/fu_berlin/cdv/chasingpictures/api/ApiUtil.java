@@ -19,12 +19,7 @@ import de.fu_berlin.cdv.chasingpictures.R;
 /**
  * @author Simon Kalt
  */
-public class ApiUtil {
-    private final Context context;
-
-    public ApiUtil(Context context) {
-        this.context = context;
-    }
+public abstract class ApiUtil {
 
     /**
      * Builds a basic JSON rest template for sending requests.
@@ -41,10 +36,11 @@ public class ApiUtil {
     /**
      * Retrieves the API URI for the specified endpoint.
      *
+     * @param context The current context
      * @param endpointResID A resource id pointing to an R.strings.api_path_* value
      * @return The URI to send your request to
      */
-    public String getURIforEndpoint(@StringRes int endpointResID) {
+    public static String getURIforEndpoint(Context context, @StringRes int endpointResID) {
         return context.getString(R.string.api_url) + context.getString(endpointResID);
     }
 

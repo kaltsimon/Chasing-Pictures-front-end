@@ -13,7 +13,6 @@ import de.fu_berlin.cdv.chasingpictures.security.Access;
  * @author Simon Kalt
  */
 public abstract class ApiRequest<ResponseType> {
-    protected final ApiUtil apiUtil;
     protected final String apiUri;
     protected final RestTemplate restTemplate;
     protected final Context context;
@@ -21,8 +20,7 @@ public abstract class ApiRequest<ResponseType> {
 
     protected ApiRequest(Context context, int endpointResID) {
         this.context = context;
-        this.apiUtil = new ApiUtil(context);
-        this.apiUri = apiUtil.getURIforEndpoint(endpointResID);
+        this.apiUri = ApiUtil.getURIforEndpoint(context, endpointResID);
         this.restTemplate = ApiUtil.buildJsonRestTemplate();
         this.headers = new HttpHeaders();
     }

@@ -29,7 +29,6 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
     }
 
     ResponseErrorHandler responseErrorHandler;
-    ApiUtil apiUtil;
     LocationManager mLocationManager;
     //region MockLocation
     private static final String MOCK_LOCATION_PROVIDER = "MockLocationProvider";
@@ -39,7 +38,6 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
 
     @Override
     public void setUp() throws Exception {
-        apiUtil = new ApiUtil(getContext());
         responseErrorHandler = new ResponseErrorHandler();
         mLocationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
     }
