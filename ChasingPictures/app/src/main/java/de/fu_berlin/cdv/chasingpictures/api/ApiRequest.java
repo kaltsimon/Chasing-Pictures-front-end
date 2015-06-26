@@ -2,6 +2,7 @@ package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
 import android.support.annotation.StringRes;
+import android.util.Log;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 /**
  * Abstract class for API requests.
@@ -22,6 +24,7 @@ import de.fu_berlin.cdv.chasingpictures.security.Access;
  * @author Simon Kalt
  */
 public abstract class ApiRequest<ResponseType> {
+    private static final String TAG = "ApiRequest";
     protected final String apiUri;
     protected final RestTemplate restTemplate;
     protected final Context context;
@@ -82,15 +85,30 @@ public abstract class ApiRequest<ResponseType> {
     }
 
     /**
+     * This method is called when an exception is thrown in the {@link #send()} method.
+     *
+     * @param ex The exception that was thrown
+     */
+    protected void handleException(Exception ex) {
+        Log.e(TAG, "An exception occurred while sending the request.", ex);
+        Utilities.showError(context, R.string.api_error_server_unreachable);
+    }
+
+    /**
      * Sends this request to the API.
      *
      * @return A {@link ResponseEntity} with the result of the call.
      */
     public final ResponseEntity<ResponseType> sendRequest() {
         beforeSending();
-        ResponseEntity<ResponseType> response = send();
-        afterSending(response);
-        return response;
+        try {
+            ResponseEntity<ResponseType> response = send();
+            afterSending(response);
+            return response;
+        } catch (Exception ex) {
+            handleException(ex);
+        }
+        return null;
     }
 
     /**

@@ -24,5 +24,6 @@
     <string name="logout_success">Logout successful.</string>
     <string name="log_out">Log out</string>
     <string name="title_activity_slideshow">Slideshow</string>
+    <string name="api.error.server_unreachable">Server could not be reached.</string>
 
 </resources>
