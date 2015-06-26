@@ -1,8 +1,8 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +12,9 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.R;
-import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 /**
  * @author Simon Kalt
