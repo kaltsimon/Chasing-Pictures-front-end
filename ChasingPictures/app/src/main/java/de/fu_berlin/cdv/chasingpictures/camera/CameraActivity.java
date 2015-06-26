@@ -38,6 +38,13 @@ public class CameraActivity extends Activity {
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final String EXTRA_IMAGE_FILE = "de.fu_berlin.cdv.chasingpictures.EXTRA_IMAGE_FILE";
     private Intent mResultData;
+    private Button buttonEscape;
+    private Button buttonTakePicture;
+    private Button buttonRetry;
+    private Button buttonFinish;
+    private Button buttonFlashToAuto;
+    private Button buttonFlashToOn;
+    private Button buttonFlashToOff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +52,14 @@ public class CameraActivity extends Activity {
         setContentView(R.layout.activity_camera_activity);
         mPictureCallback = new PictureCallback();
         mResultData = new Intent();
+
+        buttonEscape = (Button) findViewById(R.id.escapeButton);
+        buttonTakePicture = (Button) findViewById(R.id.takePictureButton);
+        buttonRetry = (Button) findViewById(R.id.retryPictureButton);
+        buttonFinish = (Button) findViewById(R.id.finishCameraButton);
+        buttonFlashToAuto = (Button) findViewById(R.id.flashToAutoCameraButton);
+        buttonFlashToOn = (Button) findViewById(R.id.flashToOnCameraButton);
+        buttonFlashToOff = (Button) findViewById(R.id.flashToOffCameraButton);
     }
 
     @Override
@@ -92,20 +107,13 @@ public class CameraActivity extends Activity {
         // get an image from the camera
         mCamera.takePicture(null, null, mPictureCallback);
 
-        Button escape = (Button) findViewById(R.id.escapeButton);
-        Button take = (Button) findViewById(R.id.takePictureButton);
-        Button retry = (Button) findViewById(R.id.retryPictureButton);
-        Button finish = (Button) findViewById(R.id.finishCameraButton);
-        Button toAuto = (Button) findViewById(R.id.flashToAutoCameraButton);
-        Button toOn = (Button) findViewById(R.id.flashToOnCameraButton);
-        Button toOff = (Button) findViewById(R.id.flashToOffCameraButton);
-        escape.setVisibility(View.GONE);
-        take.setVisibility(View.GONE);
-        retry.setVisibility(View.VISIBLE);
-        finish.setVisibility(View.VISIBLE);
-        toAuto.setVisibility(View.GONE);
-        toOn.setVisibility(View.GONE);
-        toOff.setVisibility(View.GONE);
+        buttonEscape.setVisibility(View.GONE);
+        buttonTakePicture.setVisibility(View.GONE);
+        buttonRetry.setVisibility(View.VISIBLE);
+        buttonFinish.setVisibility(View.VISIBLE);
+        buttonFlashToAuto.setVisibility(View.GONE);
+        buttonFlashToOn.setVisibility(View.GONE);
+        buttonFlashToOff.setVisibility(View.GONE);
     }
 
     public void showMyPic(View view){
@@ -133,32 +141,23 @@ public class CameraActivity extends Activity {
 
     public void setFlashAuto(View view){
         params.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
-        Button toAuto = (Button) findViewById(R.id.flashToAutoCameraButton);
-        Button toOn = (Button) findViewById(R.id.flashToOnCameraButton);
-        Button toOff = (Button) findViewById(R.id.flashToOffCameraButton);
-        toAuto.setVisibility(View.GONE);
-        toOn.setVisibility(View.VISIBLE);
-        toOff.setVisibility(View.GONE);
+        buttonFlashToAuto.setVisibility(View.GONE);
+        buttonFlashToOn.setVisibility(View.VISIBLE);
+        buttonFlashToOff.setVisibility(View.GONE);
     }
 
     public void setFlashOn(View view){
         params.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-        Button toAuto = (Button) findViewById(R.id.flashToAutoCameraButton);
-        Button toOn = (Button) findViewById(R.id.flashToOnCameraButton);
-        Button toOff = (Button) findViewById(R.id.flashToOffCameraButton);
-        toAuto.setVisibility(View.GONE);
-        toOn.setVisibility(View.GONE);
-        toOff.setVisibility(View.VISIBLE);
+        buttonFlashToAuto.setVisibility(View.GONE);
+        buttonFlashToOn.setVisibility(View.GONE);
+        buttonFlashToOff.setVisibility(View.VISIBLE);
     }
 
     public void setFlashOff(View view){
         params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-        Button toAuto = (Button) findViewById(R.id.flashToAutoCameraButton);
-        Button toOn = (Button) findViewById(R.id.flashToOnCameraButton);
-        Button toOff = (Button) findViewById(R.id.flashToOffCameraButton);
-        toAuto.setVisibility(View.VISIBLE);
-        toOn.setVisibility(View.GONE);
-        toOff.setVisibility(View.GONE);
+        buttonFlashToAuto.setVisibility(View.VISIBLE);
+        buttonFlashToOn.setVisibility(View.GONE);
+        buttonFlashToOff.setVisibility(View.GONE);
     }
 
 
