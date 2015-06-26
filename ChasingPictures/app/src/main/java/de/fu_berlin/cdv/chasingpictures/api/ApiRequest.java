@@ -18,6 +18,7 @@ import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 /**
  * Abstract class for API requests.
+ *
  * @author Simon Kalt
  */
 public abstract class ApiRequest<ResponseType> {
@@ -48,7 +49,7 @@ public abstract class ApiRequest<ResponseType> {
     /**
      * Retrieves the API URI for the specified endpoint.
      *
-     * @param context The current context
+     * @param context       The current context
      * @param endpointResID A resource id pointing to an R.strings.api_path_* value
      * @return The URI to send your request to
      */
@@ -58,6 +59,7 @@ public abstract class ApiRequest<ResponseType> {
 
     /**
      * Sends this request to the API.
+     *
      * @return A {@link ResponseEntity} with the result of the call.
      */
     protected abstract ResponseEntity<ResponseType> send();
@@ -81,6 +83,7 @@ public abstract class ApiRequest<ResponseType> {
 
     /**
      * Sends this request to the API.
+     *
      * @return A {@link ResponseEntity} with the result of the call.
      */
     public final ResponseEntity<ResponseType> sendRequest() {
