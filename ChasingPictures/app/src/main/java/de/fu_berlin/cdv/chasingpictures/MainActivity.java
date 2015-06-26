@@ -78,8 +78,12 @@ public class MainActivity extends Activity {
 
                             @Override
                             protected ResponseEntity<Picture> doInBackground(Place... params) {
-                                PhotoUploadRequest request = new PhotoUploadRequest(getApplicationContext(), params[0], imageFile);
-                                return request.sendRequest();
+                                if (params.length > 0 && params[0] != null) {
+                                    PhotoUploadRequest request = new PhotoUploadRequest(getApplicationContext(), params[0], imageFile);
+                                    return request.sendRequest();
+                                } else {
+                                    return null;
+                                }
                             }
 
                             @Override
