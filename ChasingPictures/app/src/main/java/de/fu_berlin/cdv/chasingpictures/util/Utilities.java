@@ -1,6 +1,8 @@
 package de.fu_berlin.cdv.chasingpictures.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
@@ -19,11 +21,21 @@ public class Utilities {
      */
     @Deprecated
     public static void showError(Context context, String formatString, Object... args) {
-        Toast.makeText(
+        @SuppressLint("ShowToast")
+        final Toast toast = Toast.makeText(
                 context,
                 String.format(formatString, args),
                 Toast.LENGTH_SHORT
-        ).show();
+        );
+
+        // Display on main looper.
+        Handler handler = new Handler(context.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                toast.show();
+            }
+        });
     }
 
     /**
@@ -44,11 +56,21 @@ public class Utilities {
      * @param resID A string resource to be displayed
      * @param args Arguments to be formatted into the string
      */
-    public static void showToast(Context context, @StringRes int resID, Object... args) {
-        Toast.makeText(
+    public static void showToast(Context context, @StringRes final int resID, final Object... args) {
+        @SuppressLint("ShowToast")
+        final Toast toast = Toast.makeText(
                 context,
                 String.format(context.getString(resID), args),
                 Toast.LENGTH_SHORT
-        ).show();
+        );
+
+        // Display on main looper.
+        Handler handler = new Handler(context.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                toast.show();
+            }
+        });
     }
 }
