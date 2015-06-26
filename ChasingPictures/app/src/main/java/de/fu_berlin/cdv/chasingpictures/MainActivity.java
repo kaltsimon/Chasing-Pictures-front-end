@@ -24,6 +24,7 @@ import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.camera.CameraActivity;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 
 public class MainActivity extends Activity {
@@ -91,20 +92,12 @@ public class MainActivity extends Activity {
 
                                     startActivity(intent);
                                 } else {
-                                    Toast.makeText(
-                                            getApplicationContext(),
-                                            "Error uploading photo",
-                                            Toast.LENGTH_SHORT
-                                    ).show();
+                                    Utilities.showError(getApplicationContext(), "Error uploading photo");
                                 }
                             }
                         }.execute(place);
                     } else {
-                        Toast.makeText(
-                                this,
-                                "Received no photo",
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        Utilities.showError(this, "Received no photo");
                     }
                 }
                 break;
@@ -114,7 +107,7 @@ public class MainActivity extends Activity {
     public void logOut(View view) {
         Access.revokeAccess(this);
         if (!Access.hasAccess(this)) {
-            Toast.makeText(this, getString(R.string.logout_success), Toast.LENGTH_SHORT).show();
+            Utilities.showToast(this, R.string.logout_success);
             findViewById(R.id.show_login_page_button).setEnabled(true);
         }
     }
