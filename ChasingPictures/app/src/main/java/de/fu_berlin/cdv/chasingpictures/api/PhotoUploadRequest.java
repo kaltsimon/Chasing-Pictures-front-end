@@ -41,12 +41,13 @@ public class PhotoUploadRequest extends ApiRequest<Picture> {
 
         // wrap the ID in a string, otherwise Spring won't be able to convert the value
         formData.set("place_id", String.valueOf(place.getId()));
-        FileSystemResource resource = new FileSystemResource(picture);
 
         // Manually set the content type header for the file
+        // TODO: Is this always JPEG or should we read the actual type from the file system?
         MultiValueMap<String, String> fileHeaders = new LinkedMultiValueMap<>();
         fileHeaders.set("Content-Type", MediaType.IMAGE_JPEG_VALUE);
-        formData.set("file", new HttpEntity<>(resource, fileHeaders));
+
+        formData.set("file", new HttpEntity<>(new FileSystemResource(picture), fileHeaders));
 
 
         return restTemplate.exchange(
