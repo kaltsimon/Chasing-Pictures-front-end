@@ -49,6 +49,7 @@ public class PhotoUploadRequestTest extends AndroidTestCase {
         }
         //endregion
 
+        assertNotNull("Temp file is null!", tempFile);
         PhotoUploadRequest request = new PhotoUploadRequest(getContext(), place, tempFile);
         ResponseEntity<Picture> pictureResponseEntity = request.sendRequest();
         assertNotNull("No response entity received", pictureResponseEntity);
