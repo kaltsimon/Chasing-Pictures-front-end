@@ -14,10 +14,9 @@ import android.widget.Toast;
  */
 public class Utilities {
     /**
-     *
-     * @param context The current context
+     * @param context      The current context
      * @param formatString The message to be displayed
-     * @param args Arguments to be formatted into the string
+     * @param args         Arguments to be formatted into the string
      * @deprecated Use {@link #showError(Context, int, Object...)} if possible.
      */
     @Deprecated
@@ -26,11 +25,10 @@ public class Utilities {
     }
 
     /**
-     *
-     * @param context The current context
+     * @param context      The current context
      * @param formatString The message to be displayed
-     * @param handler The handler to run Toast.show on
-     *@param args Arguments to be formatted into the string  @deprecated Use {@link #showError(Context, int, Object...)} if possible.
+     * @param handler      The handler to post {@link Toast#show()} to
+     * @param args         Arguments to be formatted into the string  @deprecated Use {@link #showError(Context, int, Object...)} if possible.
      */
     @Deprecated
     public static void showError(Context context, String formatString, @Nullable Handler handler, Object... args) {
@@ -57,9 +55,10 @@ public class Utilities {
      * Displays an error to the user.
      * Currently does the same thing as {@link #showToast(Context, int, Object...)} but
      * could later be changed to look differently.
+     *
      * @param context The current context
-     * @param resID A string resource to be displayed
-     * @param args Arguments to be formatted into the string
+     * @param resID   A string resource to be displayed
+     * @param args    Arguments to be formatted into the string
      */
     public static void showError(Context context, @StringRes int resID, Object... args) {
         showError(context, resID, null, args);
@@ -69,10 +68,11 @@ public class Utilities {
      * Displays an error to the user.
      * Currently does the same thing as {@link #showToast(Context, int, Object...)} but
      * could later be changed to look differently.
+     *
      * @param context The current context
-     * @param resID A string resource to be displayed
-     * @param handler
-     * @param args Arguments to be formatted into the string
+     * @param resID   A string resource to be displayed
+     * @param handler The handler to post {@link Toast#show()} to
+     * @param args    Arguments to be formatted into the string
      */
     public static void showError(Context context, @StringRes int resID, @Nullable Handler handler, Object... args) {
         showToast(context, resID, handler, args);
@@ -80,9 +80,10 @@ public class Utilities {
 
     /**
      * Displays a message to the user.
+     *
      * @param context The current context
-     * @param resID A string resource to be displayed
-     * @param args Arguments to be formatted into the string
+     * @param resID   A string resource to be displayed
+     * @param args    Arguments to be formatted into the string
      */
     public static void showToast(Context context, @StringRes final int resID, final Object... args) {
         showToast(context, resID, null, args);
@@ -90,10 +91,11 @@ public class Utilities {
 
     /**
      * Displays a message to the user.
+     *
      * @param context The current context
-     * @param resID A string resource to be displayed
-     * @param handler
-     * @param args Arguments to be formatted into the string
+     * @param resID   A string resource to be displayed
+     * @param handler The handler to post {@link Toast#show()} to
+     * @param args    Arguments to be formatted into the string
      */
     public static void showToast(Context context, @StringRes final int resID, @Nullable Handler handler, final Object... args) {
         @SuppressLint("ShowToast")
