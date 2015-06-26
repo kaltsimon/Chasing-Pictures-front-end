@@ -124,7 +124,8 @@ public class PictureSelectionActivity extends Activity {
 
             LocationRequest request = new LocationRequest(getApplicationContext(), params[0]);
             ResponseEntity<PlacesApiResult> result = request.sendRequest();
-            return result.getBody().getPlaces();
+            PlacesApiResult body = result == null ? null : result.getBody();
+            return body == null ? null : body.getPlaces();
         }
 
         @Override
