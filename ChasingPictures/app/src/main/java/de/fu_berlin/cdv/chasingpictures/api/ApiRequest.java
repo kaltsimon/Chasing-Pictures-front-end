@@ -91,7 +91,6 @@ public abstract class ApiRequest<ResponseType> {
      */
     protected void handleException(Exception ex) {
         Log.e(TAG, "An exception occurred while sending the request.", ex);
-        Utilities.showError(context, R.string.api_error_server_unreachable);
     }
 
     /**
