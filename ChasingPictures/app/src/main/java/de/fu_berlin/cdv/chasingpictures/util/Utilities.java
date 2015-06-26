@@ -52,33 +52,4 @@ public class Utilities {
         message = args.length == 0 ? message : String.format(message, args);
         Toaster.toast(message);
     }
-
-    /**
-     * Displays a message to the user.
-     *
-     * @param context The current context
-     * @param resID   A string resource to be displayed
-     * @param handler The handler to post {@link Toast#show()} to
-     * @param args    Arguments to be formatted into the string
-     */
-    public static void showToast(Context context, @StringRes final int resID, @Nullable Handler handler, final Object... args) {
-        @SuppressLint("ShowToast")
-        final Toast toast = Toast.makeText(
-                context,
-                String.format(context.getString(resID), args),
-                Toast.LENGTH_SHORT
-        );
-
-        // Display on main looper.
-        if (handler != null) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    toast.show();
-                }
-            });
-        } else {
-            toast.show();
-        }
-    }
 }
