@@ -24,11 +24,13 @@ import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.camera.CameraActivity;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
-    public static final int REQUEST_TAKE_PICTURE = 123411235;
+    public static final int REQUEST_LOGIN_REGISTER = 1;
+    public static final int REQUEST_TAKE_PICTURE = 2;
     private boolean triedLogin = false;
 
     @Override
@@ -44,14 +46,14 @@ public class MainActivity extends Activity {
         if (!triedLogin && !Access.hasAccess(this)) {
             triedLogin = true;
             Intent intent = new Intent(this, LoginPage.class);
-            startActivityForResult(intent, LoginPage.LOGIN);
+            startActivityForResult(intent, REQUEST_LOGIN_REGISTER);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case LoginPage.LOGIN:
+            case REQUEST_LOGIN_REGISTER:
                 if (resultCode == RESULT_OK && Access.hasAccess(this)) {
                     Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
                     findViewById(R.id.show_login_page_button).setEnabled(false);
@@ -76,8 +78,12 @@ public class MainActivity extends Activity {
 
                             @Override
                             protected ResponseEntity<Picture> doInBackground(Place... params) {
-                                PhotoUploadRequest request = new PhotoUploadRequest(getApplicationContext(), params[0], imageFile);
-                                return request.sendRequest();
+                                if (params.length > 0 && params[0] != null) {
+                                    PhotoUploadRequest request = new PhotoUploadRequest(getApplicationContext(), params[0], imageFile);
+                                    return request.sendRequest();
+                                } else {
+                                    return null;
+                                }
                             }
 
                             @Override
@@ -90,20 +96,12 @@ public class MainActivity extends Activity {
 
                                     startActivity(intent);
                                 } else {
-                                    Toast.makeText(
-                                            getApplicationContext(),
-                                            "Error uploading photo",
-                                            Toast.LENGTH_SHORT
-                                    ).show();
+                                    Utilities.showError(getApplicationContext(), "Error uploading photo");
                                 }
                             }
                         }.execute(place);
                     } else {
-                        Toast.makeText(
-                                this,
-                                "Received no photo",
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        Utilities.showError(this, "Received no photo");
                     }
                 }
                 break;
@@ -113,7 +111,7 @@ public class MainActivity extends Activity {
     public void logOut(View view) {
         Access.revokeAccess(this);
         if (!Access.hasAccess(this)) {
-            Toast.makeText(this, getString(R.string.logout_success), Toast.LENGTH_SHORT).show();
+            Utilities.showToast(this, R.string.logout_success);
             findViewById(R.id.show_login_page_button).setEnabled(true);
         }
     }

@@ -5,65 +5,26 @@ import android.content.Context;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Date;
+import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.R;
-import de.fu_berlin.cdv.chasingpictures.api.ApiUtil;
 
 /**
+ * Utility class to handle API access information.
+ * <p/>
+ * Using this class, the access headers for the back end API can
+ * easily be stored and retrieved.
+ *
  * @author Simon Kalt
  */
-public class Access {
+public abstract class Access {
 
-    public enum Headers {
-        ACCESS_TOKEN("Access-Token"),
-        CLIENT("Client"),
-        UID("Uid"),
-        EXPIRY("Expiry");
-
-        public final String field;
-
-        Headers(String field) {
-            this.field = field;
-        }
-
-        /**
-         * Load the value of this header from the secure preferences.
-         * @param prefs The preferences to use
-         * @return
-         */
-        public String load(SecurePreferences prefs) {
-            return prefs.get(field);
-        }
-
-        /**
-         * Store the value of this header received in the given response entity
-         * in the given secure preferences.
-         * @param prefs The preferences to use
-         * @param responseEntity
-         */
-        public void store(SecurePreferences prefs, ResponseEntity<?> responseEntity) {
-            prefs.put(field, ApiUtil.getHeader(responseEntity, field));
-        }
-
-        /**
-         * Gets the stored value of this header and sets it in the given HTTP headers.
-         * @param prefs The preferences to use
-         * @param headers
-         */
-        public void loadAndSet(SecurePreferences prefs, HttpHeaders headers) {
-            headers.set(field, load(prefs));
-        }
-
-        /**
-         * Deletes the value stored in the application for this header.
-         * @param prefs The preferences to use
-         */
-        public void delete(SecurePreferences prefs) {
-            prefs.remove(field);
-        }
-    }
-
+    /**
+     * Get the secure preferences for this app.
+     *
+     * @param context The current context
+     * @return The {@link SecurePreferences} object for this app
+     */
     public static SecurePreferences getSecurePreferences(Context context) {
         return SecurePreferences.getInstanceFromResources(context, R.string.security_prefsID);
     }
@@ -71,7 +32,8 @@ public class Access {
     /**
      * Returns true if all access headers are stored in the application
      * and the access token has not yet expired.
-     * @param context The current context.
+     *
+     * @param context The current context
      * @return {@code true} if the stored access information is complete and not expired.
      */
     public static boolean hasAccess(Context context) {
@@ -90,8 +52,9 @@ public class Access {
 
     /**
      * Stores the received access information in the application
-     * @param context
-     * @param responseEntity
+     *
+     * @param context        The current context
+     * @param responseEntity The response received from the API request
      */
     public static void setAccess(Context context, ResponseEntity<?> responseEntity) {
         SecurePreferences prefs = getSecurePreferences(context);
@@ -103,8 +66,9 @@ public class Access {
     /**
      * Retrieves the saved access information and puts it in
      * the given HTTP headers.
-     * @param context
-     * @param headers
+     *
+     * @param context The current context
+     * @param headers The HTTP headers to be sent to the API
      */
     public static void getAccess(Context context, HttpHeaders headers) {
         SecurePreferences prefs = getSecurePreferences(context);
@@ -115,6 +79,7 @@ public class Access {
 
     /**
      * Deletes all saved access information.
+     *
      * @param context The current context
      */
     public static void revokeAccess(Context context) {
@@ -126,9 +91,94 @@ public class Access {
 
     /**
      * Salts and hashes the given password.
+     * <strong style="color: red;">Currently does not do anything!</strong>
+     *
+     * @param context  Current context
+     * @param password Password to be hashed
+     * @return (eventually) salted and hashed version of the password
      */
-    public String saltAndHash(Context context, String password) {
-        // TODO: actually do something
+    public static String saltAndHash(Context context, String password) {
+        // FIXME: actually do something
         return password;
+    }
+
+    /**
+     * Returns the <em>first</em> header value for the given key.
+     *
+     * @param responseEntity The request response
+     * @param key            The name of the header field
+     * @return A string containing the first value for this header field
+     */
+    public static String getHeader(ResponseEntity<?> responseEntity, String key) {
+        List<String> headers = getHeaders(responseEntity, key);
+        return headers == null || headers.isEmpty() ? null : headers.get(0);
+    }
+
+    /**
+     * Returns all available header values for the given key.
+     *
+     * @param responseEntity The request response
+     * @param key            The name of the header field
+     * @return A list of strings containing the values for this header field
+     */
+    public static List<String> getHeaders(ResponseEntity<?> responseEntity, String key) {
+        HttpHeaders headers = responseEntity.getHeaders();
+        return headers == null ? null : headers.get(key);
+    }
+
+    /**
+     * Enum for HTTP headers that store access information.
+     */
+    public enum Headers {
+        ACCESS_TOKEN("Access-Token"),
+        CLIENT("Client"),
+        UID("Uid"),
+        EXPIRY("Expiry");
+
+        public final String field;
+
+        Headers(String field) {
+            this.field = field;
+        }
+
+        /**
+         * Load the value of this header from the secure preferences.
+         *
+         * @param prefs The preferences to use
+         * @return The stored value of the header, or {@code null} if it is not stored
+         */
+        public String load(SecurePreferences prefs) {
+            return prefs.get(field);
+        }
+
+        /**
+         * Store the value of this header received in the given response entity
+         * in the given secure preferences.
+         *
+         * @param prefs          The preferences to use
+         * @param responseEntity The entity received from the API
+         */
+        public void store(SecurePreferences prefs, ResponseEntity<?> responseEntity) {
+            prefs.put(field, getHeader(responseEntity, field));
+        }
+
+        /**
+         * Gets the stored value of this header and sets it in the given HTTP headers.
+         *
+         * @param prefs   The preferences to use
+         * @param headers The headers to be sent to the API
+         */
+        public void loadAndSet(SecurePreferences prefs, HttpHeaders headers) {
+            headers.set(field, load(prefs));
+        }
+
+        /**
+         * Deletes the value stored in the application for this header.
+         *
+         * @param prefs The preferences to use
+         */
+        public void delete(SecurePreferences prefs) {
+            prefs.remove(field);
+        }
     }
 }

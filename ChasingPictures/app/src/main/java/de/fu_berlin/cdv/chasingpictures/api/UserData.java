@@ -1,19 +1,16 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author Simon Kalt
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserData implements Parcelable {
+public class UserData implements Serializable {
     private Integer id;
     private String provider;
     private String uid;
@@ -97,53 +94,6 @@ public class UserData implements Parcelable {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    public UserData() { }
-
-    public UserData(Parcel in) {
-        readFromParcel(in);
-    }
-
-    private void readFromParcel(Parcel in) {
-        setId(in.readInt());
-        setProvider(in.readString());
-        setUid(in.readString());
-        setName(in.readString());
-        setNickname(in.readString());
-        setImage(in.readString());
-        setEmail(in.readString());
-        setCreatedAt(new Date(in.readLong()));
-        setUpdatedAt(new Date(in.readLong()));
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(provider);
-        dest.writeString(uid);
-        dest.writeString(name);
-        dest.writeString(nickname);
-        dest.writeString(image);
-        dest.writeString(email);
-        dest.writeLong(createdAt == null ? 0 : createdAt.getTime());
-        dest.writeLong(updatedAt == null ? 0 : updatedAt.getTime());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Parcelable.Creator CREATOR =
-            new Parcelable.Creator() {
-                public UserData createFromParcel(Parcel in) {
-                    return new UserData(in);
-                }
-
-                public UserData[] newArray(int size) {
-                    return new UserData[size];
-                }
-            };
 
     @Override
     public boolean equals(Object o) {

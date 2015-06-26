@@ -1,6 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
@@ -24,7 +25,14 @@ public class PhotoUploadRequest extends ApiRequest<Picture> {
     private final Place place;
     private final File picture;
 
-    public PhotoUploadRequest(Context context, Place place, File picture) {
+    /**
+     * Creates a new request for uploading a photo.
+     *
+     * @param context The current context
+     * @param place   The place for which gthis photo was taken
+     * @param picture The file in the file system that contains the picture
+     */
+    public PhotoUploadRequest(Context context, @NonNull Place place, @NonNull File picture) {
         super(context, R.string.api_path_upload);
         this.place = place;
         this.picture = picture;
@@ -40,12 +48,13 @@ public class PhotoUploadRequest extends ApiRequest<Picture> {
 
         // wrap the ID in a string, otherwise Spring won't be able to convert the value
         formData.set("place_id", String.valueOf(place.getId()));
-        FileSystemResource resource = new FileSystemResource(picture);
 
         // Manually set the content type header for the file
+        // TODO: Is this always JPEG or should we read the actual type from the file system?
         MultiValueMap<String, String> fileHeaders = new LinkedMultiValueMap<>();
         fileHeaders.set("Content-Type", MediaType.IMAGE_JPEG_VALUE);
-        formData.set("file", new HttpEntity<>(resource, fileHeaders));
+
+        formData.set("file", new HttpEntity<>(new FileSystemResource(picture), fileHeaders));
 
 
         return restTemplate.exchange(

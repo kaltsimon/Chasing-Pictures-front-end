@@ -27,18 +27,19 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
-import android.util.Log;
+//import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+//import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
+//import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -93,64 +94,64 @@ public class SecurePreferences {
         return new SecurePreferences(context, preferenceName, key, iv, true);
     }
 
-    /**
-     * ACCESS TO THE KEYSTORE CURRENTLY DOES NOT WORK!
-     *
-     * Returns an instance with the stored key and IV for this app.
-     * If these do not exist, they are generated the first time the preferences are used.
-     * @param context Application context
-     * @param preferenceNameId Resource ID for preference name.
-     */
-    @Deprecated
-    public static SecurePreferences getInstance(Context context, int preferenceNameId) {
-        return SecurePreferences.getInstance(context, context.getString(preferenceNameId));
-    }
-
-    /**
-     * ACCESS TO THE KEYSTORE CURRENTLY DOES NOT WORK!
-     *
-     * Returns an instance with the stored key and IV for this app.
-     * If these do not exist, they are generated the first time the preferences are used.
-     * @param context Application context
-     * @param preferenceName Name of preferences to use.
-     */
-    @Deprecated
-    public static SecurePreferences getInstance(Context context, String preferenceName) {
-        KeyStore keyStore = KeyStore.getInstance();
-        byte[] keyBytes, ivBytes;
-        SecretKey key;
-        IvParameterSpec iv;
-        String secretKeyKey = context.getString(R.string.security_secretKey_storeKey);
-        final String ivKey = context.getString(R.string.security_IV_storeKey);
-
-        keyBytes = keyStore.get(secretKeyKey);
-        if (keyBytes != null) {
-            key = new SecretKeySpec(keyBytes, "AES");
-        } else {
-            Log.d(TAG, "No secret key in keystore, generating new key.");
-            KeyGenerator aes = null;
-            try {
-                aes = KeyGenerator.getInstance("AES");
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-            key = aes.generateKey();
-            keyStore.put(secretKeyKey, key.getEncoded());
-        }
-
-
-        ivBytes = keyStore.get(ivKey);
-        if (ivBytes != null) {
-            iv = new IvParameterSpec(ivBytes);
-        }
-        else {
-            Log.d(TAG, "No IV in keystore, generating new IV.");
-            iv = SecurePreferences.getIv();
-            keyStore.put(ivKey, iv.getIV());
-        }
-
-        return new SecurePreferences(context, preferenceName, key, iv, true);
-    }
+//    /**
+//     * ACCESS TO THE KEYSTORE CURRENTLY DOES NOT WORK!
+//     *
+//     * Returns an instance with the stored key and IV for this app.
+//     * If these do not exist, they are generated the first time the preferences are used.
+//     * @param context Application context
+//     * @param preferenceNameId Resource ID for preference name.
+//     */
+//    @Deprecated
+//    public static SecurePreferences getInstance(Context context, int preferenceNameId) {
+//        return SecurePreferences.getInstance(context, context.getString(preferenceNameId));
+//    }
+//
+//    /**
+//     * ACCESS TO THE KEYSTORE CURRENTLY DOES NOT WORK!
+//     *
+//     * Returns an instance with the stored key and IV for this app.
+//     * If these do not exist, they are generated the first time the preferences are used.
+//     * @param context Application context
+//     * @param preferenceName Name of preferences to use.
+//     */
+//    @Deprecated
+//    public static SecurePreferences getInstance(Context context, String preferenceName) {
+//        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+//        byte[] keyBytes, ivBytes;
+//        SecretKey key;
+//        IvParameterSpec iv;
+//        String secretKeyKey = context.getString(R.string.security_secretKey_storeKey);
+//        final String ivKey = context.getString(R.string.security_IV_storeKey);
+//
+//        keyBytes = keyStore.get(secretKeyKey);
+//        if (keyBytes != null) {
+//            key = new SecretKeySpec(keyBytes, "AES");
+//        } else {
+//            Log.d(TAG, "No secret key in keystore, generating new key.");
+//            KeyGenerator aes = null;
+//            try {
+//                aes = KeyGenerator.getInstance("AES");
+//            } catch (NoSuchAlgorithmException e) {
+//                e.printStackTrace();
+//            }
+//            key = aes.generateKey();
+//            keyStore.put(secretKeyKey, key.getEncoded());
+//        }
+//
+//
+//        ivBytes = keyStore.get(ivKey);
+//        if (ivBytes != null) {
+//            iv = new IvParameterSpec(ivBytes);
+//        }
+//        else {
+//            Log.d(TAG, "No IV in keystore, generating new IV.");
+//            iv = SecurePreferences.getIv();
+//            keyStore.put(ivKey, iv.getIV());
+//        }
+//
+//        return new SecurePreferences(context, preferenceName, key, iv, true);
+//    }
 
 	/**
 	 * This will initialize an instance of the SecurePreferences class

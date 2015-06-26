@@ -49,4 +49,8 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/main_theme_color</item>
     </style>
+
+    <style name="ButtonLine">
+        <item name="android:background">#bd0303</item>
+    </style>
 </resources>

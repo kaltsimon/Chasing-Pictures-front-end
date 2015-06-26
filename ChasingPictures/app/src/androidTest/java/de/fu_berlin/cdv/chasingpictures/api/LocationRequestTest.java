@@ -29,8 +29,6 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
     }
 
     ResponseErrorHandler responseErrorHandler;
-    ApiUtil apiUtil;
-    LocationManager mLocationManager;
     //region MockLocation
     private static final String MOCK_LOCATION_PROVIDER = "MockLocationProvider";
     private static final double MOCK_LOCATION_LAT = 52.517072;
@@ -39,9 +37,7 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
 
     @Override
     public void setUp() throws Exception {
-        apiUtil = new ApiUtil(getContext());
         responseErrorHandler = new ResponseErrorHandler();
-        mLocationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
     }
 
     @Override
@@ -58,8 +54,9 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
                 "12345678"
         );
 
-        setMockLocation(MOCK_LOCATION_LAT, MOCK_LOCATION_LON);
-        Location location = mLocationManager.getLastKnownLocation(MOCK_LOCATION_PROVIDER);
+        Location location = new Location(MOCK_LOCATION_PROVIDER);
+        location.setLatitude(MOCK_LOCATION_LAT);
+        location.setLongitude(MOCK_LOCATION_LON);
 
         LocationRequest locationRequest = new LocationRequest(getContext(), location);
         responseErrorHandler.setExpectedStatusCode(200);
@@ -92,57 +89,4 @@ public class LocationRequestTest extends ApplicationTestCase<Application> {
                 assertEquals("Invalid status code.", expectedStatusCode, statusCode.value());
         }
     }
-
-    //region MockLocation
-    public void setMockLocation(double latitude, double longitude) {
-        if (mLocationManager.getProvider(MOCK_LOCATION_PROVIDER) != null) {
-            mLocationManager.removeTestProvider(MOCK_LOCATION_PROVIDER);
-        }
-
-        mLocationManager.addTestProvider(
-                MOCK_LOCATION_PROVIDER,
-                false, // requires network
-                false, // requires satellite
-                false, // requires cell
-                false, // has monetary cost
-                false, // supports altitude
-                false, // supports speed
-                false, // supports bearing
-                Criteria.POWER_LOW,
-                Criteria.ACCURACY_FINE
-        );
-
-        Location mockLocation = new Location(MOCK_LOCATION_PROVIDER);
-        mockLocation.setLatitude(latitude);
-        mockLocation.setLongitude(longitude);
-        mockLocation.setAccuracy(100);
-        mockLocation.setTime(System.currentTimeMillis());
-
-        //region Complete Mock Location
-        Method locationJellyBeanFixMethod = null;
-        try {
-            locationJellyBeanFixMethod = Location.class.getMethod("makeComplete");
-            if (locationJellyBeanFixMethod != null) {
-                locationJellyBeanFixMethod.invoke(mockLocation);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //endregion
-
-        mLocationManager.setTestProviderEnabled(MOCK_LOCATION_PROVIDER, true);
-
-        mLocationManager.setTestProviderStatus(
-                MOCK_LOCATION_PROVIDER,
-                LocationProvider.AVAILABLE,
-                null,
-                System.currentTimeMillis()
-        );
-
-        mLocationManager.setTestProviderLocation(
-                MOCK_LOCATION_PROVIDER,
-                mockLocation
-        );
-    }
-    //endregion
 }
