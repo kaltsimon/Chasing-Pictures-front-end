@@ -5,8 +5,9 @@ import android.content.Context;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 import de.fu_berlin.cdv.chasingpictures.R;
-import de.fu_berlin.cdv.chasingpictures.util.APIUtils;
 
 /**
  * Utility class to handle API access information.
@@ -96,6 +97,30 @@ public abstract class Access {
     }
 
     /**
+     * Returns the <em>first</em> header value for the given key.
+     *
+     * @param responseEntity The request response
+     * @param key            The name of the header field
+     * @return A string containing the first value for this header field
+     */
+    public static String getHeader(ResponseEntity<?> responseEntity, String key) {
+        List<String> headers = getHeaders(responseEntity, key);
+        return headers == null || headers.isEmpty() ? null : headers.get(0);
+    }
+
+    /**
+     * Returns all available header values for the given key.
+     *
+     * @param responseEntity The request response
+     * @param key            The name of the header field
+     * @return A list of strings containing the values for this header field
+     */
+    public static List<String> getHeaders(ResponseEntity<?> responseEntity, String key) {
+        HttpHeaders headers = responseEntity.getHeaders();
+        return headers == null ? null : headers.get(key);
+    }
+
+    /**
      * Enum for HTTP headers that store access information.
      */
     public enum Headers {
@@ -128,7 +153,7 @@ public abstract class Access {
          * @param responseEntity The entity received from the API
          */
         public void store(SecurePreferences prefs, ResponseEntity<?> responseEntity) {
-            prefs.put(field, APIUtils.getHeader(responseEntity, field));
+            prefs.put(field, getHeader(responseEntity, field));
         }
 
         /**

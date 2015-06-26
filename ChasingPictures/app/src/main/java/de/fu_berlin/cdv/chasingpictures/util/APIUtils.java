@@ -47,30 +47,6 @@ public abstract class APIUtils {
     }
 
     /**
-     * Returns the <em>first</em> header value for the given key.
-     *
-     * @param responseEntity The request response
-     * @param key            The name of the header field
-     * @return A string containing the first value for this header field
-     */
-    public static String getHeader(ResponseEntity<?> responseEntity, String key) {
-        List<String> headers = getHeaders(responseEntity, key);
-        return headers == null || headers.isEmpty() ? null : headers.get(0);
-    }
-
-    /**
-     * Returns all available header values for the given key.
-     *
-     * @param responseEntity The request response
-     * @param key            The name of the header field
-     * @return A list of strings containing the values for this header field
-     */
-    public static List<String> getHeaders(ResponseEntity<?> responseEntity, String key) {
-        HttpHeaders headers = responseEntity.getHeaders();
-        return headers == null ? null : headers.get(key);
-    }
-
-    /**
      * This default error handler, ignores the 403 error code,
      * which is not always a fatal error.
      */
