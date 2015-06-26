@@ -19,6 +19,12 @@ import de.fu_berlin.cdv.chasingpictures.R;
  */
 public abstract class Access {
 
+    /**
+     * Get the secure preferences for this app.
+     *
+     * @param context The current context
+     * @return The {@link SecurePreferences} object for this app
+     */
     public static SecurePreferences getSecurePreferences(Context context) {
         return SecurePreferences.getInstanceFromResources(context, R.string.security_prefsID);
     }
@@ -27,7 +33,7 @@ public abstract class Access {
      * Returns true if all access headers are stored in the application
      * and the access token has not yet expired.
      *
-     * @param context The current context.
+     * @param context The current context
      * @return {@code true} if the stored access information is complete and not expired.
      */
     public static boolean hasAccess(Context context) {
