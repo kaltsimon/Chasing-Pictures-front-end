@@ -25,6 +25,13 @@ public class PhotoUploadRequest extends ApiRequest<Picture> {
     private final Place place;
     private final File picture;
 
+    /**
+     * Creates a new request for uploading a photo.
+     *
+     * @param context The current context
+     * @param place   The place for which gthis photo was taken
+     * @param picture The file in the file system that contains the picture
+     */
     public PhotoUploadRequest(Context context, @NonNull Place place, @NonNull File picture) {
         super(context, R.string.api_path_upload);
         this.place = place;
