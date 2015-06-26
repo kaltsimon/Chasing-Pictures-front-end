@@ -168,6 +168,7 @@ public class CameraActivity extends Activity {
             c = Camera.open(); // attempt to get a Camera instance
         }
         catch (Exception e){
+            // TODO: Somewho notify the user of this!
             // Camera is not available (in use or does not exist)
         }
         return c;
