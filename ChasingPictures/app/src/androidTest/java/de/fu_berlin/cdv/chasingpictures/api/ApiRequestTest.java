@@ -1,4 +1,4 @@
-package de.fu_berlin.cdv.chasingpictures.util;
+package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
@@ -10,9 +10,9 @@ import de.fu_berlin.cdv.chasingpictures.R;
 /**
  * @author Simon
  */
-public class APIUtilsTest extends ApplicationTestCase<Application> {
+public class ApiRequestTest extends ApplicationTestCase<Application> {
 
-    public APIUtilsTest() {
+    public ApiRequestTest() {
         super(Application.class);
     }
 
@@ -33,9 +33,9 @@ public class APIUtilsTest extends ApplicationTestCase<Application> {
         String base_uri = getContext().getString(R.string.api_url);
 
         URI expectedUriRegister = new URI(base_uri + getContext().getString(R.string.api_path_register));
-        assertEquals("Registration URIs differ", expectedUriRegister.toString(), APIUtils.getURIforEndpoint(getContext(), R.string.api_path_register));
+        assertEquals("Registration URIs differ", expectedUriRegister.toString(), ApiRequest.getURIforEndpoint(getContext(), R.string.api_path_register));
 
         URI expectedUriLogin = new URI(base_uri + getContext().getString(R.string.api_path_login));
-        assertEquals("Login URIs differ", expectedUriLogin.toString(), APIUtils.getURIforEndpoint(getContext(), R.string.api_path_login));
+        assertEquals("Login URIs differ", expectedUriLogin.toString(), ApiRequest.getURIforEndpoint(getContext(), R.string.api_path_login));
     }
 }
