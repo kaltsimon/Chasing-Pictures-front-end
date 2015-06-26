@@ -119,7 +119,7 @@ public class PictureSelectionActivity extends Activity {
 
         @Override
         protected List<Place> doInBackground(Location... params) {
-            if (params.length == 0)
+            if (params.length == 0 || params[0] == null)
                 return null;
 
             LocationRequest request = new LocationRequest(getApplicationContext(), params[0]);
