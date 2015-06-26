@@ -7,6 +7,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,7 @@ import java.util.Locale;
 
 import de.fu_berlin.cdv.chasingpictures.MainActivity;
 import de.fu_berlin.cdv.chasingpictures.R;
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 
 public class CameraActivity extends Activity {
@@ -67,6 +69,10 @@ public class CameraActivity extends Activity {
         super.onResume();
         // Create an instance of Camera
         mCamera = getCameraInstance();
+        if (mCamera == null) {
+            finish();
+            return;
+        }
 
         //region Autofocus
         // get Camera parameters
@@ -162,14 +168,14 @@ public class CameraActivity extends Activity {
 
 
     /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance(){
+    @Nullable
+    public Camera getCameraInstance(){
         Camera c = null;
         try {
             c = Camera.open(); // attempt to get a Camera instance
         }
         catch (Exception e){
-            // TODO: Somewho notify the user of this!
-            // Camera is not available (in use or does not exist)
+            Utilities.showError(getApplicationContext(), "Camera could not be opened.");
         }
         return c;
     }
