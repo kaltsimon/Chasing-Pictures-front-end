@@ -1,6 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -17,7 +18,7 @@ import de.fu_berlin.cdv.chasingpictures.R;
 public class PictureRequest extends ApiRequest<PlacesApiResult> {
     private final Place place;
 
-    public PictureRequest(Context context, Place place) {
+    public PictureRequest(Context context, @NonNull Place place) {
         super(context, R.string.api_path_picture);
         this.place = place;
     }
