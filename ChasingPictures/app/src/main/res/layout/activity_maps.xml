@@ -22,18 +22,16 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/buttonUp"
-            android:text="23"
-            android:background="@drawable/distanz_angabe"
-            android:layout_gravity="right"
+            android:id="@+id/buttonDistance"
+            android:background="@drawable/map_distance_button"
+            android:layout_gravity="end|right"
+            android:textColor="@color/text_90"
             android:onClick="pictureOverlay"/>
 
         <Button
-            style="@style/ButtonLine"
+            android:background="@drawable/map_distance_bar"
             android:layout_width="match_parent"
-            android:layout_height="10dip"
-            android:id="@+id/buttonDistance"
-            android:layout_gravity="right"
+            android:layout_height="19dp"
             android:onClick="pictureOverlay"/>
 
         <ImageView
