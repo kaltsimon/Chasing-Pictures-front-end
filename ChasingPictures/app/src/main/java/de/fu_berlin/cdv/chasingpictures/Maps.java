@@ -73,7 +73,7 @@ public class Maps extends Activity {
             @Override
             public void onLocationChanged(Location location, GpsLocationProvider source) {
                 super.onLocationChanged(location, source);
-                ((TextView) findViewById(R.id.buttonDistance)).setText(Math.round(place.distanceTo(location)) + "m");
+                ((TextView) findViewById(R.id.buttonDistance)).setText(String.valueOf(Math.round(place.distanceTo(location))));
             }
         };
         overlay.setTrackingMode(UserLocationOverlay.TrackingMode.FOLLOW);
