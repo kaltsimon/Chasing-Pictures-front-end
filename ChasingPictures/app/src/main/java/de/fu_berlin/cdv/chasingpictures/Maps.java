@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,6 @@ public class Maps extends Activity {
 
     public static final String EXTRA_PLACE = "de.fu_berlin.cdv.chasingpictures.EXTRA_PLACE";
     private static final String TAG = "MapActivity";
-    private final int PICTURE_HIDE_DURATION = 500;
     private com.mapbox.mapboxsdk.geometry.LatLng startingPoint = new LatLng(51f, 0f);
     private MapView mv;
     private String satellite = "brunosan.map-cyglrrfu";
@@ -46,7 +44,6 @@ public class Maps extends Activity {
     private Place place;
     private boolean imageViewVisible;
     private ImageView imageView;
-    private Handler mHandler;
 
     public static Intent createIntent(Context context, Place target) {
         Intent intent = new Intent(context, Maps.class);
@@ -97,7 +94,6 @@ public class Maps extends Activity {
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.maps_layout);
         imageView = (ImageView) findViewById(R.id.imageSearch);
-        mHandler = new Handler();
     }
 
     @Override
@@ -149,40 +145,15 @@ public class Maps extends Activity {
         ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
         final LayoutParams newParams = new LayoutParams(layoutParams);
         final int height = imageView.getHeight();
-        final int sleepTime = PICTURE_HIDE_DURATION / height;
 
         if (imageViewVisible) {
-            Runnable hide = new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = 0; i <= height; i++) {
-                        newParams.setMargins(0, 0, 0, -i);
-                        imageView.setLayoutParams(newParams);
-                        try {
-                            Thread.sleep(sleepTime);
-                        } catch (InterruptedException ignored) {}
-                    }
-                }
-            };
-
-            mHandler.post(hide);
+            newParams.setMargins(0, 0, 0, -height);
         }
         else {
-            Runnable show = new Runnable() {
-                @Override
-                public void run() {
-                    for (int i = -height; i <= 0; i++) {
-                        newParams.setMargins(0, 0, 0, i);
-                        imageView.setLayoutParams(newParams);
-                        try {
-                            Thread.sleep(sleepTime);
-                        } catch (InterruptedException ignored) {}
-                    }
-                }
-            };
-            mHandler.post(show);
+            newParams.setMargins(0, 0, 0, 0);
         }
 
+        imageView.setLayoutParams(newParams);
         imageViewVisible = !imageViewVisible;
     }
 }
