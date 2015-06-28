@@ -5,9 +5,15 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <color name="main_theme_color">@android:color/holo_green_dark</color>
-    <color name="button_color">@android:color/holo_green_light</color>
-    <color name="text_error_color">@android:color/holo_red_light</color>
+    <color name="main_theme_color">@color/main_90</color>
+    <color name="button_color">@color/main_85</color>
+    <color name="text_white">#ffffff</color>
+    <color name="text_90">#e61c1c1b</color>
+    <color name="text_64">#a31c1c1b</color>
+    <color name="main_100">#ffbf5a16</color>
+    <color name="main_90">#e6bf5a16</color>
+    <color name="main_85">#d8bf5a16</color>
+    <color name="main_70">#b2bf5a16</color>
 
     <style name="Toolbar">
         <item name="android:background">@color/main_theme_color</item>
@@ -38,19 +44,19 @@
 
     <style name="Vertical.Button">
         <item name="android:background">@drawable/button_background</item>
+        <item name="android:textColor">@color/text_white</item>
     </style>
 
     <style name="Vertical.TextField">
         <item name="android:ems">@integer/standard_textinput_ems</item>
+        <item name="android:layout_gravity">start|left</item>
     </style>
 
     <style name="Vertical.Heading">
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/main_theme_color</item>
-    </style>
-
-    <style name="ButtonLine">
-        <item name="android:background">#bd0303</item>
+        <item name="android:layout_gravity">start|left</item>
+        <item name="android:layout_width">wrap_content</item>
     </style>
 </resources>
