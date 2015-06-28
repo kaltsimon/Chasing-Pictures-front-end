@@ -7,11 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.widget.ImageView;
-import android.widget.LinearLayout.LayoutParams;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -44,6 +45,7 @@ public class Maps extends Activity {
     private Place place;
     private boolean imageViewVisible;
     private ImageView imageView;
+    private LinearLayout imageViewLayout;
 
     public static Intent createIntent(Context context, Place target) {
         Intent intent = new Intent(context, Maps.class);
@@ -93,6 +95,7 @@ public class Maps extends Activity {
         mv.addMarker(m);
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.maps_layout);
+        imageViewLayout = (LinearLayout) findViewById(R.id.imageViewLayout);
         imageView = (ImageView) findViewById(R.id.imageSearch);
     }
 
@@ -101,8 +104,16 @@ public class Maps extends Activity {
         super.onStart();
         String cachedFilePath = place.getPicture().getCachedFile().getPath();
         Bitmap bitmap = BitmapFactory.decodeFile(cachedFilePath);
-        ImageView imageView = (ImageView) findViewById(R.id.imageSearch);
         imageView.setImageBitmap(bitmap);
+
+        // Hide the picture after a short delay,
+        // otherwise it does not have a height yet and it won't work properly
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pictureOverlay(imageView);
+            }
+        }, 500);
     }
 
     protected void replaceMapView(String layer) {
@@ -142,18 +153,12 @@ public class Maps extends Activity {
     }
 
     public void pictureOverlay(View view){
-        ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-        final LayoutParams newParams = new LayoutParams(layoutParams);
-        final int height = imageView.getHeight();
+        int height = imageView.getHeight();
+        height = imageViewVisible ? -height : height;
 
-        if (imageViewVisible) {
-            newParams.setMargins(0, 0, 0, -height);
-        }
-        else {
-            newParams.setMargins(0, 0, 0, 0);
-        }
+        ViewPropertyAnimator animator = imageViewLayout.animate();
+        animator.translationYBy(height);
 
-        imageView.setLayoutParams(newParams);
         imageViewVisible = !imageViewVisible;
     }
 }
