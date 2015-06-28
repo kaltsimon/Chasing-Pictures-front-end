@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -23,10 +24,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buttonDistance"
+            android:text="23"
+            android:paddingLeft="4dp"
             android:background="@drawable/map_distance_button"
-            android:layout_gravity="end|right"
+            android:layout_gravity="right"
             android:textColor="@color/text_90"
-            android:onClick="pictureOverlay"/>
+            android:onClick="pictureOverlay"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
         <Button
             android:background="@drawable/map_distance_bar"
