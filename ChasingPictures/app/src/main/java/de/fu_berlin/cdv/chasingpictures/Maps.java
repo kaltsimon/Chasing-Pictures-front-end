@@ -7,9 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,6 +34,7 @@ public class Maps extends Activity {
 
     public static final String EXTRA_PLACE = "de.fu_berlin.cdv.chasingpictures.EXTRA_PLACE";
     private static final String TAG = "MapActivity";
+    private final int PICTURE_HIDE_DURATION = 500;
     private com.mapbox.mapboxsdk.geometry.LatLng startingPoint = new LatLng(51f, 0f);
     private MapView mv;
     private String satellite = "brunosan.map-cyglrrfu";
@@ -40,6 +44,9 @@ public class Maps extends Activity {
     private String currentLayer = "";
     private LatLng berlin =  new LatLng(52.513578, 13.415124);
     private Place place;
+    private boolean imageViewVisible;
+    private ImageView imageView;
+    private Handler mHandler;
 
     public static Intent createIntent(Context context, Place target) {
         Intent intent = new Intent(context, Maps.class);
@@ -89,6 +96,8 @@ public class Maps extends Activity {
         mv.addMarker(m);
 
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.maps_layout);
+        imageView = (ImageView) findViewById(R.id.imageSearch);
+        mHandler = new Handler();
     }
 
     @Override
@@ -137,12 +146,43 @@ public class Maps extends Activity {
     }
 
     public void pictureOverlay(View view){
-        ImageView iv = (ImageView) findViewById(R.id.imageSearch);
-        if (iv.getVisibility() == View.VISIBLE){
-            iv.setVisibility(View.GONE);
+        ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+        final LayoutParams newParams = new LayoutParams(layoutParams);
+        final int height = imageView.getHeight();
+        final int sleepTime = PICTURE_HIDE_DURATION / height;
+
+        if (imageViewVisible) {
+            Runnable hide = new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i <= height; i++) {
+                        newParams.setMargins(0, 0, 0, -i);
+                        imageView.setLayoutParams(newParams);
+                        try {
+                            Thread.sleep(sleepTime);
+                        } catch (InterruptedException ignored) {}
+                    }
+                }
+            };
+
+            mHandler.post(hide);
         }
-        else if (iv.getVisibility() == View.GONE){
-            iv.setVisibility(View.VISIBLE);
+        else {
+            Runnable show = new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = -height; i <= 0; i++) {
+                        newParams.setMargins(0, 0, 0, i);
+                        imageView.setLayoutParams(newParams);
+                        try {
+                            Thread.sleep(sleepTime);
+                        } catch (InterruptedException ignored) {}
+                    }
+                }
+            };
+            mHandler.post(show);
         }
+
+        imageViewVisible = !imageViewVisible;
     }
 }
