@@ -10,6 +10,8 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -51,6 +53,11 @@ public class CameraActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Make activity fullscreen
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_camera_activity);
         mPictureCallback = new PictureCallback();
         mResultData = new Intent();
@@ -135,6 +142,7 @@ public class CameraActivity extends Activity {
         finish();
     }
 
+    // TODO: This is probably not a very good idea to just start the activity again...
     public void retry(View view){
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
