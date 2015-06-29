@@ -31,7 +31,9 @@
             android:paddingLeft="4dp"
             android:background="@drawable/map_distance_button"
             android:layout_gravity="right"
-            android:textColor="@color/text_90"
+            android:textColor="@color/text_white"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
             android:onClick="pictureOverlay"
             tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
@@ -49,7 +51,8 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:visibility="visible"
-            android:onClick="pictureOverlay"/>
+            android:onClick="pictureOverlay"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 
