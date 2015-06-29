@@ -6,16 +6,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.geometry.BoundingBox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -35,6 +35,7 @@ public class Maps extends Activity {
 
     public static final String EXTRA_PLACE = "de.fu_berlin.cdv.chasingpictures.EXTRA_PLACE";
     private static final String TAG = "MapActivity";
+    private static final float SHOW_CAMERA_DISTANCE = 5; // Show camera when less than 5 meters away
     private com.mapbox.mapboxsdk.geometry.LatLng startingPoint = new LatLng(51f, 0f);
     private MapView mv;
     private String satellite = "brunosan.map-cyglrrfu";
@@ -47,6 +48,9 @@ public class Maps extends Activity {
     private boolean imageViewVisible;
     private ImageView imageView;
     private LinearLayout imageViewLayout;
+    private Button distanceButton;
+    private boolean cameraButtonShown;
+    private Location mLastLocation;
 
     public static Intent createIntent(Context context, Place target) {
         Intent intent = new Intent(context, Maps.class);
@@ -76,11 +80,22 @@ public class Maps extends Activity {
         currentLayer = "mMap";
 
         GpsLocationProvider provider = new GpsLocationProvider(this);
+        distanceButton = ((Button) findViewById(R.id.buttonDistance));
         UserLocationOverlay overlay = new UserLocationOverlay(provider, mv) {
             @Override
             public void onLocationChanged(Location location, GpsLocationProvider source) {
                 super.onLocationChanged(location, source);
-                ((TextView) findViewById(R.id.buttonDistance)).setText(String.valueOf(Math.round(place.distanceTo(location))));
+                mLastLocation = location;
+                float distanceToDestination = place.distanceTo(location);
+
+                if (!cameraButtonShown)
+                    distanceButton.setText(String.valueOf(Math.round(distanceToDestination)));
+
+                if (distanceToDestination < SHOW_CAMERA_DISTANCE) {
+                    showCameraButton();
+                } else {
+                    hideCameraButton();
+                }
             }
         };
         overlay.setTrackingMode(UserLocationOverlay.TrackingMode.FOLLOW);
@@ -98,6 +113,25 @@ public class Maps extends Activity {
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.maps_layout);
         imageViewLayout = (LinearLayout) findViewById(R.id.imageViewLayout);
         imageView = (ImageView) findViewById(R.id.imageSearch);
+    }
+
+    private void hideCameraButton() {
+        if (cameraButtonShown) {
+            Drawable background = getResources().getDrawable(R.drawable.map_distance_button);
+            distanceButton.setBackgroundDrawable(background);
+            distanceButton.setText(String.valueOf(Math.round(place.distanceTo(mLastLocation))));
+        }
+        cameraButtonShown = false;
+    }
+
+    private void showCameraButton() {
+        if (!cameraButtonShown) {
+            distanceButton.setText("");
+            // TODO insert drawable for camera button
+            Drawable background = getResources().getDrawable(R.drawable.map_distance_button);
+            distanceButton.setBackgroundDrawable(background);
+        }
+        cameraButtonShown = true;
     }
 
     @Override
