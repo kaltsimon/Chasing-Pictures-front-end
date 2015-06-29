@@ -145,6 +145,7 @@ public class CameraActivity extends Activity {
         startActivity(intent);
     }
 
+    // region Flash Cycle
     public void setFlashAuto(View view){
         params.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
         buttonFlashToAuto.setVisibility(View.GONE);
@@ -165,7 +166,7 @@ public class CameraActivity extends Activity {
         buttonFlashToOn.setVisibility(View.GONE);
         buttonFlashToOff.setVisibility(View.GONE);
     }
-
+    // endregion
 
     /** A safe way to get an instance of the Camera object. */
     @Nullable
