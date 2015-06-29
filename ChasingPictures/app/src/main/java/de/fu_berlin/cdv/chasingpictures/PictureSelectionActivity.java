@@ -64,6 +64,12 @@ public class PictureSelectionActivity extends Activity {
         public void onConnected(Bundle connectionHint) {
             Log.d(TAG, "Connected to Google API services.");
 
+            Location lastLocation = getLastLocation();
+            if (lastLocation != null) {
+                mLastLocation = lastLocation;
+                new LocationTask().execute(mLastLocation);
+            }
+
             // TODO: Find sensible values for location updates, i.e. when do we want to search for new places
             startLocationUpdates(
                     makeLocationRequest(),
