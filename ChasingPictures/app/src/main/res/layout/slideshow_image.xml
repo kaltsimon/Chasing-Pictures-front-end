@@ -6,4 +6,4 @@
     android:layout_centerVertical="true"
     android:layout_centerHorizontal="true"
     android:contentDescription="@string/title_activity_slideshow"
-    android:scaleType="centerInside" />
+    android:scaleType="fitCenter" />
