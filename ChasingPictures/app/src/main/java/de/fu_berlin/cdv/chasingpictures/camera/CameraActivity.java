@@ -2,6 +2,7 @@ package de.fu_berlin.cdv.chasingpictures.camera;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -96,7 +97,7 @@ public class CameraActivity extends Activity {
         //endregion
 
         // Create our Preview view and set it as the content of our activity.
-        mPreview = new CameraPreview(this, mCamera);
+        mPreview = new CameraPreview(this, mCamera, BitmapFactory.decodeResource(getResources(), R.drawable.wireframe_rathaus));
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mPreview);
     }
