@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -42,10 +43,10 @@ public class CameraActivity extends Activity {
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final String EXTRA_IMAGE_FILE = "de.fu_berlin.cdv.chasingpictures.EXTRA_IMAGE_FILE";
     private Intent mResultData;
-    private Button buttonEscape;
-    private Button buttonTakePicture;
-    private Button buttonRetry;
-    private Button buttonFinish;
+    private ImageView buttonEscape;
+    private ImageView buttonTakePicture;
+    private ImageView buttonRetry;
+    private ImageView buttonFinish;
     private Button buttonFlashToAuto;
     private Button buttonFlashToOn;
     private Button buttonFlashToOff;
@@ -62,10 +63,10 @@ public class CameraActivity extends Activity {
         mPictureCallback = new PictureCallback();
         mResultData = new Intent();
 
-        buttonEscape = (Button) findViewById(R.id.escapeButton);
-        buttonTakePicture = (Button) findViewById(R.id.takePictureButton);
-        buttonRetry = (Button) findViewById(R.id.retryPictureButton);
-        buttonFinish = (Button) findViewById(R.id.finishCameraButton);
+        buttonEscape = (ImageView) findViewById(R.id.escapeButton);
+        buttonTakePicture = (ImageView) findViewById(R.id.takePictureButton);
+        buttonRetry = (ImageView) findViewById(R.id.retryPictureButton);
+        buttonFinish = (ImageView) findViewById(R.id.finishCameraButton);
         buttonFlashToAuto = (Button) findViewById(R.id.flashToAutoCameraButton);
         buttonFlashToOn = (Button) findViewById(R.id.flashToOnCameraButton);
         buttonFlashToOff = (Button) findViewById(R.id.flashToOffCameraButton);

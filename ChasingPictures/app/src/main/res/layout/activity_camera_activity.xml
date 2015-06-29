@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,16 +12,18 @@
 
     </FrameLayout>
 
-    <Button
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/takePictureButton"
-        android:text="o"
         android:layout_gravity="center_horizontal|bottom"
         android:onClick="takePic"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/camera_shutter"
+        tools:ignore="ContentDescription"
+        />
 
     <Button
         android:layout_width="wrap_content"
@@ -55,38 +58,46 @@
         android:layout_alignParentEnd="true"
         android:visibility="gone"/>
 
-    <Button
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="n"
         android:id="@+id/finishCameraButton"
         android:onClick="showMyPic"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:src="@drawable/camera_accept"
+        tools:visibility="visible"
+        tools:ignore="ContentDescription"
+        />
 
-    <Button
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="r"
         android:id="@+id/retryPictureButton"
         android:onClick="retry"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:src="@drawable/camera_quit"
+        tools:visibility="visible"
+        tools:ignore="ContentDescription"
+        />
 
-    <Button
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="e"
         android:id="@+id/escapeButton"
         android:onClick="escape"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        android:src="@drawable/camera_quit"
+        tools:ignore="ContentDescription"
+        />
 
 
 </RelativeLayout>
