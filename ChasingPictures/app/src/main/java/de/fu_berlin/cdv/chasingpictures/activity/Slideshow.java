@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import org.springframework.http.ResponseEntity;
 
@@ -43,7 +42,7 @@ public class Slideshow extends Activity {
     protected List<Picture> mPictures;
     private ProgressBar mProgressBar;
     private ViewGroup mContainerView;
-    private RelativeLayout currentImageLayout;
+    private ImageView currentImageView;
     private Handler mHandler;
     private Place mPlace;
     private SlideshowTask mSlideshowTask;
@@ -108,23 +107,21 @@ public class Slideshow extends Activity {
      * @param index Index of the picture in the {@link #mPictures} list
      */
     private void setNewPicture(int index) {
-        RelativeLayout relativeLayout = (RelativeLayout) LayoutInflater.from(this).inflate(
+        ImageView newImageView = (ImageView) LayoutInflater.from(this).inflate(
                 R.layout.slideshow_image,
                 mContainerView,
                 false
         );
 
-        ImageView newImageView = (ImageView) relativeLayout.getChildAt(0);
-
         newImageView.setImageBitmap(getBitmapForIndex(index));
 
-        if (currentImageLayout != null) {
-            currentImageLayout.setVisibility(View.INVISIBLE);
-            mContainerView.removeView(currentImageLayout);
+        if (currentImageView != null) {
+            currentImageView.setVisibility(View.INVISIBLE);
+            mContainerView.removeView(currentImageView);
         }
 
-        currentImageLayout = relativeLayout;
-        mContainerView.addView(relativeLayout, 0);
+        currentImageView = newImageView;
+        mContainerView.addView(currentImageView, 0);
     }
 
     /**
