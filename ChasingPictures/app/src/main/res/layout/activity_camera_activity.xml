@@ -27,38 +27,18 @@
         android:layout_marginRight="@dimen/camera.buttons.margin"
         android:layout_marginEnd="@dimen/camera.buttons.margin" />
 
-    <Button
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="f1"
-        android:id="@+id/flashToAutoCameraButton"
-        android:onClick="setFlashAuto"
+        android:id="@+id/flashButton"
+        android:onClick="cycleFlash"
+        android:visibility="visible"
+        android:src="@drawable/flash_off"
+        tools:ignore="ContentDescription"
+        android:layout_marginTop="@dimen/camera.buttons.margin"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="f2"
-        android:id="@+id/flashToOnCameraButton"
-        android:onClick="setFlashOn"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="f3"
-        android:id="@+id/flashToOffCameraButton"
-        android:onClick="setFlashOff"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone"/>
+        android:layout_alignLeft="@+id/finishCameraButton"
+        android:layout_alignStart="@+id/finishCameraButton" />
 
     <ImageView
         android:layout_width="wrap_content"

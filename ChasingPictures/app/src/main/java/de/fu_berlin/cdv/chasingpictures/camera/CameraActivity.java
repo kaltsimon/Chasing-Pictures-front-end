@@ -7,12 +7,12 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -23,10 +23,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
-import de.fu_berlin.cdv.chasingpictures.MainActivity;
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
@@ -46,10 +47,9 @@ public class CameraActivity extends Activity {
     private ImageView buttonTakePicture;
     private ImageView buttonRetry;
     private ImageView buttonFinish;
-    private Button buttonFlashToAuto;
-    private Button buttonFlashToOn;
-    private Button buttonFlashToOff;
+    private ImageView buttonFlash;
     private boolean viewingPhoto;
+    private FlashMode flashMode = FlashMode.OFF;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +66,7 @@ public class CameraActivity extends Activity {
         buttonTakePicture = (ImageView) findViewById(R.id.takePictureButton);
         buttonRetry = (ImageView) findViewById(R.id.retryPictureButton);
         buttonFinish = (ImageView) findViewById(R.id.finishCameraButton);
-        buttonFlashToAuto = (Button) findViewById(R.id.flashToAutoCameraButton);
-        buttonFlashToOn = (Button) findViewById(R.id.flashToOnCameraButton);
-        buttonFlashToOff = (Button) findViewById(R.id.flashToOffCameraButton);
+        buttonFlash = (ImageView) findViewById(R.id.flashButton);
     }
 
     @Override
@@ -91,7 +89,7 @@ public class CameraActivity extends Activity {
             // set the focus mode
             params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
         }
-        params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        flashMode.setParam(params);
 
         // set Camera parameters
         mCamera.setParameters(params);
@@ -123,9 +121,7 @@ public class CameraActivity extends Activity {
         viewingPhoto = true;
         buttonTakePicture.setVisibility(View.INVISIBLE);
         buttonFinish.setVisibility(View.VISIBLE);
-        buttonFlashToAuto.setVisibility(View.INVISIBLE);
-        buttonFlashToOn.setVisibility(View.INVISIBLE);
-        buttonFlashToOff.setVisibility(View.INVISIBLE);
+        buttonFlash.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -143,34 +139,63 @@ public class CameraActivity extends Activity {
      */
     public void retryOrQuit(View view){
         if (viewingPhoto) { // If we are viewing a photo, go back to camera preview mode
+            viewingPhoto = false;
             mCamera.startPreview();
+            buttonTakePicture.setVisibility(View.VISIBLE);
+            buttonFinish.setVisibility(View.INVISIBLE);
+            buttonFlash.setVisibility(View.VISIBLE);
         } else { // If in photo taking mode, just quit
             finish();
         }
     }
 
-    // region Flash Cycle
-    public void setFlashAuto(View view){
-        params.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
-        buttonFlashToAuto.setVisibility(View.INVISIBLE);
-        buttonFlashToOn.setVisibility(View.VISIBLE);
-        buttonFlashToOff.setVisibility(View.INVISIBLE);
+    private enum FlashMode {
+        OFF, ON, AUTO // currently not implemented
+        ;
+
+        private static final Map<FlashMode, String> parameters = new HashMap<>(3);
+        private static final Map<FlashMode, Integer> imageResources = new HashMap<>(3);
+
+        static {
+            parameters.put(OFF, Camera.Parameters.FLASH_MODE_OFF);
+            parameters.put(ON, Camera.Parameters.FLASH_MODE_ON);
+            parameters.put(AUTO, Camera.Parameters.FLASH_MODE_AUTO);
+
+            imageResources.put(OFF, R.drawable.flash_off);
+            imageResources.put(ON, R.drawable.flash_on);
+            // not yet implemented (because we are missing the icon)
+            // imageResources.put(AUTO, R.drawable.flash_auto);
+        }
+
+        @DrawableRes
+        public int getButtonImageResource() {
+            return imageResources.get(this);
+        }
+
+        public void setParam(Camera.Parameters cameraParams) {
+            cameraParams.setFlashMode(parameters.get(this));
+        }
+
+        public FlashMode next() {
+            switch (this) {
+                case OFF:
+                    return FlashMode.ON;
+                case ON:
+                    return FlashMode.OFF;
+                case AUTO: // not implemented
+                    return FlashMode.OFF;
+                default:
+                    return FlashMode.OFF;
+            }
+        }
     }
 
-    public void setFlashOn(View view){
-        params.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-        buttonFlashToAuto.setVisibility(View.INVISIBLE);
-        buttonFlashToOn.setVisibility(View.INVISIBLE);
-        buttonFlashToOff.setVisibility(View.VISIBLE);
+    public void cycleFlash(View view) {
+        flashMode = flashMode.next();
+        flashMode.setParam(params);
+        mCamera.setParameters(params);
+        buttonFlash.setImageResource(flashMode.getButtonImageResource());
     }
-
-    public void setFlashOff(View view){
-        params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-        buttonFlashToAuto.setVisibility(View.VISIBLE);
-        buttonFlashToOn.setVisibility(View.INVISIBLE);
-        buttonFlashToOff.setVisibility(View.INVISIBLE);
-    }
-    // endregion
 
     /** A safe way to get an instance of the Camera object. */
     @Nullable
