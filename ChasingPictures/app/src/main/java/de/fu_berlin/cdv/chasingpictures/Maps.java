@@ -149,8 +149,7 @@ public class Maps extends Activity {
     private void showCameraButton() {
         if (!cameraButtonShown) {
             distanceButton.setText("");
-            // TODO insert drawable for camera button
-            Drawable background = getResources().getDrawable(R.drawable.map_distance_button);
+            Drawable background = getResources().getDrawable(R.drawable.camera_button);
             distanceButton.setBackgroundDrawable(background);
             distanceButton.setOnClickListener(cameraClickListener);
         }
