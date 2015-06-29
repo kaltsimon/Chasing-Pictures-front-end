@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,10 +15,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationServices;
 
 import org.springframework.http.ResponseEntity;
 
@@ -63,6 +60,12 @@ public class PictureSelectionActivity extends Activity {
         @Override
         public void onConnected(Bundle connectionHint) {
             Log.d(TAG, "Connected to Google API services.");
+
+            Location lastLocation = getLastLocation();
+            if (lastLocation != null) {
+                mLastLocation = lastLocation;
+                new LocationTask(false).execute(mLastLocation);
+            }
 
             // TODO: Find sensible values for location updates, i.e. when do we want to search for new places
             startLocationUpdates(
@@ -117,6 +120,16 @@ public class PictureSelectionActivity extends Activity {
 
     private class LocationTask extends AsyncTask<Location, Object, List<Place>> {
 
+        private final boolean exitOnEmptyResult;
+
+        public LocationTask(boolean exitOnEmptyResult) {
+            this.exitOnEmptyResult = exitOnEmptyResult;
+        }
+
+        public LocationTask() {
+            this(true);
+        }
+
         @Override
         protected List<Place> doInBackground(Location... params) {
             if (params.length == 0 || params[0] == null)
@@ -131,8 +144,11 @@ public class PictureSelectionActivity extends Activity {
         @Override
         protected void onPostExecute(List<Place> resultPlaces) {
             if (resultPlaces == null || resultPlaces.isEmpty()) {
+                // TODO: Show better error and do not exit activity
                 Utilities.showError(getApplicationContext(), "No places found nearby");
-                finish();
+                if (exitOnEmptyResult) {
+                    finish();
+                }
                 return;
             }
 
