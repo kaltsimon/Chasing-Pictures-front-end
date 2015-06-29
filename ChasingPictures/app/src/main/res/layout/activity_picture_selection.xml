@@ -1,37 +1,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:layout_gravity="center"
     tools:context="de.fu_berlin.cdv.chasingpictures.PictureSelectionActivity"
-    android:id="@+id/picture_selection_layout">
+    android:id="@+id/picture_selection_layout"
+    android:animateLayoutChanges="true"
+    >
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="300dp"
         android:contentDescription="Picture"
         android:id="@+id/picture_card_image"
         android:src="@drawable/rathaus"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:visibility="invisible"
-        android:layout_alignBottom="@+id/locationProgressBar"
         tools:visibility="visible"
         tools:ignore="HardcodedText"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text=""
-        android:id="@+id/place_info"
-        android:layout_gravity="center"
-        android:layout_below="@id/picture_card_image"
-        android:layout_centerHorizontal="true"
-        tools:text="25m"
         />
 
     <ProgressBar
@@ -54,7 +43,24 @@
         android:layout_marginTop="105dp"
         android:indeterminate="true"
         android:visibility="gone"
-        tools:visibility="gone"
+        tools:visibility="visible"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/place_distance"
+        android:background="@drawable/preview_distance"
+        android:layout_alignBottom="@+id/picture_card_image"
+        android:layout_alignRight="@+id/picture_card_image"
+        android:layout_alignEnd="@+id/picture_card_image"
+        android:textColor="@color/text_white"
+        android:textSize="24sp"
+        android:text="25 m"
+        android:textAllCaps="false"
+        android:visibility="invisible"
+        tools:ignore="HardcodedText"
+        tools:visibility="visible"
         />
 
 </RelativeLayout>
