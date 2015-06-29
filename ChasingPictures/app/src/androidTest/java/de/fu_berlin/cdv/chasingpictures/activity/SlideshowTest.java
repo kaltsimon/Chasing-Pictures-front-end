@@ -20,18 +20,11 @@ public class SlideshowTest extends ActivityInstrumentationTestCase2<Slideshow> {
 
     public void setUp() throws Exception {
         super.setUp();
-        Place placeWithPictures = DebugUtilities.getPlaceWithPictures();
-        if (placeWithPictures != null) {
-            List<Picture> pictures = placeWithPictures.getPictures();
+        Place place = new Place();
+        place.setId(6);
 
-            // Set up activity intent
-            Intent intent = Slideshow.createIntent(getInstrumentation().getContext(), pictures);
-            setActivityIntent(intent);
-        }
-    }
-
-    public void testIntentDataReceived() throws Exception {
-        List<Picture> pictures = getActivity().pictures;
-        assertFalse("Received no pictures from Intent", pictures == null || pictures.isEmpty());
+        // Set up activity intent
+        Intent intent = Slideshow.createIntent(getInstrumentation().getContext(), place);
+        setActivityIntent(intent);
     }
 }

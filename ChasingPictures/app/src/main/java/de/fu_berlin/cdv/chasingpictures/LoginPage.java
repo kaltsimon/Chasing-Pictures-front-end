@@ -3,19 +3,16 @@ package de.fu_berlin.cdv.chasingpictures;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
-
-import de.fu_berlin.cdv.chasingpictures.api.UserData;
-import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 
+/**
+ * This activity presents a page where the user can choose to
+ * either log in or register a new account.
+ *
+ * @author Simon Kalt
+ */
 public class LoginPage extends Activity {
-
-    public static final int LOGIN = 1;
-    public static final int REGISTER = 2;
-    public static final String TAG = "LoginPage";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,24 +20,30 @@ public class LoginPage extends Activity {
         setContentView(R.layout.activity_login_page);
     }
 
+    /**
+     * On tapping the log in button, go to the log in form.
+     */
     public void showLoginForm(View view) {
         Intent intent = new Intent(this, LoginForm.class);
-        startActivityForResult(intent, LOGIN);
+        startActivityForResult(intent, MainActivity.REQUEST_LOGIN_REGISTER);
     }
 
+    /**
+     * On tapping the register button, go to the registration form.
+     */
     public void showRegisterForm(View view) {
         Intent intent = new Intent(this, Register.class);
-        startActivityForResult(intent, REGISTER);
+        startActivityForResult(intent, MainActivity.REQUEST_LOGIN_REGISTER);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // If the sub-activity says that log in/registration succeeded, pass on that result
         if (resultCode == RESULT_OK) {
             setResult(RESULT_OK);
             finish();
-        } else {
-            Log.d(TAG, "Log in/Register result not OK!");
-            // Do nothing
         }
+
+        // Otherwise, stay here and let the user decide what to do
     }
 }

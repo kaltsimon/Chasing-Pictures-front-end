@@ -1,19 +1,30 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
+import android.util.Log;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+
+import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 /**
  * Abstract class for API requests.
+ *
  * @author Simon Kalt
  */
 public abstract class ApiRequest<ResponseType> {
-    protected final ApiUtil apiUtil;
+    private static final String TAG = "ApiRequest";
     protected final String apiUri;
     protected final RestTemplate restTemplate;
     protected final Context context;
@@ -21,14 +32,37 @@ public abstract class ApiRequest<ResponseType> {
 
     protected ApiRequest(Context context, int endpointResID) {
         this.context = context;
-        this.apiUtil = new ApiUtil(context);
-        this.apiUri = apiUtil.getURIforEndpoint(endpointResID);
-        this.restTemplate = ApiUtil.buildJsonRestTemplate();
+        this.apiUri = getURIforEndpoint(context, endpointResID);
+        this.restTemplate = buildJsonRestTemplate();
         this.headers = new HttpHeaders();
     }
 
     /**
+     * Builds a basic JSON rest template for sending requests.
+     *
+     * @return A RestTemplate with a {@link org.springframework.http.converter.json.MappingJackson2HttpMessageConverter} attached.
+     */
+    public static RestTemplate buildJsonRestTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        restTemplate.setErrorHandler(new DefaultAPIResponseErrorHandler());
+        return restTemplate;
+    }
+
+    /**
+     * Retrieves the API URI for the specified endpoint.
+     *
+     * @param context       The current context
+     * @param endpointResID A resource id pointing to an R.strings.api_path_* value
+     * @return The URI to send your request to
+     */
+    public static String getURIforEndpoint(Context context, @StringRes int endpointResID) {
+        return context.getString(R.string.api_url) + context.getString(endpointResID);
+    }
+
+    /**
      * Sends this request to the API.
+     *
      * @return A {@link ResponseEntity} with the result of the call.
      */
     protected abstract ResponseEntity<ResponseType> send();
@@ -51,13 +85,45 @@ public abstract class ApiRequest<ResponseType> {
     }
 
     /**
+     * This method is called when an exception is thrown in the {@link #send()} method.
+     *
+     * @param ex The exception that was thrown
+     */
+    protected void handleException(Exception ex) {
+        Log.e(TAG, "An exception occurred while sending the request.", ex);
+        Utilities.showError(context, R.string.api_error_server_unreachable);
+    }
+
+    /**
      * Sends this request to the API.
+     *
      * @return A {@link ResponseEntity} with the result of the call.
      */
     public final ResponseEntity<ResponseType> sendRequest() {
         beforeSending();
-        ResponseEntity<ResponseType> response = send();
-        afterSending(response);
-        return response;
+        try {
+            ResponseEntity<ResponseType> response = send();
+            afterSending(response);
+            return response;
+        } catch (Exception ex) {
+            handleException(ex);
+        }
+        return null;
+    }
+
+    /**
+     * This default error handler ignores the 403 error code,
+     * which is not always a fatal error.
+     */
+    public static class DefaultAPIResponseErrorHandler extends DefaultResponseErrorHandler {
+        public void handleError(ClientHttpResponse response) throws IOException {
+            final HttpStatus statusCode = response.getStatusCode();
+            if (statusCode == HttpStatus.FORBIDDEN || statusCode == HttpStatus.UNAUTHORIZED) {
+                // Request was denied,
+                // do nothing and return.
+                return;
+            }
+            super.handleError(response);
+        }
     }
 }

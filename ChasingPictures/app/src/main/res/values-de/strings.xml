@@ -22,4 +22,5 @@
     <string name="title_activity_camera">Kamera</string>
     <string name="title_activity_maps">Karte</string>
     <string name="title_activity_picture_selection">Bildauswahl</string>
+    <string name="api.error.server_unreachable">Server nicht erreichbar.</string>
 </resources>

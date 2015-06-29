@@ -9,9 +9,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +30,7 @@ import de.fu_berlin.cdv.chasingpictures.api.LocationRequest;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.api.PlacesApiResult;
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 
 public class PictureSelectionActivity extends Activity {
@@ -37,6 +41,9 @@ public class PictureSelectionActivity extends Activity {
     private List<Place> places;
     private int currentPlace = 0;
     private LocationHelper mLocationHelper;
+    private ProgressBar mLocationProgressBar;
+    private ProgressBar mImageProgressBar;
+
     private LocationListener placeFinderListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -44,7 +51,6 @@ public class PictureSelectionActivity extends Activity {
             new LocationTask().execute(location);
         }
     };
-
     private LocationListener distanceCalculatorListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -52,6 +58,19 @@ public class PictureSelectionActivity extends Activity {
             setPlaceInfoText(currentPlace);
         }
     };
+
+    private class PictureViewLocationHelper extends LocationHelper {
+        @Override
+        public void onConnected(Bundle connectionHint) {
+            Log.d(TAG, "Connected to Google API services.");
+
+            // TODO: Find sensible values for location updates, i.e. when do we want to search for new places
+            startLocationUpdates(
+                    makeLocationRequest(),
+                    placeFinderListener
+            );
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,96 +84,100 @@ public class PictureSelectionActivity extends Activity {
         mSwipeDetector = new SwipeDetector();
         mImageView = (ImageView) findViewById(R.id.picture_card_image);
         mImageView.setOnTouchListener(mSwipeDetector);
-
         mImageView.setOnClickListener(new ClickListener());
+
+        mLocationProgressBar = (ProgressBar) findViewById(R.id.locationProgressBar);
+        mImageProgressBar = (ProgressBar) findViewById(R.id.imageProgressBar);
+    }
+
+    private class MyPictureDownloader extends PictureDownloader {
+        public MyPictureDownloader() {
+            super(getCacheDir(), true);
+        }
+
+        @Override
+        protected void handleProgressUpdate(@NonNull Progress progress) {
+            if (progress.getState() == currentPlace) {
+                updatePicture();
+                showDelayedPlaceInfo(currentPlace);
+            }
+        }
+
+        @Override
+        protected void handleException(@Nullable Throwable exception) {
+            super.handleException(exception);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            updatePicture();
+            showDelayedPlaceInfo(currentPlace);
+        }
     }
 
     private class LocationTask extends AsyncTask<Location, Object, List<Place>> {
 
         @Override
         protected List<Place> doInBackground(Location... params) {
-            if (params.length == 0)
+            if (params.length == 0 || params[0] == null)
                 return null;
 
             LocationRequest request = new LocationRequest(getApplicationContext(), params[0]);
             ResponseEntity<PlacesApiResult> result = request.sendRequest();
-            List<Place> places = result.getBody().getPlaces();
-
-            if (places != null && places.size() > 0) {
-                // Since we have places now, deregister the listener
-                mLocationHelper.stopLocationUpdates(placeFinderListener);
-                // And register the distance calculator
-                LocationServices.FusedLocationApi.requestLocationUpdates(
-                        mLocationHelper.getGoogleApiClient(),
-                        LocationHelper.makeLocationRequest(),
-                        distanceCalculatorListener,
-                        getMainLooper() // We need to do this on the Main looper, otherwise our application will crash
-                );
-
-                // Download the first picture and update the image view
-                // as soon as we have it.
-                new PictureDownloader(getCacheDir()) {
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        updatePicture();
-                        showDelayedPlaceInfo(currentPlace);
-                    }
-                }.execute();
-
-                // Download the rest of the pictures
-                Picture[] pictures = new Picture[places.size()];
-                for (int i = 0; i < places.size(); i++) {
-                    pictures[i] = places.get(i).getPicture();
-                }
-
-                new PictureDownloader(getCacheDir())
-                        .execute(pictures);
-            }
-
-            return places;
+            PlacesApiResult body = result == null ? null : result.getBody();
+            return body == null ? null : body.getPlaces();
         }
 
         @Override
         protected void onPostExecute(List<Place> resultPlaces) {
-            if (resultPlaces != null)
-                places = resultPlaces;
-            updatePicture();
-            showDelayedPlaceInfo(currentPlace);
+            if (resultPlaces == null || resultPlaces.isEmpty()) {
+                Utilities.showError(getApplicationContext(), "No places found nearby");
+                finish();
+                return;
+            }
+
+            places = resultPlaces;
+            checkAndFixIndex();
+
+            // Since we have places now, de-register the listener
+            mLocationHelper.stopLocationUpdates(placeFinderListener);
+
+            // And register the distance calculator
+            mLocationHelper.startLocationUpdates(LocationHelper.makeLocationRequest(), distanceCalculatorListener);
+
+            // Hide the location progress bar
+            mLocationProgressBar.setVisibility(View.GONE);
+            mImageProgressBar.setVisibility(View.VISIBLE);
+
+            // Collect the pictures
+            Picture[] pictures = new Picture[places.size()];
+            for (int i = 0; i < places.size(); i++) {
+                pictures[i] = places.get(i).getFirstPicture();
+            }
+
+            // Download the pictures
+            new MyPictureDownloader().execute(pictures);
         }
     }
 
-    private class PictureViewLocationHelper extends LocationHelper {
-        @Override
-        public void onConnected(Bundle connectionHint) {
-            if (Debug.isDebuggerConnected())
-                Log.i(TAG, "Connected to Google API services.");
-
-            startLocationUpdates(
-                    makeLocationRequest(),
-                    placeFinderListener
-            );
-        }
-    }
 
     private void updatePicture() {
         if (checkAndFixIndex()) {
-            File cachedFile = places.get(currentPlace).getPicture().getCachedFile();
+            File cachedFile = places.get(currentPlace).getFirstPicture().getCachedFile();
             if (cachedFile != null) {
                 Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
                 mImageView.setImageBitmap(bitmap);
+                mImageProgressBar.setVisibility(View.GONE);
+                mImageView.setVisibility(View.VISIBLE);
             }
         }
         else {
-            Toast.makeText(
-                    this,
-                    "No places found nearby",
-                    Toast.LENGTH_SHORT
-            ).show();
+            Log.e(TAG, "No places available");
         }
     }
 
     private boolean checkAndFixIndex() {
-        if (places == null || places.size() == 0)
+        if (places == null || places.isEmpty())
             return false;
 
         // Fix the index, if necessary

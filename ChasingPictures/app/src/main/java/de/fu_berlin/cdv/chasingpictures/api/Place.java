@@ -127,7 +127,7 @@ public class Place implements Serializable {
      *
      * @return The first picture associated with this place.
      */
-    private Picture getFirstPicture() {
+    public Picture getFirstPicture() {
         return pictures == null || pictures.isEmpty() ? null : pictures.get(0);
     }
 
