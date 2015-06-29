@@ -36,6 +36,8 @@
         android:src="@drawable/flash_off"
         tools:ignore="ContentDescription"
         android:layout_marginTop="@dimen/camera.buttons.margin"
+        android:layout_marginLeft="@dimen/camera.buttons.sizeDifference.2"
+        android:layout_marginStart="@dimen/camera.buttons.sizeDifference.2"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/finishCameraButton"
         android:layout_alignStart="@+id/finishCameraButton" />
