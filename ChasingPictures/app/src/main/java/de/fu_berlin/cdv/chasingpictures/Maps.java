@@ -105,6 +105,10 @@ public class Maps extends Activity {
         overlay.setTrackingMode(UserLocationOverlay.TrackingMode.FOLLOW);
         overlay.setRequiredZoom(18);
         overlay.enableMyLocation();
+        overlay.setDrawAccuracyEnabled(false);
+        overlay.setPersonBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.user_location));
+        overlay.setDirectionArrowBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.user_location_pointer));
+
         mv.addOverlay(overlay);
         provider.startLocationProvider(overlay);
 
