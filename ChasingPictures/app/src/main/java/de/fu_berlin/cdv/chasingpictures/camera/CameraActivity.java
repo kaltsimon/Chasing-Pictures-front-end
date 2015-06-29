@@ -43,13 +43,13 @@ public class CameraActivity extends Activity {
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final String EXTRA_IMAGE_FILE = "de.fu_berlin.cdv.chasingpictures.EXTRA_IMAGE_FILE";
     private Intent mResultData;
-    private ImageView buttonEscape;
     private ImageView buttonTakePicture;
     private ImageView buttonRetry;
     private ImageView buttonFinish;
     private Button buttonFlashToAuto;
     private Button buttonFlashToOn;
     private Button buttonFlashToOff;
+    private boolean viewingPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,6 @@ public class CameraActivity extends Activity {
         mPictureCallback = new PictureCallback();
         mResultData = new Intent();
 
-        buttonEscape = (ImageView) findViewById(R.id.escapeButton);
         buttonTakePicture = (ImageView) findViewById(R.id.takePictureButton);
         buttonRetry = (ImageView) findViewById(R.id.retryPictureButton);
         buttonFinish = (ImageView) findViewById(R.id.finishCameraButton);
@@ -117,63 +116,59 @@ public class CameraActivity extends Activity {
         }
     }
 
-    public void takePic(View view){
+    public void takePicture(View view){
         // get an image from the camera
         mCamera.takePicture(null, null, mPictureCallback);
 
-        buttonEscape.setVisibility(View.GONE);
-        buttonTakePicture.setVisibility(View.GONE);
-        buttonRetry.setVisibility(View.VISIBLE);
+        viewingPhoto = true;
+        buttonTakePicture.setVisibility(View.INVISIBLE);
         buttonFinish.setVisibility(View.VISIBLE);
-        buttonFlashToAuto.setVisibility(View.GONE);
-        buttonFlashToOn.setVisibility(View.GONE);
-        buttonFlashToOff.setVisibility(View.GONE);
-    }
-
-    public void showMyPic(View view){
-        doFinish();
+        buttonFlashToAuto.setVisibility(View.INVISIBLE);
+        buttonFlashToOn.setVisibility(View.INVISIBLE);
+        buttonFlashToOff.setVisibility(View.INVISIBLE);
     }
 
     /**
      * Return to the previous activity, and return
      * the taken picture (if available).
      */
-    public void doFinish() {
+    public void acceptPhoto(View view){
         setResult(RESULT_OK, mResultData);
         finish();
     }
 
-    // TODO: This is probably not a very good idea to just start the activity again...
-    public void retry(View view){
-        Intent intent = new Intent(this, CameraActivity.class);
-        startActivity(intent);
-    }
-
-    public void escape(View view){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+    /**
+     * Depending on where we are at, quit the camera
+     * or go back to taking the photo.
+     */
+    public void retryOrQuit(View view){
+        if (viewingPhoto) { // If we are viewing a photo, go back to camera preview mode
+            mCamera.startPreview();
+        } else { // If in photo taking mode, just quit
+            finish();
+        }
     }
 
     // region Flash Cycle
     public void setFlashAuto(View view){
         params.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
-        buttonFlashToAuto.setVisibility(View.GONE);
+        buttonFlashToAuto.setVisibility(View.INVISIBLE);
         buttonFlashToOn.setVisibility(View.VISIBLE);
-        buttonFlashToOff.setVisibility(View.GONE);
+        buttonFlashToOff.setVisibility(View.INVISIBLE);
     }
 
     public void setFlashOn(View view){
         params.setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-        buttonFlashToAuto.setVisibility(View.GONE);
-        buttonFlashToOn.setVisibility(View.GONE);
+        buttonFlashToAuto.setVisibility(View.INVISIBLE);
+        buttonFlashToOn.setVisibility(View.INVISIBLE);
         buttonFlashToOff.setVisibility(View.VISIBLE);
     }
 
     public void setFlashOff(View view){
         params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
         buttonFlashToAuto.setVisibility(View.VISIBLE);
-        buttonFlashToOn.setVisibility(View.GONE);
-        buttonFlashToOff.setVisibility(View.GONE);
+        buttonFlashToOn.setVisibility(View.INVISIBLE);
+        buttonFlashToOff.setVisibility(View.INVISIBLE);
     }
     // endregion
 

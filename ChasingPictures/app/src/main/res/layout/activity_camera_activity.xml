@@ -8,6 +8,7 @@
         android:id="@+id/camera_preview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        tools:visibility="gone"
         >
 
     </FrameLayout>
@@ -17,13 +18,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/takePictureButton"
         android:layout_gravity="center_horizontal|bottom"
-        android:onClick="takePic"
+        android:onClick="takePicture"
+        android:src="@drawable/camera_shutter"
+        tools:ignore="ContentDescription"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/camera_shutter"
-        tools:ignore="ContentDescription"
-        />
+        android:layout_marginRight="@dimen/camera.buttons.margin"
+        android:layout_marginEnd="@dimen/camera.buttons.margin" />
 
     <Button
         android:layout_width="wrap_content"
@@ -62,42 +64,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/finishCameraButton"
-        android:onClick="showMyPic"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone"
+        android:onClick="acceptPhoto"
+        android:visibility="invisible"
         android:src="@drawable/camera_accept"
+        android:layout_marginTop="@dimen/camera.buttons.sizeDifference"
+        android:layout_marginLeft="@dimen/camera.buttons.sizeDifference"
+        android:layout_marginRight="@dimen/camera.buttons.sizeDifference"
+        android:layout_below="@+id/takePictureButton"
+        android:layout_alignLeft="@+id/takePictureButton"
+        android:layout_alignStart="@+id/takePictureButton"
         tools:visibility="visible"
-        tools:ignore="ContentDescription"
-        />
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/retryPictureButton"
-        android:onClick="retry"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:visibility="gone"
-        android:src="@drawable/camera_quit"
-        tools:visibility="visible"
-        tools:ignore="ContentDescription"
-        />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/escapeButton"
-        android:onClick="escape"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:onClick="retryOrQuit"
         android:visibility="visible"
         android:src="@drawable/camera_quit"
         tools:ignore="ContentDescription"
-        />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/camera.buttons.margin"
+        android:layout_alignLeft="@+id/finishCameraButton"
+        android:layout_alignStart="@+id/finishCameraButton" />
 
 
 </RelativeLayout>
