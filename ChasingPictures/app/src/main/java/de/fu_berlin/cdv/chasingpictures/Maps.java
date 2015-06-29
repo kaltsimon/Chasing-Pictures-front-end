@@ -40,6 +40,19 @@ public class Maps extends Activity {
     public static final String EXTRA_PLACE = "de.fu_berlin.cdv.chasingpictures.EXTRA_PLACE";
     private static final String TAG = "MapActivity";
     private static final float SHOW_CAMERA_DISTANCE = 5; // Show camera when less than 5 meters away
+    private final View.OnClickListener showHidePictureClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            pictureOverlay(v);
+        }
+    };
+    private final View.OnClickListener cameraClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+            startActivityForResult(intent, MainActivity.REQUEST_TAKE_PICTURE);
+        }
+    };
     private com.mapbox.mapboxsdk.geometry.LatLng startingPoint = new LatLng(51f, 0f);
     private MapView mv;
     private String satellite = "brunosan.map-cyglrrfu";
@@ -128,6 +141,7 @@ public class Maps extends Activity {
             Drawable background = getResources().getDrawable(R.drawable.map_distance_button);
             distanceButton.setBackgroundDrawable(background);
             distanceButton.setText(String.valueOf(Math.round(place.distanceTo(mLastLocation))));
+            distanceButton.setOnClickListener(showHidePictureClickListener);
         }
         cameraButtonShown = false;
     }
@@ -138,13 +152,7 @@ public class Maps extends Activity {
             // TODO insert drawable for camera button
             Drawable background = getResources().getDrawable(R.drawable.map_distance_button);
             distanceButton.setBackgroundDrawable(background);
-            distanceButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
-                    startActivityForResult(intent, MainActivity.REQUEST_TAKE_PICTURE);
-                }
-            });
+            distanceButton.setOnClickListener(cameraClickListener);
         }
         cameraButtonShown = true;
     }
