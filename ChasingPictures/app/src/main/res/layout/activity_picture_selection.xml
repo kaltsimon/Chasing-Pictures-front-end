@@ -17,7 +17,10 @@
         android:src="@drawable/rathaus"
         android:scaleType="fitCenter"
         android:visibility="invisible"
-        android:layout_alignBottom="@+id/locationProgressBar" />
+        android:layout_alignBottom="@+id/locationProgressBar"
+        tools:visibility="visible"
+        tools:ignore="HardcodedText"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,7 +30,9 @@
         android:id="@+id/place_info"
         android:layout_gravity="center"
         android:layout_below="@id/picture_card_image"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        tools:text="25m"
+        />
 
     <ProgressBar
         android:layout_width="wrap_content"
@@ -35,7 +40,9 @@
         android:id="@+id/locationProgressBar"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:indeterminate="true"/>
+        android:indeterminate="true"
+        tools:visibility="invisible"
+        />
 
     <ProgressBar
         style="?android:attr/progressBarStyleSmall"
@@ -46,6 +53,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="105dp"
         android:indeterminate="true"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="gone"
+        />
 
 </RelativeLayout>
