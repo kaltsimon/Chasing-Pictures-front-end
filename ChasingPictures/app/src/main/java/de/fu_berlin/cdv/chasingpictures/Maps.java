@@ -28,7 +28,11 @@ import com.mapbox.mapboxsdk.tileprovider.tilesource.MapboxTileLayer;
 import com.mapbox.mapboxsdk.tileprovider.tilesource.WebSourceTileLayer;
 import com.mapbox.mapboxsdk.views.MapView;
 
+import java.io.File;
+
+import de.fu_berlin.cdv.chasingpictures.api.PhotoUploadRequestTask;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
+import de.fu_berlin.cdv.chasingpictures.camera.CameraActivity;
 
 
 public class Maps extends Activity {
@@ -130,8 +134,29 @@ public class Maps extends Activity {
             // TODO insert drawable for camera button
             Drawable background = getResources().getDrawable(R.drawable.map_distance_button);
             distanceButton.setBackgroundDrawable(background);
+            distanceButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+                    startActivityForResult(intent, MainActivity.REQUEST_TAKE_PICTURE);
+                }
+            });
         }
         cameraButtonShown = true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case MainActivity.REQUEST_TAKE_PICTURE:
+                if (resultCode == RESULT_OK) {
+                    final File imageFile = (File) data.getSerializableExtra(CameraActivity.EXTRA_IMAGE_FILE);
+                    if (imageFile != null && imageFile.exists() && imageFile.length() > 0) {
+                        new PhotoUploadRequestTask(this, place, imageFile).execute();
+                    }
+                }
+                break;
+        }
     }
 
     @Override
