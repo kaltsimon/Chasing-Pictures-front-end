@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -102,18 +103,22 @@ public class Maps extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        String cachedFilePath = place.getPicture().getCachedFile().getPath();
+        String cachedFilePath = place.getFirstPicture().getCachedFile().getPath();
         Bitmap bitmap = BitmapFactory.decodeFile(cachedFilePath);
         imageView.setImageBitmap(bitmap);
 
-        // Hide the picture after a short delay,
-        // otherwise it does not have a height yet and it won't work properly
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pictureOverlay(imageView);
-            }
-        }, 500);
+        // Calculate the height of the image by hand, since imageView.getHeight doesnt work yet
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        Point window = new Point();
+        getWindowManager().getDefaultDisplay().getSize(window);
+
+        double scale = window.x/(double) width;
+        int actualHeight = (int) (height * scale);
+
+        // Move the image out of sight
+        imageViewLayout.setTranslationY(actualHeight);
     }
 
     protected void replaceMapView(String layer) {
@@ -154,7 +159,7 @@ public class Maps extends Activity {
 
     public void pictureOverlay(View view){
         int height = imageView.getHeight();
-        height = imageViewVisible ? -height : height;
+        height = imageViewVisible ? height : -height;
 
         ViewPropertyAnimator animator = imageViewLayout.animate();
         animator.translationYBy(height);
