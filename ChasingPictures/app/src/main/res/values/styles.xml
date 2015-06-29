@@ -8,6 +8,7 @@
     <color name="main_theme_color">@android:color/holo_green_dark</color>
     <color name="button_color">@android:color/holo_green_light</color>
     <color name="text_error_color">@android:color/holo_red_light</color>
+    <color name="base_color">#bd0303</color>
 
     <style name="Toolbar">
         <item name="android:background">@color/main_theme_color</item>
@@ -51,6 +52,6 @@
     </style>
 
     <style name="ButtonLine">
-        <item name="android:background">#bd0303</item>
+        <item name="android:background">@color/base_color</item>
     </style>
 </resources>
