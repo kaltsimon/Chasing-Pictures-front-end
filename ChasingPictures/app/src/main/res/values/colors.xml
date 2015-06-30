@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="main_theme_color">@color/main_90</color>
+    <color name="button_color">@color/main_85</color>
+    <color name="text_white">#ffffff</color>
+    <color name="text_90">#e61c1c1b</color>
+    <color name="text_64">#a31c1c1b</color>
+    <color name="main_100">#ffbf5a16</color>
+    <color name="main_90">#e6bf5a16</color>
+    <color name="main_85">#d8bf5a16</color>
+    <color name="main_70">#b2bf5a16</color>
+    <color name="base_color">#bd0303</color>
+    <color name="overlay_button">#c0878786</color>
+    <color name="overlay_button_pressed">#b2000000</color>
+    <color name="overlay_button_text">#ddffffff</color>
+</resources>
