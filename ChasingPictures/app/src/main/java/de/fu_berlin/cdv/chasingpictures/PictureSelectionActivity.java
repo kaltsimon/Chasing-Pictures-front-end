@@ -230,16 +230,18 @@ public class PictureSelectionActivity extends Activity {
         return places.get(placeNr).distanceTo(mLastLocation);
     }
 
+    public void startSearch(View view) {
+        if (checkAndFixIndex()) {
+            Intent intent = Maps.createIntent(this, places.get(currentPlace));
+            startActivity(intent);
+        }
+    }
+
     private class ClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            boolean swiped = false;
             if (mSwipeDetector.swipeDetected()) {
-                swiped = showNextPlace(mSwipeDetector.getAction());
-            }
-            if (!swiped && checkAndFixIndex()) {
-                Intent intent = Maps.createIntent(getApplicationContext(), places.get(currentPlace));
-                startActivity(intent);
+                showNextPlace(mSwipeDetector.getAction());
             }
         }
     }
