@@ -55,6 +55,7 @@ public class PictureSelectionActivity extends Activity {
             setPlaceInfoText(currentPlace);
         }
     };
+    private TextView mPlaceDistance;
 
     private class PictureViewLocationHelper extends LocationHelper {
         @Override
@@ -79,6 +80,7 @@ public class PictureSelectionActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_selection);
+        mPlaceDistance = (TextView) findViewById(R.id.place_distance);
 
         mLocationHelper = new PictureViewLocationHelper()
                 .buildGoogleApiClient(getApplicationContext())
@@ -205,7 +207,7 @@ public class PictureSelectionActivity extends Activity {
 
     private void showDelayedPlaceInfo(final int placeNr) {
         if (checkAndFixIndex()) {
-            ((TextView) findViewById(R.id.place_info)).setText("");
+            mPlaceDistance.setVisibility(View.INVISIBLE);
             new Handler().postDelayed(
                     new Runnable() {
                         @Override
@@ -219,9 +221,9 @@ public class PictureSelectionActivity extends Activity {
     }
 
     private void setPlaceInfoText(int placeNr) {
-        String text = String.valueOf(Math.round(getDistanceToPlace(placeNr))) + "m";
-        final TextView placeInfo = (TextView) findViewById(R.id.place_info);
-        placeInfo.setText(text);
+        String text = String.valueOf(Math.round(getDistanceToPlace(placeNr))) + " m";
+        mPlaceDistance.setText(text);
+        mPlaceDistance.setVisibility(View.VISIBLE);
     }
 
     private float getDistanceToPlace(int placeNr) {
