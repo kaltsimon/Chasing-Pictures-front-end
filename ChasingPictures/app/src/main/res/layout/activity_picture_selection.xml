@@ -63,4 +63,20 @@
         tools:visibility="visible"
         />
 
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/overlay_button_background"
+        android:text="@string/chase_picture"
+        android:id="@+id/chasePictureButton"
+        android:textColor="@color/overlay_button_text"
+        android:textStyle="italic"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="100dp"
+        />
+
 </RelativeLayout>

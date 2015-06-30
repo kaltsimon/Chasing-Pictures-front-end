@@ -23,4 +23,5 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_picture_selection">Picture Selection</string>
     <string name="api.error.server_unreachable">Server could not be reached.</string>
+    <string name="chase_picture">chase picture</string>
 </resources>
