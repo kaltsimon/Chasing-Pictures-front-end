@@ -78,6 +78,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="100dp"
         android:onClick="startSearch"
+        android:visibility="invisible"
+        tools:visibility="visible"
         />
 
 </RelativeLayout>
