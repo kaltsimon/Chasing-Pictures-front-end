@@ -15,21 +15,21 @@
             android:orientation="vertical"
             android:weightSum="3">
 
-            <ImageView
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/menuNext"
                 android:background="@drawable/next"
                 android:layout_weight="1"/>
 
-            <ImageView
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/menuNew"
                 android:background="@drawable/new_button"
                 android:layout_weight="1"/>
 
-            <ImageView
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/menuLast"
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageNext"
-                android:src="@drawable/new_aktuaisiert_1024"
+                android:src="@drawable/new_aktuaisiert"
                 android:scaleType="fitEnd"
                 android:adjustViewBounds="true"
                 android:layout_weight="1"/>
