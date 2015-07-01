@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class PictureSelectionActivity extends Activity {
     private LocationHelper mLocationHelper;
     private ProgressBar mLocationProgressBar;
     private ProgressBar mImageProgressBar;
+    private Button mChasePictureButton;
 
     private LocationListener placeFinderListener = new LocationListener() {
         @Override
@@ -90,6 +92,7 @@ public class PictureSelectionActivity extends Activity {
         mImageView = (ImageView) findViewById(R.id.picture_card_image);
         mImageView.setOnTouchListener(mSwipeDetector);
         mImageView.setOnClickListener(new ClickListener());
+        mChasePictureButton = (Button) findViewById(R.id.chasePictureButton);
 
         mLocationProgressBar = (ProgressBar) findViewById(R.id.locationProgressBar);
         mImageProgressBar = (ProgressBar) findViewById(R.id.imageProgressBar);
@@ -187,6 +190,7 @@ public class PictureSelectionActivity extends Activity {
                 mImageView.setImageBitmap(bitmap);
                 mImageProgressBar.setVisibility(View.GONE);
                 mImageView.setVisibility(View.VISIBLE);
+                mChasePictureButton.setVisibility(View.VISIBLE);
             }
         }
         else {
@@ -230,16 +234,18 @@ public class PictureSelectionActivity extends Activity {
         return places.get(placeNr).distanceTo(mLastLocation);
     }
 
+    public void startSearch(View view) {
+        if (checkAndFixIndex()) {
+            Intent intent = Maps.createIntent(this, places.get(currentPlace));
+            startActivity(intent);
+        }
+    }
+
     private class ClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            boolean swiped = false;
             if (mSwipeDetector.swipeDetected()) {
-                swiped = showNextPlace(mSwipeDetector.getAction());
-            }
-            if (!swiped && checkAndFixIndex()) {
-                Intent intent = Maps.createIntent(getApplicationContext(), places.get(currentPlace));
-                startActivity(intent);
+                showNextPlace(mSwipeDetector.getAction());
             }
         }
     }
