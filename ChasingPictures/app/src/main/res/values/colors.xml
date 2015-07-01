@@ -14,4 +14,5 @@
     <color name="overlay_button_pressed">#b2000000</color>
     <color name="overlay_button_text">#ddffffff</color>
     <color name="gradient_dark">#252525</color>
+    <color name="gradient_light">#47474B</color>
 </resources>
