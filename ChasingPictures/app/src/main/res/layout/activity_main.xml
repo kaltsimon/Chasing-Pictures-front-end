@@ -45,4 +45,10 @@
         android:text="@string/title_activity_slideshow"
         android:onClick="showSlideshow"/>
 
+    <Button
+        style="@style/Vertical.Button"
+        android:text="Go to Menu"
+        android:id="@+id/button"
+        android:onClick="showMenu" />
+
 </LinearLayout>
