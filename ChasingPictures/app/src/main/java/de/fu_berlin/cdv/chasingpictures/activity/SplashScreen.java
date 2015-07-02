@@ -44,7 +44,7 @@ public class SplashScreen extends Activity {
             Intent intent = new Intent(getApplicationContext(), PictureSelectionActivity.class);
             startActivity(intent);
         } else {
-            Utilities.showError(this, "Could not log in.");
+            Utilities.showError(this, R.string.login_fail);
         }
     }
 

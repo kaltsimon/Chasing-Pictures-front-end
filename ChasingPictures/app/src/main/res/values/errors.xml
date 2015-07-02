@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error.api.server_unreachable">Server could not be reached</string>
+    <string name="error.camera.open">Camera could not be opened</string>
+    <string name="error.download.failed">Download failed</string>
+    <string name="error.camera.no_photo">Received no photo</string>
+    <string name="error.api.no_pictures">Did not receive any pictures</string>
+    <string name="error.api.no_place">Did not receive a place</string>
+    <string name="error.location.no_places">No places found nearby</string>
+    <string name="error.slideshow.photo_unavailable">Photo %d unavailable</string>
+    <string name="error.upload.photo">Error uploading photo</string>
+</resources>

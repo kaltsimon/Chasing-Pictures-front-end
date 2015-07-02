@@ -14,7 +14,7 @@
     <string name="invalid_email">That is not a valid email address.</string>
     <string name="login_success">Login successful.</string>
     <string name="login_fail">Login failed.</string>
-    <string name="empty_password">Password cannot be empty.</string>
+    <string name="empty_password">Password cannot be empty</string>
     <string name="register.invalid_username">This name is invalid.</string>
     <string name="registration_fail">Registration failed.</string>
     <string name="title_activity_picture_selection">Picture Selection</string>

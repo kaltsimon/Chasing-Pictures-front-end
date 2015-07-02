@@ -150,7 +150,7 @@ public class PictureSelectionActivity extends Activity {
         protected void onPostExecute(List<Place> resultPlaces) {
             if (resultPlaces == null || resultPlaces.isEmpty()) {
                 // TODO: Show better error and do not exit activity
-                Utilities.showError(getApplicationContext(), "No places found nearby");
+                Utilities.showError(getApplicationContext(), R.string.error_location_no_places);
                 if (exitOnEmptyResult) {
                     finish();
                 }

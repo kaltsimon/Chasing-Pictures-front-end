@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 
+import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.activity.Slideshow;
 import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
@@ -42,7 +43,7 @@ public class PhotoUploadRequestTask extends AsyncTask<Void, Void, ResponseEntity
             );
             context.startActivity(intent);
         } else {
-            Utilities.showError(context, "Error uploading photo");
+            Utilities.showError(context, R.string.error_upload_photo);
         }
     }
 }

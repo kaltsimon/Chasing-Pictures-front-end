@@ -13,7 +13,7 @@
     <string name="invalid_email">That is not a valid email address.</string>
     <string name="login_success">Login successful.</string>
     <string name="login_fail">Login failed.</string>
-    <string name="empty_password">Password cannot be empty.</string>
+    <string name="empty_password">Password cannot be empty</string>
     <string name="register.invalid_username">This name is invalid.</string>
     <string name="registration_fail">Registration failed.</string>
     <string name="register.error.password_too_short">Password is too short (at least 8 characters)</string>
@@ -22,6 +22,5 @@
     <string name="title_activity_camera">Camera</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_picture_selection">Picture Selection</string>
-    <string name="api.error.server_unreachable">Server could not be reached.</string>
     <string name="chase_picture">chase picture</string>
 </resources>

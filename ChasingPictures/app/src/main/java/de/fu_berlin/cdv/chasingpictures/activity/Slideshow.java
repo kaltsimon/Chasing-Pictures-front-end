@@ -79,7 +79,7 @@ public class Slideshow extends Activity {
         mPlace = (Place) getIntent().getSerializableExtra(Maps.EXTRA_PLACE);
 
         if (mPlace == null) {
-            Utilities.showError(this, "Did not receive a place");
+            Utilities.showError(this, R.string.error_api_no_place);
             setResult(RESULT_CANCELED);
             finish();
         }
@@ -151,7 +151,7 @@ public class Slideshow extends Activity {
 
         } catch (NullPointerException | IndexOutOfBoundsException ex) {
             Log.e(TAG, "Could not read picture at slideshow index " + index + ".", ex);
-            Utilities.showError(this, "Photo %d unavailable", index);
+            Utilities.showError(this, R.string.error_slideshow_photo_unavailable, index);
         }
 
         return bitmap;
@@ -190,7 +190,7 @@ public class Slideshow extends Activity {
         protected void onPostExecute(List<Picture> pictures) {
             if (pictures == null) {
                 // We have no reason to stay here...
-                Utilities.showError(getApplicationContext(), "Did not receive any pictures");
+                Utilities.showError(getApplicationContext(), R.string.error_api_no_pictures);
                 finish();
             }
             else {
@@ -220,7 +220,7 @@ public class Slideshow extends Activity {
         protected void handleException(@Nullable Throwable exception) {
             super.handleException(exception);
             if (exception != null) {
-                Utilities.showError(getApplicationContext(), "Download failed.");
+                Utilities.showError(getApplicationContext(), R.string.error_download_failed);
                 // TODO: Cancel and exit?
             }
         }

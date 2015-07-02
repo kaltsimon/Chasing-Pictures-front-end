@@ -96,12 +96,12 @@ public class MainActivity extends Activity {
 
                                     startActivity(intent);
                                 } else {
-                                    Utilities.showError(getApplicationContext(), "Error uploading photo");
+                                    Utilities.showError(getApplicationContext(), R.string.error_upload_photo);
                                 }
                             }
                         }.execute(place);
                     } else {
-                        Utilities.showError(this, "Received no photo");
+                        Utilities.showError(this, R.string.error_camera_no_photo);
                     }
                 }
                 break;
