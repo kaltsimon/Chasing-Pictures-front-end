@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.R;
-import xdroid.toaster.Toaster;
 
 /**
  * Utility class to handle API access information.
@@ -31,7 +30,6 @@ public final class Access {
     private static void ensureInstance(Context context) {
         if (Access.preferences == null) {
             Access.preferences = getSharedPreferences(context);
-            Access.preferences.edit().commit();
         }
     }
 
@@ -78,7 +76,7 @@ public final class Access {
      */
     public static void setAccess(Context context, ResponseEntity<?> responseEntity) {
         ensureInstance(context);
-        Headers.storeAll(preferences, responseEntity);
+        storeAll(preferences, responseEntity);
     }
 
     /**
@@ -102,7 +100,7 @@ public final class Access {
      */
     public static void revokeAccess(Context context) {
         ensureInstance(context);
-        Headers.deleteAll(preferences);
+        deleteAll(preferences);
     }
 
     /**
@@ -119,27 +117,40 @@ public final class Access {
     }
 
     /**
-     * Returns the <em>first</em> header value for the given key.
-     *
-     * @param responseEntity The request response
-     * @param key            The name of the header field
-     * @return A string containing the first value for this header field
+     * Stores the relevant header values from the given response entity in the preferences.
+     * @param prefs The preferences to use
+     * @param responseEntity The response entity received from the API
      */
-    public static String getHeader(ResponseEntity<?> responseEntity, String key) {
-        List<String> headers = getHeaders(responseEntity, key);
-        return headers == null || headers.isEmpty() ? null : headers.get(0);
+    private static void storeAll(SharedPreferences prefs, ResponseEntity<?> responseEntity) {
+        SharedPreferences.Editor edit = prefs.edit();
+        HttpHeaders headers = responseEntity.getHeaders();
+
+        // Store the headers, but only if they aren't empty
+        if (headers != null) {
+            for (Headers header : Headers.values()) {
+                List<String> strings = headers.get(header.field);
+                if (strings == null || strings.isEmpty() || strings.get(0).isEmpty()) {
+                    // If one header value is empty, just quit
+                    return;
+                } else {
+                    edit.putString(header.field, strings.get(0));
+                }
+            }
+            edit.apply();
+        }
     }
 
     /**
-     * Returns all available header values for the given key.
+     * Deletes the access values stored in this application.
      *
-     * @param responseEntity The request response
-     * @param key            The name of the header field
-     * @return A list of strings containing the values for this header field
+     * @param prefs The preferences to use
      */
-    public static List<String> getHeaders(ResponseEntity<?> responseEntity, String key) {
-        HttpHeaders headers = responseEntity.getHeaders();
-        return headers == null ? null : headers.get(key);
+    public static void deleteAll(SharedPreferences prefs) {
+        SharedPreferences.Editor edit = prefs.edit().clear();
+        for (Headers header : Headers.values()) {
+            edit.remove(header.field);
+        }
+        edit.apply();
     }
 
     /**
@@ -168,25 +179,6 @@ public final class Access {
             return prefs.getString(field, null);
         }
 
-        public static void storeAll(SharedPreferences prefs, ResponseEntity<?> responseEntity) {
-            SharedPreferences.Editor edit = prefs.edit();
-            HttpHeaders headers = responseEntity.getHeaders();
-
-            // Store the headers, but only if they aren't empty
-            if (headers != null) {
-                for (Headers header : values()) {
-                    List<String> strings = headers.get(header.field);
-                    if (strings != null && !strings.isEmpty()) {
-                        String headerValue = strings.get(0);
-                        if (!headerValue.isEmpty())
-                            edit.putString(header.field, headerValue);
-                    }
-                }
-            }
-
-            edit.apply();
-        }
-
         /**
          * Gets the stored value of this header and sets it in the given HTTP headers.
          *
@@ -197,20 +189,5 @@ public final class Access {
             headers.set(field, load(prefs));
         }
 
-        /**
-         * Deletes the access values stored in this application.
-         *
-         * @param prefs The preferences to use
-         */
-        public static void deleteAll(SharedPreferences prefs) {
-            SharedPreferences.Editor edit = prefs.edit().clear();
-            for (Headers header : values()) {
-                edit.remove(header.field);
-            }
-
-            boolean commit = edit.commit();
-            if (!commit)
-                Toaster.toast("Could not delete access information!");
-        }
     }
 }
