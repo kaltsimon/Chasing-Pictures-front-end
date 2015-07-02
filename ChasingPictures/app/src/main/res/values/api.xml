@@ -6,7 +6,6 @@
     <string name="api.path.location_request" translatable="false">places/find?latitude={latitude}&amp;longitude={longitude}</string>
     <string name="api.path.picture" translatable="false">places/{placeId}</string>
     <string name="api.path.upload" translatable="false">pictures</string>
-    <string name="api.error.email" translatable="false">email</string>
-    <string name="api.error.password" translatable="false">password</string>
-    <string name="api.error.username" translatable="false">name</string>
+    <string name="api.errorKey.email" translatable="false">email</string>
+    <string name="api.access.prefsID" translatable="false">de.fu_berlin.cdv.chasingpictures.access</string>
 </resources>

@@ -23,4 +23,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_picture_selection">Picture Selection</string>
     <string name="chase_picture">chase picture</string>
+    <string name="title_activity_slideshow">Slideshow</string>
+    <string name="title_activity_menu">Menu</string>
 </resources>
