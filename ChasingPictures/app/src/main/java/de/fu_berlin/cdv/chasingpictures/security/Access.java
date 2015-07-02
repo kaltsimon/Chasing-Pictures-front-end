@@ -1,6 +1,8 @@
 package de.fu_berlin.cdv.chasingpictures.security;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.R;
+import xdroid.toaster.Toaster;
 
 /**
  * Utility class to handle API access information.
@@ -17,17 +20,31 @@ import de.fu_berlin.cdv.chasingpictures.R;
  *
  * @author Simon Kalt
  */
-public abstract class Access {
+public final class Access {
+
+    private static SharedPreferences preferences;
+
+    private Access() {
+
+    }
+
+    private static void ensureInstance(Context context) {
+        if (Access.preferences == null) {
+            Access.preferences = getSharedPreferences(context);
+            Access.preferences.edit().commit();
+        }
+    }
 
     /**
-     * Get the secure preferences for this app.
+     * Get the shared preferences for this app.
      *
      * @param context The current context
      * @return The {@link SecurePreferences} object for this app
      */
-    public static SecurePreferences getSecurePreferences(Context context) {
-        return SecurePreferences.getInstanceFromResources(context, R.string.security_prefsID);
+    private static SharedPreferences getSharedPreferences(Context context) {
+        return context.getSharedPreferences(context.getString(R.string.security_prefsID), Context.MODE_PRIVATE);
     }
+
 
     /**
      * Returns true if all access headers are stored in the application
@@ -37,15 +54,18 @@ public abstract class Access {
      * @return {@code true} if the stored access information is complete and not expired.
      */
     public static boolean hasAccess(Context context) {
-        SecurePreferences prefs = getSecurePreferences(context);
+        ensureInstance(context);
+
         for (Headers header : Headers.values()) {
-            String value = header.load(prefs);
+            String value = header.load(preferences);
             if (value == null || value.isEmpty()) {
                 return false;
             }
         }
 
-        long expirationTime = Long.parseLong(Headers.EXPIRY.load(prefs));
+        String expiryString = Headers.EXPIRY.load(preferences);
+        assert expiryString != null; // If it was, we would not be here
+        long expirationTime = Long.parseLong(expiryString);
         long currentTime = System.currentTimeMillis() / 1000;
         return expirationTime - currentTime > 0;
     }
@@ -57,10 +77,8 @@ public abstract class Access {
      * @param responseEntity The response received from the API request
      */
     public static void setAccess(Context context, ResponseEntity<?> responseEntity) {
-        SecurePreferences prefs = getSecurePreferences(context);
-        for (Headers header : Headers.values()) {
-            header.store(prefs, responseEntity);
-        }
+        ensureInstance(context);
+        Headers.storeAll(preferences, responseEntity);
     }
 
     /**
@@ -71,9 +89,9 @@ public abstract class Access {
      * @param headers The HTTP headers to be sent to the API
      */
     public static void getAccess(Context context, HttpHeaders headers) {
-        SecurePreferences prefs = getSecurePreferences(context);
+        ensureInstance(context);
         for (Headers header : Headers.values()) {
-            header.loadAndSet(prefs, headers);
+            header.loadAndSet(preferences, headers);
         }
     }
 
@@ -83,10 +101,8 @@ public abstract class Access {
      * @param context The current context
      */
     public static void revokeAccess(Context context) {
-        SecurePreferences prefs = getSecurePreferences(context);
-        for (Headers header : Headers.values()) {
-            header.delete(prefs);
-        }
+        ensureInstance(context);
+        Headers.deleteAll(preferences);
     }
 
     /**
@@ -142,24 +158,33 @@ public abstract class Access {
         }
 
         /**
-         * Load the value of this header from the secure preferences.
+         * Load the value of this header from the shared preferences.
          *
          * @param prefs The preferences to use
          * @return The stored value of the header, or {@code null} if it is not stored
          */
-        public String load(SecurePreferences prefs) {
-            return prefs.get(field);
+        @Nullable
+        public String load(SharedPreferences prefs) {
+            return prefs.getString(field, null);
         }
 
-        /**
-         * Store the value of this header received in the given response entity
-         * in the given secure preferences.
-         *
-         * @param prefs          The preferences to use
-         * @param responseEntity The entity received from the API
-         */
-        public void store(SecurePreferences prefs, ResponseEntity<?> responseEntity) {
-            prefs.put(field, getHeader(responseEntity, field));
+        public static void storeAll(SharedPreferences prefs, ResponseEntity<?> responseEntity) {
+            SharedPreferences.Editor edit = prefs.edit();
+            HttpHeaders headers = responseEntity.getHeaders();
+
+            // Store the headers, but only if they aren't empty
+            if (headers != null) {
+                for (Headers header : values()) {
+                    List<String> strings = headers.get(header.field);
+                    if (strings != null && !strings.isEmpty()) {
+                        String headerValue = strings.get(0);
+                        if (!headerValue.isEmpty())
+                            edit.putString(header.field, headerValue);
+                    }
+                }
+            }
+
+            edit.apply();
         }
 
         /**
@@ -168,17 +193,24 @@ public abstract class Access {
          * @param prefs   The preferences to use
          * @param headers The headers to be sent to the API
          */
-        public void loadAndSet(SecurePreferences prefs, HttpHeaders headers) {
+        public void loadAndSet(SharedPreferences prefs, HttpHeaders headers) {
             headers.set(field, load(prefs));
         }
 
         /**
-         * Deletes the value stored in the application for this header.
+         * Deletes the access values stored in this application.
          *
          * @param prefs The preferences to use
          */
-        public void delete(SecurePreferences prefs) {
-            prefs.remove(field);
+        public static void deleteAll(SharedPreferences prefs) {
+            SharedPreferences.Editor edit = prefs.edit().clear();
+            for (Headers header : values()) {
+                edit.remove(header.field);
+            }
+
+            boolean commit = edit.commit();
+            if (!commit)
+                Toaster.toast("Could not delete access information!");
         }
     }
 }

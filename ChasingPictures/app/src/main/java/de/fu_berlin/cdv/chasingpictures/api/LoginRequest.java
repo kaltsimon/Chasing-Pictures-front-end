@@ -41,7 +41,7 @@ public class LoginRequest extends ApiRequest<LoginApiResult> {
         return restTemplate.exchange(
                 apiUri,
                 HttpMethod.POST,
-                new HttpEntity<>(data, null),
+                new HttpEntity<>(data),
                 LoginApiResult.class
         );
     }
