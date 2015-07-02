@@ -37,7 +37,7 @@ public final class Access {
      * Get the shared preferences for this app.
      *
      * @param context The current context
-     * @return The {@link SecurePreferences} object for this app
+     * @return The {@link SharedPreferences} object for this app
      */
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences(context.getString(R.string.security_prefsID), Context.MODE_PRIVATE);
