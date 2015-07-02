@@ -32,10 +32,11 @@ android {
 }
 
 dependencies {
+    def jackson_version = "2.6.0-rc2"
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.2'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.3.2'
+    compile "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
+    compile "com.fasterxml.jackson.core:jackson-annotations:$jackson_version"
     compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:0.7.4@aar'){
         transitive=true
     }
