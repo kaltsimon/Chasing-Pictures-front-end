@@ -13,8 +13,6 @@ import de.fu_berlin.cdv.chasingpictures.security.Access;
 
 public class LoginForm extends Activity {
 
-    public static final String TAG = "LoginForm";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
