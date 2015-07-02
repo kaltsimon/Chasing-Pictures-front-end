@@ -5,25 +5,6 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Toolbar">
-        <item name="android:background">@color/main_theme_color</item>
-    </style>
-
-    <style name="Button">
-        <item name="android:background">@color/button_color</item>
-    </style>
-
-    <style name="ButtonInvi">
-        <item name="android:background">@android:color/transparent</item>
-    </style>
-
-    <style name="ToolbarButton">
-        <item name="android:background">@color/button_color</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_width">wrap_content</item>
-    </style>
-
     <style name="Vertical">
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:layout_marginTop">5dp</item>
@@ -48,9 +29,5 @@
         <item name="android:textColor">@color/main_theme_color</item>
         <item name="android:layout_gravity">start|left</item>
         <item name="android:layout_width">wrap_content</item>
-    </style>
-
-    <style name="ButtonLine">
-        <item name="android:background">@color/base_color</item>
     </style>
 </resources>
