@@ -5,7 +5,7 @@
     android:animateLayoutChanges="true"
     android:id="@+id/slideshowLayout"
     tools:context="de.fu_berlin.cdv.chasingpictures.activity.Slideshow"
-    android:background="@color/text_90"
+    android:background="@drawable/gradient_background"
     >
 
     <ProgressBar
@@ -19,5 +19,7 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
+        tools:max="100"
+        tools:progress="33"
         />
 </RelativeLayout>
