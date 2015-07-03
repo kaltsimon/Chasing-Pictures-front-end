@@ -95,7 +95,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/place_distance"
+                android:id="@+id/menuPlaceDistance"
                 android:background="@drawable/preview_distance"
                 android:layout_alignBottom="@+id/imageNext"
                 android:layout_alignRight="@+id/imageNext"
