@@ -14,10 +14,10 @@
             android:src="@drawable/image_new"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/imageLast"
+            android:layout_below="@id/containerLast"
             android:layout_alignBottom="@id/buttonNew"
-            android:layout_alignRight="@id/imageLast"
-            android:layout_alignEnd="@id/imageLast"
+            android:layout_alignRight="@id/containerLast"
+            android:layout_alignEnd="@id/containerLast"
             android:layout_marginTop="@dimen/menu.button.overlap.negative"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
@@ -26,22 +26,51 @@
             android:paddingStart="@dimen/menu.button.width"
             tools:ignore="RtlSymmetry" />
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/rathaus"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/containerNext"
             android:layout_alignRight="@id/containerNext"
             android:layout_alignEnd="@id/containerNext"
             android:layout_alignBottom="@id/buttonLast"
-            android:layout_marginBottom="@dimen/menu.button.overlap"
+            android:paddingBottom="@dimen/menu.button.overlap"
             android:layout_marginTop="@dimen/menu.button.overlap.negative"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:id="@+id/imageLast"
+            android:background="@drawable/shadow"
+            android:id="@+id/containerLast"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/rathaus"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:id="@+id/imageLast"
             />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/place_count"
+                android:background="@drawable/preview_count"
+                android:layout_alignBottom="@+id/imageLast"
+                android:layout_alignRight="@+id/imageLast"
+                android:layout_alignEnd="@+id/imageLast"
+                android:textColor="@color/text_white"
+                android:textSize="14sp"
+                android:text="121"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center_vertical|left|start"
+                android:paddingLeft="15dp"
+                android:paddingTop="4dp"
+                tools:ignore="HardcodedText"
+                />
+        </RelativeLayout>
+
+
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -62,6 +91,21 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:id="@+id/imageNext"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/place_distance"
+                android:background="@drawable/preview_distance"
+                android:layout_alignBottom="@+id/imageNext"
+                android:layout_alignRight="@+id/imageNext"
+                android:layout_alignEnd="@+id/imageNext"
+                android:textColor="@color/text_white"
+                android:textSize="14sp"
+                android:text="25 m"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:gravity="center"
+                tools:ignore="HardcodedText"
                 />
         </RelativeLayout>
 
