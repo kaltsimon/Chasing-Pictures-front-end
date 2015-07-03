@@ -27,14 +27,19 @@ import de.fu_berlin.cdv.chasingpictures.api.Place;
 public class Menu extends Activity {
 
     public static final Location BERLIN = new Location(LocationManager.PASSIVE_PROVIDER);
+    public static final ColorMatrixColorFilter GRAYSCALE_FILTER;
     private static final int REQUEST_PICTURE_SELECTION = 0;
     private static final int MIN_TIME = 5000;
     private static final int MIN_DISTANCE = 5;
 
-    // FIXME: Find a better place, this is currently directly at the town hall!
     static {
+        // FIXME: Find a better place, this is currently directly at the town hall!
         BERLIN.setLatitude(52.518405);
         BERLIN.setLongitude(13.408499);
+
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+        GRAYSCALE_FILTER = new ColorMatrixColorFilter(matrix);
     }
 
     private TextView mPlaceDistance;
@@ -65,10 +70,7 @@ public class Menu extends Activity {
         mPlaceDistance = (TextView) findViewById(R.id.menuPlaceDistance);
 
         // Filter the *next* image to grayscale
-        ColorMatrix matrix = new ColorMatrix();
-        matrix.setSaturation(0);
-        ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
-        mImageNext.setColorFilter(cf);
+        mImageNext.setColorFilter(GRAYSCALE_FILTER);
 
         mLocationHelper = new LocationHelper2(this);
         Location location = mLocationHelper.getLastKnownLocation();
