@@ -7,10 +7,14 @@ import android.graphics.ColorMatrixColorFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
+import de.fu_berlin.cdv.chasingpictures.api.LocationTask;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 
 
@@ -46,9 +50,20 @@ public class Menu extends Activity {
 
         location = new LocationHelper2(this).getLastKnownLocation();
 
-        // TODO: Send an API request with this location and set *place* to the first result.
-        // TODO: Use place to set the *next* picture
-        // TODO: Register a the listener to update the distance to that place
+        new LocationTask(this) {
+            @Override
+            protected void onPostExecute(@Nullable List<Place> places) {
+                if (places == null || places.isEmpty())
+                    return;
+
+                place = places.get(0);
+                // Check for null, just to be sure
+                if (place == null) return;
+
+                // TODO: Use place to set the *next* picture
+                // TODO: Register a the listener to update the distance to that place
+            }
+        };
     }
 
     public void goToPictureSelection(View view) {
