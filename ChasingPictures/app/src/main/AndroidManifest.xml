@@ -81,6 +81,10 @@
             android:label="@string/title_activity_slideshow"
             android:screenOrientation="landscape" >
         </activity>
+        <activity
+            android:name=".Menu"
+            android:label="@string/title_activity_menu" >
+        </activity>
     </application>
 
 </manifest>
