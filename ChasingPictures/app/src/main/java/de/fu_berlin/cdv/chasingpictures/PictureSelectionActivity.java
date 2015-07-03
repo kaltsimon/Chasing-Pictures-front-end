@@ -20,13 +20,15 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.List;
 
+import de.fu_berlin.cdv.chasingpictures.location.EasyLocationListener;
 import de.fu_berlin.cdv.chasingpictures.api.LocationTask;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
+import de.fu_berlin.cdv.chasingpictures.location.LocationHelper;
 import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
-import static de.fu_berlin.cdv.chasingpictures.LocationHelper2.DEFAULT_MIN_DISTANCE;
-import static de.fu_berlin.cdv.chasingpictures.LocationHelper2.DEFAULT_MIN_TIME;
+import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_DISTANCE;
+import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_TIME;
 
 
 public class PictureSelectionActivity extends Activity {
@@ -36,19 +38,19 @@ public class PictureSelectionActivity extends Activity {
     private SwipeDetector mSwipeDetector;
     private List<Place> places;
     private int currentPlace = 0;
-    private LocationHelper2 mLocationHelper;
+    private LocationHelper mLocationHelper;
     private ProgressBar mLocationProgressBar;
     private ProgressBar mImageProgressBar;
     private Button mChasePictureButton;
 
-    private LocationListener placeFinderListener = new LocationHelper2.EasyLocationListener() {
+    private LocationListener placeFinderListener = new EasyLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             mLastLocation = location;
             new MyLocationTask().execute(location);
         }
     };
-    private LocationListener distanceCalculatorListener = new LocationHelper2.EasyLocationListener() {
+    private LocationListener distanceCalculatorListener = new EasyLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             mLastLocation = location;
@@ -63,7 +65,7 @@ public class PictureSelectionActivity extends Activity {
         setContentView(R.layout.activity_picture_selection);
         mPlaceDistance = (TextView) findViewById(R.id.place_distance);
 
-        mLocationHelper = new LocationHelper2(this);
+        mLocationHelper = new LocationHelper(this);
 
         Location lastLocation = mLocationHelper.getLastKnownLocation();
         if (lastLocation != null) {

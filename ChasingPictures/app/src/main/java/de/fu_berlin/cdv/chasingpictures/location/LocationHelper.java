@@ -1,10 +1,9 @@
-package de.fu_berlin.cdv.chasingpictures;
+package de.fu_berlin.cdv.chasingpictures.location;
 
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -16,7 +15,7 @@ import java.util.Map;
  *
  * @author Simon Kalt
  */
-public class LocationHelper2 {
+public class LocationHelper {
     /**
      * The default minimum time interval for location updates (5 seconds).
      */
@@ -33,7 +32,7 @@ public class LocationHelper2 {
      *
      * @param context The current context
      */
-    public LocationHelper2(@NonNull Context context) {
+    public LocationHelper(@NonNull Context context) {
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
     }
 
@@ -88,7 +87,7 @@ public class LocationHelper2 {
      * @param minDistance
      * @return
      */
-    public LocationHelper2 startLocationUpdates(@NonNull LocationListener newListener, long minTime, float minDistance) {
+    public LocationHelper startLocationUpdates(@NonNull LocationListener newListener, long minTime, float minDistance) {
         addListener(newListener, minTime, minDistance);
         getLocation(true);
         return this;
@@ -151,25 +150,4 @@ public class LocationHelper2 {
     }
     //endregion
 
-    /**
-     * Class for easy {@link LocationListener} implementation.
-     * All methods except {@link #onLocationChanged(Location)} are implemented as stubs.
-     */
-    public static abstract class EasyLocationListener implements LocationListener {
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    }
 }

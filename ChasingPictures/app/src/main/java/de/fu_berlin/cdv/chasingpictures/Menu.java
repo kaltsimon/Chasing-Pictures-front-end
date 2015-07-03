@@ -22,8 +22,10 @@ import java.util.List;
 import de.fu_berlin.cdv.chasingpictures.api.LocationTask;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
+import de.fu_berlin.cdv.chasingpictures.location.EasyLocationListener;
+import de.fu_berlin.cdv.chasingpictures.location.LocationHelper;
 
-import static de.fu_berlin.cdv.chasingpictures.LocationHelper2.*;
+import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.*;
 
 
 public class Menu extends Activity {
@@ -45,20 +47,20 @@ public class Menu extends Activity {
     private TextView mPlaceDistance;
     private ImageView mImageNext;
     private Place place;
-    private final LocationListener distanceCalculatorListener = new LocationHelper2.EasyLocationListener() {
+    private final LocationListener distanceCalculatorListener = new EasyLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             updatePlaceDistance(location);
         }
     };
-    private final LocationListener placeFinderListener = new LocationHelper2.EasyLocationListener() {
+    private final LocationListener placeFinderListener = new EasyLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             mLocationHelper.stopLocationUpdates(this);
             sendLocationRequest(location);
         }
     };
-    private LocationHelper2 mLocationHelper;
+    private LocationHelper mLocationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,7 @@ public class Menu extends Activity {
         // Filter the *next* image to grayscale
         mImageNext.setColorFilter(GRAYSCALE_FILTER);
 
-        mLocationHelper = new LocationHelper2(this);
+        mLocationHelper = new LocationHelper(this);
         Location location = mLocationHelper.getLastKnownLocation();
 
         if (location == null) {
