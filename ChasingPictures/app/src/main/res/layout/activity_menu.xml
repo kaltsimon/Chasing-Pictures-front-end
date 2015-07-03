@@ -4,21 +4,37 @@
     tools:context="de.fu_berlin.cdv.chasingpictures.Menu">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/menu_bar"
+        android:gravity="end"
+        android:layout_alignParentBottom="true"
+        android:padding="8dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/me_button"
+            android:scaleType="centerInside"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Menu buttons -->
+
         <ImageView
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonNew"
-        android:scaleType="fitStart"
-        android:adjustViewBounds="true"
-        android:src="@drawable/menu_new"
-        android:layout_below="@+id/buttonLast"
-        android:layout_alignLeft="@+id/buttonLast"
-        android:layout_alignStart="@+id/buttonLast"
-        android:layout_marginTop="-22dp"
-        />
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonNew"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:src="@drawable/menu_new"
+            android:layout_below="@+id/buttonLast"
+            android:layout_alignLeft="@+id/buttonLast"
+            android:layout_alignStart="@+id/buttonLast"
+            android:layout_marginTop="-22dp" />
 
         <ImageView
             android:layout_width="40dp"
@@ -42,5 +58,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:src="@drawable/menu_next"/>
+
+
+
     </RelativeLayout>
 </RelativeLayout>
