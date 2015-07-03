@@ -22,6 +22,51 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Images -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image_new"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/imageLast"
+            android:layout_alignBottom="@id/buttonNew"
+            android:layout_marginTop="-22dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:id="@+id/imageNew"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rathaus"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/imageNext"
+            android:layout_alignBottom="@id/buttonLast"
+            android:layout_marginBottom="22dp"
+            android:layout_marginTop="-22dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:id="@+id/imageLast"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rathaus"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBottom="@id/buttonNext"
+            android:layout_marginBottom="22dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:id="@+id/imageNext"
+            />
+
+
+
         <!-- Menu buttons -->
 
         <ImageView
@@ -58,8 +103,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:src="@drawable/menu_next"/>
-
-
 
     </RelativeLayout>
 </RelativeLayout>
