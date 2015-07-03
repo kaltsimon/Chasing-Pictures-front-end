@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.os.AsyncTask;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -17,19 +17,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.location.LocationListener;
-
-import org.springframework.http.ResponseEntity;
-
 import java.io.File;
 import java.util.List;
 
-import de.fu_berlin.cdv.chasingpictures.api.LocationRequest;
 import de.fu_berlin.cdv.chasingpictures.api.LocationTask;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
-import de.fu_berlin.cdv.chasingpictures.api.PlacesApiResult;
 import de.fu_berlin.cdv.chasingpictures.util.Utilities;
+
+import static de.fu_berlin.cdv.chasingpictures.LocationHelper2.DEFAULT_MIN_DISTANCE;
+import static de.fu_berlin.cdv.chasingpictures.LocationHelper2.DEFAULT_MIN_TIME;
 
 
 public class PictureSelectionActivity extends Activity {
@@ -39,19 +36,19 @@ public class PictureSelectionActivity extends Activity {
     private SwipeDetector mSwipeDetector;
     private List<Place> places;
     private int currentPlace = 0;
-    private LocationHelper mLocationHelper;
+    private LocationHelper2 mLocationHelper;
     private ProgressBar mLocationProgressBar;
     private ProgressBar mImageProgressBar;
     private Button mChasePictureButton;
 
-    private LocationListener placeFinderListener = new LocationListener() {
+    private LocationListener placeFinderListener = new LocationHelper2.EasyLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             mLastLocation = location;
             new MyLocationTask().execute(location);
         }
     };
-    private LocationListener distanceCalculatorListener = new LocationListener() {
+    private LocationListener distanceCalculatorListener = new LocationHelper2.EasyLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             mLastLocation = location;
@@ -60,34 +57,21 @@ public class PictureSelectionActivity extends Activity {
     };
     private TextView mPlaceDistance;
 
-    private class PictureViewLocationHelper extends LocationHelper {
-        @Override
-        public void onConnected(Bundle connectionHint) {
-            Log.d(TAG, "Connected to Google API services.");
-
-            Location lastLocation = getLastLocation();
-            if (lastLocation != null) {
-                mLastLocation = lastLocation;
-                new MyLocationTask(false).execute(mLastLocation);
-            }
-
-            // TODO: Find sensible values for location updates, i.e. when do we want to search for new places
-            startLocationUpdates(
-                    makeLocationRequest(),
-                    placeFinderListener
-            );
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_selection);
         mPlaceDistance = (TextView) findViewById(R.id.place_distance);
 
-        mLocationHelper = new PictureViewLocationHelper()
-                .buildGoogleApiClient(getApplicationContext())
-                .connect();
+        mLocationHelper = new LocationHelper2(this);
+
+        Location lastLocation = mLocationHelper.getLastKnownLocation();
+        if (lastLocation != null) {
+            mLastLocation = lastLocation;
+            new MyLocationTask(false).execute(mLastLocation);
+        }
+
+        mLocationHelper.startLocationUpdates(placeFinderListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
 
         mSwipeDetector = new SwipeDetector();
         mImageView = (ImageView) findViewById(R.id.picture_card_image);
@@ -155,7 +139,7 @@ public class PictureSelectionActivity extends Activity {
             mLocationHelper.stopLocationUpdates(placeFinderListener);
 
             // And register the distance calculator
-            mLocationHelper.startLocationUpdates(LocationHelper.makeLocationRequest(), distanceCalculatorListener);
+            mLocationHelper.startLocationUpdates(distanceCalculatorListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
 
             // Hide the location progress bar
             mLocationProgressBar.setVisibility(View.GONE);
