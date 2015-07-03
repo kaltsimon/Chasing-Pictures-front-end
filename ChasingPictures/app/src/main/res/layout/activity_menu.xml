@@ -5,11 +5,11 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/menu.button.width"
         android:background="@drawable/menu_bar"
         android:gravity="end"
         android:layout_alignParentBottom="true"
-        android:padding="8dp">
+        android:padding="@dimen/menu.bar.padding">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -31,7 +31,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/imageLast"
             android:layout_alignBottom="@id/buttonNew"
-            android:layout_marginTop="-22dp"
+            android:layout_marginTop="@dimen/menu.button.overlap.negative"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:id="@+id/imageNew"
@@ -45,8 +45,8 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/imageNext"
             android:layout_alignBottom="@id/buttonLast"
-            android:layout_marginBottom="22dp"
-            android:layout_marginTop="-22dp"
+            android:layout_marginBottom="@dimen/menu.button.overlap"
+            android:layout_marginTop="@dimen/menu.button.overlap.negative"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:id="@+id/imageLast"
@@ -59,7 +59,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignBottom="@id/buttonNext"
-            android:layout_marginBottom="22dp"
+            android:layout_marginBottom="@dimen/menu.button.overlap"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:id="@+id/imageNext"
@@ -70,7 +70,7 @@
         <!-- Menu buttons -->
 
         <ImageView
-            android:layout_width="40dp"
+            android:layout_width="@dimen/menu.button.width"
             android:layout_height="wrap_content"
             android:id="@+id/buttonNew"
             android:scaleType="fitStart"
@@ -79,10 +79,10 @@
             android:layout_below="@+id/buttonLast"
             android:layout_alignLeft="@+id/buttonLast"
             android:layout_alignStart="@+id/buttonLast"
-            android:layout_marginTop="-22dp" />
+            android:layout_marginTop="@dimen/menu.button.overlap.negative" />
 
         <ImageView
-            android:layout_width="40dp"
+            android:layout_width="@dimen/menu.button.width"
             android:layout_height="wrap_content"
             android:id="@+id/buttonLast"
             android:layout_below="@+id/buttonNext"
@@ -90,11 +90,11 @@
             android:layout_alignStart="@+id/buttonNext"
             android:scaleType="fitStart"
             android:adjustViewBounds="true"
-            android:layout_marginTop="-22dp"
+            android:layout_marginTop="@dimen/menu.button.overlap.negative"
             android:src="@drawable/menu_last" />
 
         <ImageView
-            android:layout_width="40dp"
+            android:layout_width="@dimen/menu.button.width"
             android:layout_height="wrap_content"
             android:id="@+id/buttonNext"
             android:scaleType="fitStart"

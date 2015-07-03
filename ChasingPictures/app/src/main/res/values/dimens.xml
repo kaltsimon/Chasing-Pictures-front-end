@@ -5,4 +5,10 @@
     <dimen name="camera.buttons.margin">20dp</dimen>
     <dimen name="camera.buttons.sizeDifference">14dp</dimen>
     <dimen name="camera.buttons.sizeDifference.2">6dp</dimen>
+
+    <!-- Menu dimenions -->
+    <dimen name="menu.button.overlap">22dp</dimen>
+    <dimen name="menu.button.overlap.negative">-22dp</dimen>
+    <dimen name="menu.button.width">40dp</dimen>
+    <dimen name="menu.bar.padding">8dp</dimen>
 </resources>
