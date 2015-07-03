@@ -23,14 +23,14 @@ import de.fu_berlin.cdv.chasingpictures.api.LocationTask;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 
+import static de.fu_berlin.cdv.chasingpictures.LocationHelper2.*;
+
 
 public class Menu extends Activity {
 
     public static final Location BERLIN = new Location(LocationManager.PASSIVE_PROVIDER);
     public static final ColorMatrixColorFilter GRAYSCALE_FILTER;
     private static final int REQUEST_PICTURE_SELECTION = 0;
-    private static final int MIN_TIME = 5000;
-    private static final int MIN_DISTANCE = 5;
 
     static {
         // FIXME: Find a better place, this is currently directly at the town hall!
@@ -79,7 +79,7 @@ public class Menu extends Activity {
             // Let's just go to Berlin
             location = BERLIN;
             // And wait for a location
-            mLocationHelper.startLocationUpdates(placeFinderListener, MIN_TIME, MIN_DISTANCE);
+            mLocationHelper.startLocationUpdates(placeFinderListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
         }
 
         sendLocationRequest(location);
@@ -100,7 +100,7 @@ public class Menu extends Activity {
                 updatePlaceDistance(location);
 
                 // Register the listener to always show the current distance to that place
-                mLocationHelper.startLocationUpdates(distanceCalculatorListener, MIN_TIME, MIN_DISTANCE);
+                mLocationHelper.startLocationUpdates(distanceCalculatorListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
             }
         }.execute(location);
     }

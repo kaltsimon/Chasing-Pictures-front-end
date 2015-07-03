@@ -17,6 +17,14 @@ import java.util.Map;
  * @author Simon Kalt
  */
 public class LocationHelper2 {
+    /**
+     * The default minimum time interval for location updates (5 seconds).
+     */
+    public static final int DEFAULT_MIN_TIME = 5000;
+    /**
+     * The default minimum distance for location updates (5 meters).
+     */
+    public static final int DEFAULT_MIN_DISTANCE = 5;
     private final Map<LocationListener, ListenerInfo> listeners = new HashMap<>();
     private LocationManager mLocationManager;
 
