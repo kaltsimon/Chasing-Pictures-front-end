@@ -91,7 +91,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:id="@+id/imageNext"
-                />
+                android:onClick="goToPictureSelection" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:gravity="center"
                 tools:ignore="HardcodedText"
-                />
+                android:onClick="goToPictureSelection" />
         </RelativeLayout>
 
 
@@ -161,7 +161,8 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:src="@drawable/menu_next"/>
+            android:src="@drawable/menu_next"
+            android:onClick="goToPictureSelection" />
 
     </RelativeLayout>
 </RelativeLayout>
