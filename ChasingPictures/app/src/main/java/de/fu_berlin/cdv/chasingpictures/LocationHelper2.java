@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -140,4 +141,26 @@ public class LocationHelper2 {
         }
     }
     //endregion
+
+    /**
+     * Class for easy {@link LocationListener} implementation.
+     * All methods except {@link #onLocationChanged(Location)} are implemented as stubs.
+     */
+    public static abstract class EasyLocationListener implements LocationListener {
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    }
 }
