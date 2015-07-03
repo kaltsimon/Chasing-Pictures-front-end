@@ -58,7 +58,8 @@ public class LocationHelper2 {
                         ListenerInfo info = entry.getValue();
                         LocationListener listener = entry.getKey();
 
-                        listener.onLocationChanged(location);
+                        if (location != null)
+                            listener.onLocationChanged(location);
                         mLocationManager.removeUpdates(listener);
                         mLocationManager.requestLocationUpdates(provider, info.minTime, info.minDistance, listener);
                     }
