@@ -5,21 +5,6 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/menu.button.width"
-        android:background="@drawable/menu_bar"
-        android:gravity="end"
-        android:layout_alignParentBottom="true"
-        android:padding="@dimen/menu.bar.padding">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/me_button"
-            android:scaleType="centerInside"
-            />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <!-- Images -->
@@ -31,11 +16,15 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/imageLast"
             android:layout_alignBottom="@id/buttonNew"
+            android:layout_alignRight="@id/imageLast"
+            android:layout_alignEnd="@id/imageLast"
             android:layout_marginTop="@dimen/menu.button.overlap.negative"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:id="@+id/imageNew"
-            />
+            android:id="@+id/centerInside"
+            android:paddingLeft="@dimen/menu.button.width"
+            android:paddingStart="@dimen/menu.button.width"
+            tools:ignore="RtlSymmetry" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -43,7 +32,9 @@
             android:src="@drawable/rathaus"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/imageNext"
+            android:layout_below="@id/containerNext"
+            android:layout_alignRight="@id/containerNext"
+            android:layout_alignEnd="@id/containerNext"
             android:layout_alignBottom="@id/buttonLast"
             android:layout_marginBottom="@dimen/menu.button.overlap"
             android:layout_marginTop="@dimen/menu.button.overlap.negative"
@@ -52,20 +43,44 @@
             android:id="@+id/imageLast"
             />
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/rathaus"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignBottom="@id/buttonNext"
-            android:layout_marginBottom="@dimen/menu.button.overlap"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:id="@+id/imageNext"
-            />
+            android:paddingBottom="@dimen/menu.button.overlap"
+            android:background="@drawable/shadow"
+            android:id="@+id/containerNext"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/rathaus"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:id="@+id/imageNext"
+                />
+        </RelativeLayout>
 
 
+        <!-- Bottom bar -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/menu.button.width"
+            android:background="@drawable/menu_bar"
+            android:gravity="end"
+            android:layout_alignParentBottom="true"
+            android:padding="@dimen/menu.bar.padding">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/me_button"
+                android:scaleType="centerInside"
+                />
+        </RelativeLayout>
 
         <!-- Menu buttons -->
 
