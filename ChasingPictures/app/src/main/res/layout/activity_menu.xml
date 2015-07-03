@@ -60,13 +60,13 @@
                 android:layout_alignRight="@+id/imageLast"
                 android:layout_alignEnd="@+id/imageLast"
                 android:textColor="@color/text_white"
-                android:textSize="14sp"
+                android:textSize="@dimen/menu.preview.textSize"
                 android:text="121"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:gravity="center_vertical|left|start"
-                android:paddingLeft="15dp"
-                android:paddingTop="4dp"
-                tools:ignore="HardcodedText"
+                android:paddingLeft="@dimen/menu.preview_count.paddingLeft"
+                android:paddingTop="@dimen/menu.preview_count.paddingTop"
+                tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"
                 />
         </RelativeLayout>
 
@@ -101,7 +101,7 @@
                 android:layout_alignRight="@+id/imageNext"
                 android:layout_alignEnd="@+id/imageNext"
                 android:textColor="@color/text_white"
-                android:textSize="14sp"
+                android:textSize="@dimen/menu.preview.textSize"
                 android:text="25 m"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:gravity="center"
