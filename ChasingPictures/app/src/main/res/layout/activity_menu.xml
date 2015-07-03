@@ -52,22 +52,17 @@
                 android:id="@+id/imageLast"
             />
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/menu_preview_style"
                 android:id="@+id/place_count"
                 android:background="@drawable/preview_count"
                 android:layout_alignBottom="@+id/imageLast"
                 android:layout_alignRight="@+id/imageLast"
                 android:layout_alignEnd="@+id/imageLast"
-                android:textColor="@color/text_white"
-                android:textSize="@dimen/menu.preview.textSize"
                 android:text="121"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:gravity="center_vertical|left|start"
                 android:paddingLeft="@dimen/menu.preview_count.paddingLeft"
                 android:paddingTop="@dimen/menu.preview_count.paddingTop"
-                tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"
-                />
+                tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
         </RelativeLayout>
 
 
@@ -93,20 +88,14 @@
                 android:id="@+id/imageNext"
                 android:onClick="goToPictureSelection" />
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/menuPlaceDistance"
-                android:background="@drawable/preview_distance"
                 android:layout_alignBottom="@+id/imageNext"
                 android:layout_alignRight="@+id/imageNext"
                 android:layout_alignEnd="@+id/imageNext"
-                android:textColor="@color/text_white"
-                android:textSize="@dimen/menu.preview.textSize"
                 android:text="25 m"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:gravity="center"
                 tools:ignore="HardcodedText"
-                android:onClick="goToPictureSelection" />
+                android:onClick="goToPictureSelection"
+                style="@style/menu_preview_style" />
         </RelativeLayout>
 
 
