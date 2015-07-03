@@ -5,6 +5,4 @@
     <dimen name="camera.buttons.margin">20dp</dimen>
     <dimen name="camera.buttons.sizeDifference">14dp</dimen>
     <dimen name="camera.buttons.sizeDifference.2">6dp</dimen>
-
-    <integer name="standard_textinput_ems">12</integer>
 </resources>

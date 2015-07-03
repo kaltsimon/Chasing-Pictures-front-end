@@ -17,14 +17,12 @@
         style="@style/Vertical.Button"
         android:text="@string/login_button"
         android:id="@+id/button_login"
-        android:onClick="showLoginForm"
-        android:ems="@integer/standard_textinput_ems"/>
+        android:onClick="showLoginForm"/>
 
     <Button
         style="@style/Vertical.Button"
         android:text="@string/register_button"
         android:id="@+id/button_register"
-        android:onClick="showRegisterForm"
-        android:ems="@integer/standard_textinput_ems" />
+        android:onClick="showRegisterForm"/>
 </LinearLayout>
 

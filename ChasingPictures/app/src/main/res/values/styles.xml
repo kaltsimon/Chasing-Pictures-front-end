@@ -19,7 +19,6 @@
     </style>
 
     <style name="Vertical.TextField">
-        <item name="android:ems">@integer/standard_textinput_ems</item>
         <item name="android:layout_gravity">start|left</item>
     </style>
 
