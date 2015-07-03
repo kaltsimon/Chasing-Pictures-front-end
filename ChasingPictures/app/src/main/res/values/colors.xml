@@ -15,4 +15,6 @@
     <color name="overlay_button_text">#ddffffff</color>
     <color name="gradient_dark">#252525</color>
     <color name="gradient_light">#47474B</color>
+    <color name="menu_bar_gradient_dark">#212121</color>
+    <color name="menu_bar_gradient_light">#666666</color>
 </resources>
