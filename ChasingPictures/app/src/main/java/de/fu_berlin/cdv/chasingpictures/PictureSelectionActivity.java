@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.api.LocationRequest;
+import de.fu_berlin.cdv.chasingpictures.api.LocationTask;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.api.PlacesApiResult;
@@ -47,7 +48,7 @@ public class PictureSelectionActivity extends Activity {
         @Override
         public void onLocationChanged(Location location) {
             mLastLocation = location;
-            new LocationTask().execute(location);
+            new MyLocationTask().execute(location);
         }
     };
     private LocationListener distanceCalculatorListener = new LocationListener() {
@@ -67,7 +68,7 @@ public class PictureSelectionActivity extends Activity {
             Location lastLocation = getLastLocation();
             if (lastLocation != null) {
                 mLastLocation = lastLocation;
-                new LocationTask(false).execute(mLastLocation);
+                new MyLocationTask(false).execute(mLastLocation);
             }
 
             // TODO: Find sensible values for location updates, i.e. when do we want to search for new places
@@ -123,31 +124,21 @@ public class PictureSelectionActivity extends Activity {
         }
     }
 
-    private class LocationTask extends AsyncTask<Location, Object, List<Place>> {
+    private class MyLocationTask extends LocationTask {
 
         private final boolean exitOnEmptyResult;
 
-        public LocationTask(boolean exitOnEmptyResult) {
+        public MyLocationTask(boolean exitOnEmptyResult) {
+            super(getApplicationContext());
             this.exitOnEmptyResult = exitOnEmptyResult;
         }
 
-        public LocationTask() {
+        public MyLocationTask() {
             this(true);
         }
 
         @Override
-        protected List<Place> doInBackground(Location... params) {
-            if (params.length == 0 || params[0] == null)
-                return null;
-
-            LocationRequest request = new LocationRequest(getApplicationContext(), params[0]);
-            ResponseEntity<PlacesApiResult> result = request.sendRequest();
-            PlacesApiResult body = result == null ? null : result.getBody();
-            return body == null ? null : body.getPlaces();
-        }
-
-        @Override
-        protected void onPostExecute(List<Place> resultPlaces) {
+        protected void onPostExecute(@Nullable List<Place> resultPlaces) {
             if (resultPlaces == null || resultPlaces.isEmpty()) {
                 // TODO: Show better error and do not exit activity
                 Utilities.showError(getApplicationContext(), R.string.error_location_no_places);
