@@ -1,5 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
@@ -13,7 +15,6 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:id="@+id/relativeLayout">
 
         <ImageView
@@ -62,24 +63,32 @@
             tools:ignore="HardcodedText"
             tools:visibility="visible"
             />
+        
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/overlay_button_background"
+            android:text="@string/chase_picture"
+            android:id="@+id/chasePictureButton"
+            android:textColor="@color/overlay_button_text"
+            android:textStyle="italic"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center"
+            android:onClick="startSearch"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            android:layout_above="@+id/place_distance"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/overlay_button_background"
-        android:text="@string/chase_picture"
-        android:id="@+id/chasePictureButton"
-        android:textColor="@color/overlay_button_text"
-        android:textStyle="italic"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:gravity="center"
-        android:onClick="startSearch"
-        android:visibility="invisible"
-        tools:visibility="visible"
-        android:layout_below="@+id/relativeLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
-</RelativeLayout>
+    <com.mapbox.mapboxsdk.views.MapView
+        android:id="@+id/mapview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        mapbox:accessToken="@string/access_mb" />
+
+
+</LinearLayout>
