@@ -1,62 +1,69 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:layout_gravity="center"
+    android:background="@drawable/gradient_background"
     tools:context="de.fu_berlin.cdv.chasingpictures.PictureSelectionActivity"
     android:id="@+id/picture_selection_layout"
-    android:animateLayoutChanges="true"
-    >
+    android:animateLayoutChanges="true">
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="300dp"
-        android:contentDescription="Picture"
-        android:id="@+id/picture_card_image"
-        android:src="@drawable/rathaus"
-        android:scaleType="centerCrop"
-        android:visibility="invisible"
-        tools:visibility="visible"
-        tools:ignore="HardcodedText"
-        />
 
-    <ProgressBar
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/locationProgressBar"
-        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:indeterminate="true"
-        tools:visibility="invisible"
-        />
+        android:id="@+id/relativeLayout">
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageProgressBar"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="105dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        tools:visibility="visible"
-        />
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="300dp"
+            android:contentDescription="Picture"
+            android:id="@+id/picture_card_image"
+            android:src="@drawable/rathaus"
+            android:scaleType="centerCrop"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            tools:ignore="HardcodedText"
+            />
 
-    <TextView
-        style="@style/menu_preview_style"
-        android:id="@+id/place_distance"
-        android:layout_alignBottom="@+id/picture_card_image"
-        android:layout_alignRight="@+id/picture_card_image"
-        android:layout_alignEnd="@+id/picture_card_image"
-        android:text="25 m"
-        android:visibility="invisible"
-        tools:ignore="HardcodedText"
-        tools:visibility="visible"
-        />
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/locationProgressBar"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminate="true"
+            tools:visibility="invisible"
+            />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageProgressBar"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="105dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
+        <TextView
+            style="@style/menu_preview_style"
+            android:id="@+id/place_distance"
+            android:layout_alignBottom="@+id/picture_card_image"
+            android:layout_alignRight="@+id/picture_card_image"
+            android:layout_alignEnd="@+id/picture_card_image"
+            android:text="25 m"
+            android:visibility="invisible"
+            tools:ignore="HardcodedText"
+            tools:visibility="visible"
+            />
+
+    </RelativeLayout>
 
     <Button
         android:layout_width="fill_parent"
@@ -68,13 +75,11 @@
         android:textStyle="italic"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:gravity="center"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="100dp"
         android:onClick="startSearch"
         android:visibility="invisible"
         tools:visibility="visible"
-        />
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

@@ -38,8 +38,8 @@
             android:paddingBottom="@dimen/menu.button.overlap"
             android:layout_marginTop="@dimen/menu.button.overlap.negative"
             android:background="@drawable/shadow"
-            android:id="@+id/containerLast"
-            >
+            android:id="@+id/containerLast">
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
