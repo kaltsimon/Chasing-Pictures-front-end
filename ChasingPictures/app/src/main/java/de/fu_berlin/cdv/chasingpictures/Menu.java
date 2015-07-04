@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
@@ -36,8 +37,8 @@ public class Menu extends Activity {
 
     static {
         // FIXME: Find a better place, this is currently directly at the town hall!
-        BERLIN.setLatitude(52.518405);
-        BERLIN.setLongitude(13.408499);
+        BERLIN.setLatitude(52.5219831);
+        BERLIN.setLongitude(13.4131676);
 
         ColorMatrix matrix = new ColorMatrix();
         matrix.setSaturation(0);
@@ -61,6 +62,7 @@ public class Menu extends Activity {
         }
     };
     private LocationHelper mLocationHelper;
+    private ProgressBar mImageNextProgessBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class Menu extends Activity {
         // find and assign view fields
         mImageNext = (ImageView) findViewById(R.id.imageNext);
         mPlaceDistance = (TextView) findViewById(R.id.menuPlaceDistance);
+        mImageNextProgessBar = (ProgressBar) findViewById(R.id.imageNextProgressBar);
 
         // Filter the *next* image to grayscale
         mImageNext.setColorFilter(GRAYSCALE_FILTER);
@@ -82,9 +85,9 @@ public class Menu extends Activity {
             location = BERLIN;
             // And wait for a location
             mLocationHelper.startLocationUpdates(placeFinderListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
+        } else {
+            sendLocationRequest(location);
         }
-
-        sendLocationRequest(location);
     }
 
     private void sendLocationRequest(@NonNull final Location location) {
@@ -132,8 +135,11 @@ public class Menu extends Activity {
     }
 
     private void updatePictureNext(Bitmap pictureNextBitmap) {
-        if (pictureNextBitmap != null)
+        if (pictureNextBitmap != null) {
             mImageNext.setImageBitmap(pictureNextBitmap);
+            mImageNextProgessBar.setVisibility(View.INVISIBLE);
+            mImageNext.setVisibility(View.VISIBLE);
+        }
     }
 
     public void goToPictureSelection(View view) {

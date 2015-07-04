@@ -67,8 +67,11 @@ public class LocationHelper {
 
                         if (location != null)
                             listener.onLocationChanged(location);
-                        mLocationManager.removeUpdates(listener);
-                        mLocationManager.requestLocationUpdates(provider, info.minTime, info.minDistance, listener);
+
+                        if (!info.updatesStarted) {
+                            mLocationManager.requestLocationUpdates(provider, info.minTime, info.minDistance, listener);
+                            info.updatesStarted = true;
+                        }
                     }
                 }
             }
@@ -142,6 +145,7 @@ public class LocationHelper {
     private static class ListenerInfo {
         public final long minTime;
         public final float minDistance;
+        public boolean updatesStarted;
 
         private ListenerInfo(long minTime, float minDistance) {
             this.minTime = minTime;

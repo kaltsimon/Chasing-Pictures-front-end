@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -15,10 +16,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mapbox.mapboxsdk.overlay.GpsLocationProvider;
 import com.mapbox.mapboxsdk.views.MapView;
 
 import java.io.File;
@@ -31,7 +32,6 @@ import de.fu_berlin.cdv.chasingpictures.location.EasyLocationListener;
 import de.fu_berlin.cdv.chasingpictures.location.LocationHelper;
 import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
-import static de.fu_berlin.cdv.chasingpictures.MapLayoutView.*;
 import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_DISTANCE;
 import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_TIME;
 
@@ -65,6 +65,9 @@ public class PictureSelectionActivity extends Activity {
     };
     private TextView mPlaceDistance;
     private MapView mapView;
+    private LinearLayout mPlaceDistanceView;
+    private int windowWidth;
+    private int mPlaceDistanceViewHeight;
 
     public static Intent createIntent(Context context, Location location) {
         Intent intent = new Intent(context, PictureSelectionActivity.class);
@@ -77,16 +80,10 @@ public class PictureSelectionActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_selection);
         mPlaceDistance = (TextView) findViewById(R.id.place_distance);
-        mapView =  (MapView) this.findViewById(R.id.mapview);
-        MapLayoutView mapLayoutView = new MapLayoutView(this, mapView, Maps.mMap, new MyUserLocationOverlay(mapView, this) {
-            @Override
-            public void onLocationChanged(Location location, GpsLocationProvider source) {
-                super.onLocationChanged(location, source);
+        mapView =  (MapView) findViewById(R.id.mapview);
+        mPlaceDistanceView = (LinearLayout) findViewById(R.id.distanceView);
 
-                // TODO: Show distance to place
-            }
-        });
-
+        MapLayoutView mapLayoutView = new MapLayoutView(this, mapView, Maps.mMap, true);
         mapLayoutView.init().startTracking();
 
         mLocationHelper = new LocationHelper(this);
@@ -121,8 +118,10 @@ public class PictureSelectionActivity extends Activity {
         @Override
         protected void handleProgressUpdate(@NonNull Progress progress) {
             if (progress.getState() == currentPlace) {
-                updatePicture();
-                showDelayedPlaceInfo(currentPlace);
+                File cachedFile = places.get(currentPlace).getFirstPicture().getCachedFile();
+                if (cachedFile != null) {
+                    updatePicture(true);
+                }
             }
         }
 
@@ -133,8 +132,7 @@ public class PictureSelectionActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            updatePicture();
-            showDelayedPlaceInfo(currentPlace);
+            updatePicture(false);
         }
     }
 
@@ -187,20 +185,65 @@ public class PictureSelectionActivity extends Activity {
     }
 
 
-    private void updatePicture() {
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (hasFocus) {
+            Point windowSize = new Point();
+            getWindowManager().getDefaultDisplay().getSize(windowSize);
+            windowWidth = windowSize.x;
+            mPlaceDistanceViewHeight = mPlaceDistanceView.getHeight();
+            hideButtons();
+            mPlaceDistanceView.setVisibility(View.VISIBLE);
+            mChasePictureButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideButtons() {
+        // Somehow does not work, i.e. it isn't animated and setAlpha(1) does not work...
+//        mPlaceDistanceView.animate().alpha(0);
+//        mChasePictureButton.animate().alpha(0);
+
+        mPlaceDistanceView.setTranslationY(-mPlaceDistanceViewHeight);
+        mChasePictureButton.setTranslationX(windowWidth);
+    }
+
+    private void updatePicture(boolean isNewPicture) {
+
         if (checkAndFixIndex()) {
             File cachedFile = places.get(currentPlace).getFirstPicture().getCachedFile();
+            setPlaceInfoText(currentPlace);
             if (cachedFile != null) {
                 Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
-                mImageView.setImageBitmap(bitmap);
-                mImageProgressBar.setVisibility(View.GONE);
-                mImageView.setVisibility(View.VISIBLE);
-                mChasePictureButton.setVisibility(View.VISIBLE);
+                if (isNewPicture) {
+                    hideButtons();
+
+                    updateImageBitmap(bitmap);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mChasePictureButton.animate().translationX(0);
+                            mPlaceDistanceView.animate().translationY(0);
+                        }
+                    }, 500);
+                } else {
+                    updateImageBitmap(bitmap);
+                    if (mChasePictureButton.getVisibility() != View.VISIBLE)
+                        mChasePictureButton.setVisibility(View.VISIBLE);
+                    if (mPlaceDistanceView.getVisibility() != View.VISIBLE)
+                        mPlaceDistanceView.setVisibility(View.VISIBLE);
+                }
             }
         }
         else {
             Log.e(TAG, "No places available");
         }
+    }
+
+    private void updateImageBitmap(Bitmap bitmap) {
+        mImageProgressBar.setVisibility(View.GONE);
+        mImageView.setImageBitmap(bitmap);
+        mImageView.setVisibility(View.VISIBLE);
     }
 
     private boolean checkAndFixIndex() {
@@ -214,25 +257,22 @@ public class PictureSelectionActivity extends Activity {
         return true;
     }
 
-    private void showDelayedPlaceInfo(final int placeNr) {
+    private void showDelayedPlaceInfo(final int placeNr, boolean hideFirst) {
         if (checkAndFixIndex()) {
-            mPlaceDistance.setVisibility(View.INVISIBLE);
-            new Handler().postDelayed(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            setPlaceInfoText(placeNr);
-                        }
-                    },
-                    1000
-            );
+            if (hideFirst)
+                mPlaceDistanceView.setVisibility(View.GONE);
+
+            setPlaceInfoText(placeNr);
+
+            if (mPlaceDistanceView.getVisibility() == View.GONE) {
+                mPlaceDistanceView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     private void setPlaceInfoText(int placeNr) {
-        String text = String.valueOf(Math.round(getDistanceToPlace(placeNr))) + " m";
+        String text = String.valueOf(Math.round(getDistanceToPlace(placeNr)));
         mPlaceDistance.setText(text);
-        mPlaceDistance.setVisibility(View.VISIBLE);
     }
 
     private float getDistanceToPlace(int placeNr) {
@@ -277,8 +317,7 @@ public class PictureSelectionActivity extends Activity {
                 return false;
         }
 
-        updatePicture();
-        showDelayedPlaceInfo(currentPlace);
+        updatePicture(true);
         return true;
     }
 }

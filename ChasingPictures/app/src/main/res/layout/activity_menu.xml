@@ -86,7 +86,9 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:id="@+id/imageNext"
-                android:onClick="goToPictureSelection" />
+                android:onClick="goToPictureSelection"
+                android:visibility="visible"
+                tools:visibility="visible" />
             <TextView
                 android:id="@+id/menuPlaceDistance"
                 android:layout_alignBottom="@+id/imageNext"
@@ -96,6 +98,14 @@
                 tools:ignore="HardcodedText"
                 android:onClick="goToPictureSelection"
                 style="@style/menu_preview_style" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageNextProgressBar"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
 
