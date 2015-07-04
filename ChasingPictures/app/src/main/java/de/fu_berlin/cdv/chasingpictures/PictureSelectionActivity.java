@@ -82,32 +82,41 @@ public class PictureSelectionActivity extends Activity {
         mPlaceDistance = (TextView) findViewById(R.id.place_distance);
         mapView =  (MapView) findViewById(R.id.mapview);
         mPlaceDistanceView = (LinearLayout) findViewById(R.id.distanceView);
+        mImageView = (ImageView) findViewById(R.id.picture_card_image);
+        mImageView.setColorFilter(Menu.GRAYSCALE_FILTER);
+        mChasePictureButton = (Button) findViewById(R.id.chasePictureButton);
+        mLocationProgressBar = (ProgressBar) findViewById(R.id.locationProgressBar);
+        mImageProgressBar = (ProgressBar) findViewById(R.id.imageProgressBar);
 
+        // Swipe listener
+        mSwipeDetector = new SwipeDetector();
+        mImageView.setOnTouchListener(mSwipeDetector);
+        mImageView.setOnClickListener(new ClickListener());
+
+        // Location listener
+        mLocationHelper = new LocationHelper(this);
+
+        // Initialize map view
         MapLayoutView mapLayoutView = new MapLayoutView(this, mapView, Maps.mMap, true);
         mapLayoutView.init().startTracking();
 
-        mLocationHelper = new LocationHelper(this);
 
         Location lastLocation = mLocationHelper.getLastKnownLocation();
         if (lastLocation == null) {
             lastLocation = getIntent().getParcelableExtra(EXTRA_LOCATION);
-        }
-        if (lastLocation != null) {
-            mLastLocation = lastLocation;
-            new MyLocationTask(false).execute(lastLocation);
+            if (lastLocation != null) {
+                mLastLocation = lastLocation;
+                new MyLocationTask(false).execute(lastLocation);
+            }
         }
 
         mLocationHelper.startLocationUpdates(placeFinderListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
+    }
 
-        mSwipeDetector = new SwipeDetector();
-        mImageView = (ImageView) findViewById(R.id.picture_card_image);
-        mImageView.setColorFilter(Menu.GRAYSCALE_FILTER);
-        mImageView.setOnTouchListener(mSwipeDetector);
-        mImageView.setOnClickListener(new ClickListener());
-        mChasePictureButton = (Button) findViewById(R.id.chasePictureButton);
-
-        mLocationProgressBar = (ProgressBar) findViewById(R.id.locationProgressBar);
-        mImageProgressBar = (ProgressBar) findViewById(R.id.imageProgressBar);
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        animateShowButtons();
     }
 
     @Override
@@ -219,6 +228,16 @@ public class PictureSelectionActivity extends Activity {
         mChasePictureButton.setTranslationX(windowWidth);
     }
 
+    private void animateShowButtons() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mChasePictureButton.animate().translationX(0);
+                mPlaceDistanceView.animate().translationY(0);
+            }
+        }, 500);
+    }
+
     private void updatePicture(boolean isNewPicture) {
 
         if (checkAndFixIndex()) {
@@ -231,13 +250,7 @@ public class PictureSelectionActivity extends Activity {
 
                     updateImageBitmap(bitmap);
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mChasePictureButton.animate().translationX(0);
-                            mPlaceDistanceView.animate().translationY(0);
-                        }
-                    }, 500);
+                    animateShowButtons();
                 } else {
                     updateImageBitmap(bitmap);
                     if (mChasePictureButton.getVisibility() != View.VISIBLE)
