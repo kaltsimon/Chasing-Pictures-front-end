@@ -1,6 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,10 +21,10 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.List;
 
-import de.fu_berlin.cdv.chasingpictures.location.EasyLocationListener;
 import de.fu_berlin.cdv.chasingpictures.api.LocationTask;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
+import de.fu_berlin.cdv.chasingpictures.location.EasyLocationListener;
 import de.fu_berlin.cdv.chasingpictures.location.LocationHelper;
 import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
@@ -33,6 +34,7 @@ import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_M
 
 public class PictureSelectionActivity extends Activity {
     private static final String TAG = "PictureSelection";
+    public static final String EXTRA_LOCATION = "de.fu_berlin.cdv.chasingpictures.EXTRA_LOCATION";
     private Location mLastLocation;
     private ImageView mImageView;
     private SwipeDetector mSwipeDetector;
@@ -59,6 +61,12 @@ public class PictureSelectionActivity extends Activity {
     };
     private TextView mPlaceDistance;
 
+    public static Intent createIntent(Context context, Location location) {
+        Intent intent = new Intent(context, PictureSelectionActivity.class);
+        intent.putExtra(EXTRA_LOCATION, location);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,15 +76,19 @@ public class PictureSelectionActivity extends Activity {
         mLocationHelper = new LocationHelper(this);
 
         Location lastLocation = mLocationHelper.getLastKnownLocation();
+        if (lastLocation == null) {
+            lastLocation = getIntent().getParcelableExtra(EXTRA_LOCATION);
+        }
         if (lastLocation != null) {
             mLastLocation = lastLocation;
-            new MyLocationTask(false).execute(mLastLocation);
+            new MyLocationTask(false).execute(lastLocation);
         }
 
         mLocationHelper.startLocationUpdates(placeFinderListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
 
         mSwipeDetector = new SwipeDetector();
         mImageView = (ImageView) findViewById(R.id.picture_card_image);
+        mImageView.setColorFilter(Menu.GRAYSCALE_FILTER);
         mImageView.setOnTouchListener(mSwipeDetector);
         mImageView.setOnClickListener(new ClickListener());
         mChasePictureButton = (Button) findViewById(R.id.chasePictureButton);

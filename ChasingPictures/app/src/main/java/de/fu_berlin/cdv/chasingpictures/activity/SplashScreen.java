@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import de.fu_berlin.cdv.chasingpictures.LoginPage;
 import de.fu_berlin.cdv.chasingpictures.MainActivity;
-import de.fu_berlin.cdv.chasingpictures.PictureSelectionActivity;
+import de.fu_berlin.cdv.chasingpictures.Menu;
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
 import de.fu_berlin.cdv.chasingpictures.util.Utilities;
@@ -41,7 +41,7 @@ public class SplashScreen extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == MainActivity.REQUEST_LOGIN_REGISTER && resultCode == RESULT_OK) {
             finish();
-            Intent intent = new Intent(getApplicationContext(), PictureSelectionActivity.class);
+            Intent intent = new Intent(getApplicationContext(), Menu.class);
             startActivity(intent);
         } else {
             Utilities.showError(this, R.string.login_fail);
