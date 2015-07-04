@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.os.AsyncTask;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -17,18 +17,18 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.location.LocationListener;
-
-import org.springframework.http.ResponseEntity;
-
 import java.io.File;
 import java.util.List;
 
-import de.fu_berlin.cdv.chasingpictures.api.LocationRequest;
+import de.fu_berlin.cdv.chasingpictures.location.EasyLocationListener;
+import de.fu_berlin.cdv.chasingpictures.api.LocationTask;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
-import de.fu_berlin.cdv.chasingpictures.api.PlacesApiResult;
+import de.fu_berlin.cdv.chasingpictures.location.LocationHelper;
 import de.fu_berlin.cdv.chasingpictures.util.Utilities;
+
+import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_DISTANCE;
+import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_TIME;
 
 
 public class PictureSelectionActivity extends Activity {
@@ -43,14 +43,14 @@ public class PictureSelectionActivity extends Activity {
     private ProgressBar mImageProgressBar;
     private Button mChasePictureButton;
 
-    private LocationListener placeFinderListener = new LocationListener() {
+    private LocationListener placeFinderListener = new EasyLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             mLastLocation = location;
-            new LocationTask().execute(location);
+            new MyLocationTask().execute(location);
         }
     };
-    private LocationListener distanceCalculatorListener = new LocationListener() {
+    private LocationListener distanceCalculatorListener = new EasyLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             mLastLocation = location;
@@ -59,34 +59,21 @@ public class PictureSelectionActivity extends Activity {
     };
     private TextView mPlaceDistance;
 
-    private class PictureViewLocationHelper extends LocationHelper {
-        @Override
-        public void onConnected(Bundle connectionHint) {
-            Log.d(TAG, "Connected to Google API services.");
-
-            Location lastLocation = getLastLocation();
-            if (lastLocation != null) {
-                mLastLocation = lastLocation;
-                new LocationTask(false).execute(mLastLocation);
-            }
-
-            // TODO: Find sensible values for location updates, i.e. when do we want to search for new places
-            startLocationUpdates(
-                    makeLocationRequest(),
-                    placeFinderListener
-            );
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_selection);
         mPlaceDistance = (TextView) findViewById(R.id.place_distance);
 
-        mLocationHelper = new PictureViewLocationHelper()
-                .buildGoogleApiClient(getApplicationContext())
-                .connect();
+        mLocationHelper = new LocationHelper(this);
+
+        Location lastLocation = mLocationHelper.getLastKnownLocation();
+        if (lastLocation != null) {
+            mLastLocation = lastLocation;
+            new MyLocationTask(false).execute(mLastLocation);
+        }
+
+        mLocationHelper.startLocationUpdates(placeFinderListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
 
         mSwipeDetector = new SwipeDetector();
         mImageView = (ImageView) findViewById(R.id.picture_card_image);
@@ -123,31 +110,21 @@ public class PictureSelectionActivity extends Activity {
         }
     }
 
-    private class LocationTask extends AsyncTask<Location, Object, List<Place>> {
+    private class MyLocationTask extends LocationTask {
 
         private final boolean exitOnEmptyResult;
 
-        public LocationTask(boolean exitOnEmptyResult) {
+        public MyLocationTask(boolean exitOnEmptyResult) {
+            super(getApplicationContext());
             this.exitOnEmptyResult = exitOnEmptyResult;
         }
 
-        public LocationTask() {
+        public MyLocationTask() {
             this(true);
         }
 
         @Override
-        protected List<Place> doInBackground(Location... params) {
-            if (params.length == 0 || params[0] == null)
-                return null;
-
-            LocationRequest request = new LocationRequest(getApplicationContext(), params[0]);
-            ResponseEntity<PlacesApiResult> result = request.sendRequest();
-            PlacesApiResult body = result == null ? null : result.getBody();
-            return body == null ? null : body.getPlaces();
-        }
-
-        @Override
-        protected void onPostExecute(List<Place> resultPlaces) {
+        protected void onPostExecute(@Nullable List<Place> resultPlaces) {
             if (resultPlaces == null || resultPlaces.isEmpty()) {
                 // TODO: Show better error and do not exit activity
                 Utilities.showError(getApplicationContext(), R.string.error_location_no_places);
@@ -164,7 +141,7 @@ public class PictureSelectionActivity extends Activity {
             mLocationHelper.stopLocationUpdates(placeFinderListener);
 
             // And register the distance calculator
-            mLocationHelper.startLocationUpdates(LocationHelper.makeLocationRequest(), distanceCalculatorListener);
+            mLocationHelper.startLocationUpdates(distanceCalculatorListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
 
             // Hide the location progress bar
             mLocationProgressBar.setVisibility(View.GONE);

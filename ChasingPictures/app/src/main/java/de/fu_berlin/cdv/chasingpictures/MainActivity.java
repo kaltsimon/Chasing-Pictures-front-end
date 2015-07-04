@@ -52,9 +52,4 @@ public class MainActivity extends Activity {
         Intent intent = Slideshow.createIntent(this, place);
         startActivity(intent);
     }
-
-    public void showMenu(View view) {
-        Intent intent = new Intent(this, Menu.class);
-        startActivity(intent);
-    }
 }
