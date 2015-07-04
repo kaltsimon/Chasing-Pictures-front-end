@@ -91,8 +91,10 @@ public class LocationHelper {
      * @return
      */
     public LocationHelper startLocationUpdates(@NonNull LocationListener newListener, long minTime, float minDistance) {
-        addListener(newListener, minTime, minDistance);
-        getLocation(true);
+        if (!listeners.containsKey(newListener)) {
+            addListener(newListener, minTime, minDistance);
+            getLocation(true);
+        }
         return this;
     }
 
