@@ -77,6 +77,7 @@ public class PictureSelectionActivity extends Activity {
 
         mSwipeDetector = new SwipeDetector();
         mImageView = (ImageView) findViewById(R.id.picture_card_image);
+        mImageView.setColorFilter(Menu.GRAYSCALE_FILTER);
         mImageView.setOnTouchListener(mSwipeDetector);
         mImageView.setOnClickListener(new ClickListener());
         mChasePictureButton = (Button) findViewById(R.id.chasePictureButton);
