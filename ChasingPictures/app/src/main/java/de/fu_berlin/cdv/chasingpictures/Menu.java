@@ -78,6 +78,11 @@ public class Menu extends Activity {
         mImageNext.setColorFilter(GRAYSCALE_FILTER);
 
         mLocationHelper = new LocationHelper(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         Location location = mLocationHelper.getLastKnownLocation();
 
         if (location == null) {
