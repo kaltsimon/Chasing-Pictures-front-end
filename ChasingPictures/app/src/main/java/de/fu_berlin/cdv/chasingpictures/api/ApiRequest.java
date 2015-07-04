@@ -1,6 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.StringRes;
 import android.util.Log;
 
@@ -10,13 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
+import de.fu_berlin.cdv.chasingpictures.LoginPage;
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
-import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 /**
  * Abstract class for API requests.
@@ -29,6 +31,7 @@ public abstract class ApiRequest<ResponseType> {
     protected final RestTemplate restTemplate;
     protected final Context context;
     protected HttpHeaders headers;
+    protected HttpStatus errorCode;
 
     protected ApiRequest(Context context, int endpointResID) {
         this.context = context;
@@ -42,7 +45,7 @@ public abstract class ApiRequest<ResponseType> {
      *
      * @return A RestTemplate with a {@link org.springframework.http.converter.json.MappingJackson2HttpMessageConverter} attached.
      */
-    public static RestTemplate buildJsonRestTemplate() {
+    private RestTemplate buildJsonRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         restTemplate.setErrorHandler(new DefaultAPIResponseErrorHandler());
@@ -85,7 +88,16 @@ public abstract class ApiRequest<ResponseType> {
     }
 
     /**
-     * This method is called when an exception is thrown in the {@link #send()} method.
+     * This method is called when a {@link RestClientException} exception is thrown in the {@link #send()} method.
+     *
+     * @param ex The exception that was thrown
+     */
+    protected void handleException(RestClientException ex) {
+        Log.e(TAG, "An exception occurred while sending the request.", ex);
+    }
+
+    /**
+     * This method is called when a general exception is thrown in the {@link #send()} method.
      *
      * @param ex The exception that was thrown
      */
@@ -104,6 +116,8 @@ public abstract class ApiRequest<ResponseType> {
             ResponseEntity<ResponseType> response = send();
             afterSending(response);
             return response;
+        } catch (RestClientException ex) {
+            handleException(ex);
         } catch (Exception ex) {
             handleException(ex);
         }
@@ -111,17 +125,22 @@ public abstract class ApiRequest<ResponseType> {
     }
 
     /**
-     * This default error handler ignores the 403 error code,
-     * which is not always a fatal error.
+     * Checks whether the request resulted in a 401 unauthorized status
+     * code and, if so, sends the user to the log in page.
      */
-    public static class DefaultAPIResponseErrorHandler extends DefaultResponseErrorHandler {
+    protected void checkAccess() {
+        if (errorCode == HttpStatus.UNAUTHORIZED) {
+            Intent intent = new Intent(context, LoginPage.class);
+            context.startActivity(intent);
+        }
+    }
+
+    /**
+     * This default error handler logs the status code.
+     */
+    public class DefaultAPIResponseErrorHandler extends DefaultResponseErrorHandler {
         public void handleError(ClientHttpResponse response) throws IOException {
-            final HttpStatus statusCode = response.getStatusCode();
-            if (statusCode == HttpStatus.FORBIDDEN || statusCode == HttpStatus.UNAUTHORIZED) {
-                // Request was denied,
-                // do nothing and return.
-                return;
-            }
+            errorCode = response.getStatusCode();
             super.handleError(response);
         }
     }

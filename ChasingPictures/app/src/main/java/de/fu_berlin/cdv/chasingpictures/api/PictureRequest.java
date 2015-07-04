@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,5 +44,10 @@ public class PictureRequest extends ApiRequest<PlacesApiResult> {
                 PlacesApiResult.class,
                 queryParameters
         );
+    }
+
+    @Override
+    protected void handleException(RestClientException ex) {
+        checkAccess();
     }
 }
