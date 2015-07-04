@@ -85,9 +85,8 @@ public class Menu extends Activity {
             location = BERLIN;
             // And wait for a location
             mLocationHelper.startLocationUpdates(placeFinderListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
-        } else {
-            sendLocationRequest(location);
         }
+        sendLocationRequest(location);
     }
 
     private void sendLocationRequest(@NonNull final Location location) {
