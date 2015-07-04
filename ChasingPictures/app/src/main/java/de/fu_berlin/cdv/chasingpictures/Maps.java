@@ -134,6 +134,7 @@ public class Maps extends Activity {
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.maps_layout);
         imageViewLayout = (LinearLayout) findViewById(R.id.imageViewLayout);
         imageView = (ImageView) findViewById(R.id.imageSearch);
+        imageView.setColorFilter(Menu.GRAYSCALE_FILTER);
     }
 
     private void hideCameraButton() {
