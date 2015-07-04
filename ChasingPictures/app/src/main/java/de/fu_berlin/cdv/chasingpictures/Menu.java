@@ -26,14 +26,17 @@ import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.location.EasyLocationListener;
 import de.fu_berlin.cdv.chasingpictures.location.LocationHelper;
 
-import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.*;
+import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_DISTANCE;
+import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_TIME;
 
 
 public class Menu extends Activity {
 
     public static final Location BERLIN = new Location(LocationManager.PASSIVE_PROVIDER);
     public static final ColorMatrixColorFilter GRAYSCALE_FILTER;
-    private static final int REQUEST_PICTURE_SELECTION = 0;
+    public static final int REQUEST_PICTURE_SELECTION = 3;
+    public static final int SLIDESHOW_REQUEST_SHOW_ONCE = 4;
+    public static final int MAPS_REQUEST_SEARCH = 5;
 
     static {
         // FIXME: Find a better place, this is currently directly at the town hall!

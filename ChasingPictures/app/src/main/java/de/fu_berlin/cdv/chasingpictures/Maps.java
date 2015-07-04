@@ -138,11 +138,17 @@ public class Maps extends Activity {
         switch (requestCode) {
             case MainActivity.REQUEST_TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
+                    // TODO: Maybe put upload in slideshow or separate activity?
                     final File imageFile = (File) data.getSerializableExtra(CameraActivity.EXTRA_IMAGE_FILE);
                     if (imageFile != null && imageFile.exists() && imageFile.length() > 0) {
                         new PhotoUploadRequestTask(this, place, imageFile).execute();
                     }
                 }
+                break;
+            case Menu.SLIDESHOW_REQUEST_SHOW_ONCE:
+                // When we're finished with the slideshow, just set status to OK and quit
+                setResult(RESULT_OK);
+                finish();
                 break;
         }
     }

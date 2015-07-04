@@ -1,6 +1,6 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 
@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 
+import de.fu_berlin.cdv.chasingpictures.Menu;
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.activity.Slideshow;
 import de.fu_berlin.cdv.chasingpictures.util.Utilities;
@@ -18,11 +19,11 @@ import de.fu_berlin.cdv.chasingpictures.util.Utilities;
  */
 public class PhotoUploadRequestTask extends AsyncTask<Void, Void, ResponseEntity<Picture>> {
 
-    private final Context context;
+    private final Activity context;
     private final Place place;
     private final File image;
 
-    public PhotoUploadRequestTask(Context context, Place place, File image) {
+    public PhotoUploadRequestTask(Activity context, Place place, File image) {
         this.context = context;
         this.place = place;
         this.image = image;
@@ -41,7 +42,7 @@ public class PhotoUploadRequestTask extends AsyncTask<Void, Void, ResponseEntity
                     context,
                     place
             );
-            context.startActivity(intent);
+            context.startActivityForResult(intent, Menu.SLIDESHOW_REQUEST_SHOW_ONCE);
         } else {
             Utilities.showError(context, R.string.error_upload_photo);
         }

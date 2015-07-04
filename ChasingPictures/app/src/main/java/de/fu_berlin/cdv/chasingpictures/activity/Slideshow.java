@@ -257,6 +257,9 @@ public class Slideshow extends Activity {
                     Log.e(TAG, "Could not sleep.", e);
                 }
             }
+
+            finish();
+
             return null;
         }
     }

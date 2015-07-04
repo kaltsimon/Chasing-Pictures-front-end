@@ -110,6 +110,18 @@ public class PictureSelectionActivity extends Activity {
         mImageProgressBar = (ProgressBar) findViewById(R.id.imageProgressBar);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Menu.MAPS_REQUEST_SEARCH:
+                if (resultCode == RESULT_OK) {
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                break;
+        }
+    }
+
     private class MyPictureDownloader extends PictureDownloader {
         public MyPictureDownloader() {
             super(getCacheDir(), true);
@@ -282,7 +294,7 @@ public class PictureSelectionActivity extends Activity {
     public void startSearch(View view) {
         if (checkAndFixIndex()) {
             Intent intent = Maps.createIntent(this, places.get(currentPlace));
-            startActivity(intent);
+            startActivityForResult(intent, Menu.MAPS_REQUEST_SEARCH);
         }
     }
 
