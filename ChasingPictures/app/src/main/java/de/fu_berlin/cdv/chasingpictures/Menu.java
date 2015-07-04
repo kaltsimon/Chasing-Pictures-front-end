@@ -137,7 +137,11 @@ public class Menu extends Activity {
     }
 
     public void goToPictureSelection(View view) {
-        Intent intent = new Intent(this, PictureSelectionActivity.class);
+        Location location = mLocationHelper.getLastKnownLocation();
+        if (location == null)
+            location = BERLIN;
+
+        Intent intent = PictureSelectionActivity.createIntent(this, location);
         startActivityForResult(intent, REQUEST_PICTURE_SELECTION);
     }
 
