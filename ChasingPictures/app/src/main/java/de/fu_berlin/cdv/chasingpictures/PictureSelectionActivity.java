@@ -18,6 +18,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.mapbox.mapboxsdk.overlay.GpsLocationProvider;
+import com.mapbox.mapboxsdk.views.MapView;
+
 import java.io.File;
 import java.util.List;
 
@@ -28,6 +31,7 @@ import de.fu_berlin.cdv.chasingpictures.location.EasyLocationListener;
 import de.fu_berlin.cdv.chasingpictures.location.LocationHelper;
 import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
+import static de.fu_berlin.cdv.chasingpictures.MapLayoutView.*;
 import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_DISTANCE;
 import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_TIME;
 
@@ -60,6 +64,7 @@ public class PictureSelectionActivity extends Activity {
         }
     };
     private TextView mPlaceDistance;
+    private MapView mapView;
 
     public static Intent createIntent(Context context, Location location) {
         Intent intent = new Intent(context, PictureSelectionActivity.class);
@@ -72,6 +77,17 @@ public class PictureSelectionActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_selection);
         mPlaceDistance = (TextView) findViewById(R.id.place_distance);
+        mapView =  (MapView) this.findViewById(R.id.mapview);
+        MapLayoutView mapLayoutView = new MapLayoutView(this, mapView, Maps.mMap, new MyUserLocationOverlay(mapView, this) {
+            @Override
+            public void onLocationChanged(Location location, GpsLocationProvider source) {
+                super.onLocationChanged(location, source);
+
+                // TODO: Show distance to place
+            }
+        });
+
+        mapLayoutView.init().startTracking();
 
         mLocationHelper = new LocationHelper(this);
 
