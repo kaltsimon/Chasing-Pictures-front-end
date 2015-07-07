@@ -10,7 +10,7 @@ import java.io.Serializable
  *
  * @author Simon Kalt
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
+JsonIgnoreProperties(ignoreUnknown = true)
 public data class Place(
         var id: Int = 0,
         var name: String? = null,
@@ -27,13 +27,13 @@ public data class Place(
      *
      * @return The first picture associated with this place.
      */
-    @JsonIgnore
+    JsonIgnore
     fun getFirstPicture(): Picture? = if (pictures?.isEmpty() ?: true) null else pictures?.get(0)
 
     /**
      * Returns a {@link Location} describing latitude and longitude of this place.
      */
-    @JsonIgnore
+    JsonIgnore
     fun getLocation(): Location {
         val location = Location("");
         location.setLatitude(latitude)
@@ -70,9 +70,7 @@ public data class Place(
      * @return The first picture associated with this place.
      * @deprecated Use {@link #getFirstPicture()} instead
      */
-    @JsonIgnore
+    JsonIgnore
     deprecated("Use {@link #getFirstPicture()} instead", replaceWith = ReplaceWith("getFirstPicture()"))
-    fun getPicture(): Picture? {
-        return getFirstPicture();
-    }
+    fun getPicture(): Picture? = getFirstPicture()
 }
