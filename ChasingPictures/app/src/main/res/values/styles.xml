@@ -44,7 +44,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">4dp</item>
-        <item name="android:background">@drawable/map_distance_button</item>
+        <item name="android:background">@drawable/distance_button_up</item>
         <item name="android:layout_gravity">right|end</item>
         <item name="android:textColor">@color/text_white</item>
         <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>

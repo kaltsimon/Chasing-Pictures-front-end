@@ -41,7 +41,7 @@
 
             <Button
                 android:id="@+id/place_distance"
-                android:background="@drawable/map_distance_button_down"
+                android:background="@drawable/distance_button_down"
                 android:text="23"
                 tools:ignore="HardcodedText"
                 style="@style/distanceButtonStyle"

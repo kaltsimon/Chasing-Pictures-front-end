@@ -115,7 +115,7 @@ public class Maps extends Activity {
 
     private void hideCameraButton() {
         if (cameraButtonShown) {
-            Drawable background = getResources().getDrawable(R.drawable.map_distance_button);
+            Drawable background = getResources().getDrawable(R.drawable.distance_button_up);
             distanceButton.setBackgroundDrawable(background);
             distanceButton.setText(String.valueOf(Math.round(place.distanceTo(mLastLocation))));
             distanceButton.setOnClickListener(showHidePictureClickListener);
