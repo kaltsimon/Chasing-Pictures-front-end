@@ -206,7 +206,7 @@ public class CameraActivity extends Activity {
             c = Camera.open(); // attempt to get a Camera instance
         }
         catch (Exception e){
-            Utilities.showError(getApplicationContext(), "Camera could not be opened.");
+            Utilities.showError(getApplicationContext(), R.string.error_camera_open);
         }
         return c;
     }

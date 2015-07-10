@@ -1,11 +1,7 @@
 package de.fu_berlin.cdv.chasingpictures.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.widget.Toast;
 
 import xdroid.toaster.Toaster;
 

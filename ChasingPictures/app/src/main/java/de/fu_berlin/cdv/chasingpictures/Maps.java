@@ -15,21 +15,15 @@ import android.view.ViewPropertyAnimator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-import com.mapbox.mapboxsdk.geometry.BoundingBox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.overlay.GpsLocationProvider;
-import com.mapbox.mapboxsdk.overlay.Icon;
-import com.mapbox.mapboxsdk.overlay.Marker;
 import com.mapbox.mapboxsdk.overlay.UserLocationOverlay;
-import com.mapbox.mapboxsdk.tileprovider.tilesource.ITileLayer;
-import com.mapbox.mapboxsdk.tileprovider.tilesource.MapboxTileLayer;
-import com.mapbox.mapboxsdk.tileprovider.tilesource.WebSourceTileLayer;
 import com.mapbox.mapboxsdk.views.MapView;
 
 import java.io.File;
 
+import de.fu_berlin.cdv.chasingpictures.MapLayoutView.MyUserLocationOverlay;
 import de.fu_berlin.cdv.chasingpictures.api.PhotoUploadRequestTask;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.camera.CameraActivity;
@@ -54,12 +48,11 @@ public class Maps extends Activity {
         }
     };
     private com.mapbox.mapboxsdk.geometry.LatLng startingPoint = new LatLng(51f, 0f);
-    private MapView mv;
+    private MapView mapView;
     private String satellite = "brunosan.map-cyglrrfu";
     private String street = "examples.map-i87786ca";
     private String terrain = "examples.map-zgrqqx0w";
-    private String mMap = "miriwie.130123ed";
-    private String currentLayer = "";
+    public static String mMap = "miriwie.130123ed";
     private LatLng berlin =  new LatLng(52.513578, 13.415124);
     private Place place;
     private boolean imageViewVisible;
@@ -90,15 +83,10 @@ public class Maps extends Activity {
 
         setContentView(R.layout.activity_maps);
 
-        mv =  (MapView) this.findViewById(R.id.mapview);
-
-        // Set Default Map Type
-        replaceMapView(mMap);
-        currentLayer = "mMap";
-
-        GpsLocationProvider provider = new GpsLocationProvider(this);
         distanceButton = ((Button) findViewById(R.id.buttonDistance));
-        UserLocationOverlay overlay = new UserLocationOverlay(provider, mv) {
+        mapView =  (MapView) this.findViewById(R.id.mapview);
+
+        UserLocationOverlay overlay = new MyUserLocationOverlay(mapView, this) {
             @Override
             public void onLocationChanged(Location location, GpsLocationProvider source) {
                 super.onLocationChanged(location, source);
@@ -115,25 +103,14 @@ public class Maps extends Activity {
                 }
             }
         };
-        overlay.setTrackingMode(UserLocationOverlay.TrackingMode.FOLLOW);
-        overlay.setRequiredZoom(18);
-        overlay.enableMyLocation();
-        overlay.setDrawAccuracyEnabled(false);
-        overlay.setPersonBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.user_location));
-        overlay.setDirectionArrowBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.user_location_pointer));
-
-        mv.addOverlay(overlay);
-        provider.startLocationProvider(overlay);
-
-        Marker m = new Marker(mv, "Berlin", "Germany", berlin);
 
 
-        m.setIcon(new Icon(this, Icon.Size.SMALL, "marker-stroked", "FF0000"));
-        mv.addMarker(m);
+        MapLayoutView layoutView = new MapLayoutView(this, mapView, mMap, overlay);
+        layoutView.init().startTracking();
 
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.maps_layout);
         imageViewLayout = (LinearLayout) findViewById(R.id.imageViewLayout);
         imageView = (ImageView) findViewById(R.id.imageSearch);
+        imageView.setColorFilter(Menu.GRAYSCALE_FILTER);
     }
 
     private void hideCameraButton() {
@@ -161,11 +138,17 @@ public class Maps extends Activity {
         switch (requestCode) {
             case MainActivity.REQUEST_TAKE_PICTURE:
                 if (resultCode == RESULT_OK) {
+                    // TODO: Maybe put upload in slideshow or separate activity?
                     final File imageFile = (File) data.getSerializableExtra(CameraActivity.EXTRA_IMAGE_FILE);
                     if (imageFile != null && imageFile.exists() && imageFile.length() > 0) {
                         new PhotoUploadRequestTask(this, place, imageFile).execute();
                     }
                 }
+                break;
+            case Menu.SLIDESHOW_REQUEST_SHOW_ONCE:
+                // When we're finished with the slideshow, just set status to OK and quit
+                setResult(RESULT_OK);
+                finish();
                 break;
         }
     }
@@ -189,42 +172,6 @@ public class Maps extends Activity {
 
         // Move the image out of sight
         imageViewLayout.setTranslationY(actualHeight);
-    }
-
-    protected void replaceMapView(String layer) {
-        ITileLayer source;
-        BoundingBox box;
-        if (layer.equalsIgnoreCase("OpenStreetMap")) {
-            source = new WebSourceTileLayer("openstreetmap",
-                    "http://tile.openstreetmap.org/{z}/{x}/{y}.png").setName("OpenStreetMap")
-                    .setAttribution("© OpenStreetMap Contributors")
-                    .setMinimumZoomLevel(1)
-                    .setMaximumZoomLevel(18);
-        } else if (layer.equalsIgnoreCase("OpenSeaMap")) {
-            source = new WebSourceTileLayer("openstreetmap",
-                    "http://tile.openstreetmap.org/seamark/{z}/{x}/{y}.png").setName(
-                    "OpenStreetMap")
-                    .setAttribution("© OpenStreetMap Contributors")
-                    .setMinimumZoomLevel(1)
-                    .setMaximumZoomLevel(18);
-        } else if (layer.equalsIgnoreCase("mapquest")) {
-            source = new WebSourceTileLayer("mapquest",
-                    "http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png").setName(
-                    "MapQuest Open Aerial")
-                    .setAttribution(
-                            "Tiles courtesy of MapQuest and OpenStreetMap contributors.")
-                    .setMinimumZoomLevel(1)
-                    .setMaximumZoomLevel(18);
-        } else {
-            source = new MapboxTileLayer(layer);
-        }
-        mv.setTileSource(source);
-        box = source.getBoundingBox();
-        mv.setScrollableAreaLimit(box);
-        mv.setMinZoomLevel(mv.getTileProvider().getMinimumZoomLevel());
-        mv.setMaxZoomLevel(mv.getTileProvider().getMaximumZoomLevel());
-        mv.setCenter(berlin);
-        mv.setZoom(10);
     }
 
     public void pictureOverlay(View view){

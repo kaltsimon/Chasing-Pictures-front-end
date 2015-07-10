@@ -7,13 +7,16 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
+import de.fu_berlin.cdv.chasingpictures.LoginPage;
 import de.fu_berlin.cdv.chasingpictures.MainActivity;
+import de.fu_berlin.cdv.chasingpictures.Menu;
 import de.fu_berlin.cdv.chasingpictures.R;
+import de.fu_berlin.cdv.chasingpictures.security.Access;
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 public class SplashScreen extends Activity {
 
     private static final long ANIMATION_DURATION = 3202;
-    private AnimationDrawable draw;
     private final Thread splashThread = new Thread(new Runnable() {
         @Override
         public void run() {
@@ -21,14 +24,29 @@ public class SplashScreen extends Activity {
                 synchronized (splashThread) {
                     splashThread.wait(ANIMATION_DURATION);
                 }
-            } catch (InterruptedException ignored) {}
+            } catch (InterruptedException ignored) {
+            }
 
-            finish();
-
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            if (!Access.hasAccess(getApplicationContext())) {
+                Intent intent = new Intent(getApplicationContext(), LoginPage.class);
+                startActivityForResult(intent, MainActivity.REQUEST_LOGIN_REGISTER);
+            } else {
+                onActivityResult(MainActivity.REQUEST_LOGIN_REGISTER, RESULT_OK, null);
+            }
         }
     });
+    private AnimationDrawable draw;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == MainActivity.REQUEST_LOGIN_REGISTER && resultCode == RESULT_OK) {
+            finish();
+            Intent intent = new Intent(getApplicationContext(), Menu.class);
+            startActivity(intent);
+        } else {
+            Utilities.showError(this, R.string.login_fail);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +68,8 @@ public class SplashScreen extends Activity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            synchronized(splashThread) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            synchronized (splashThread) {
                 splashThread.notifyAll();
             }
             return true;

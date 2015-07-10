@@ -23,25 +23,25 @@
         android:id="@+id/imageViewLayout"
         >
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttonDistance"
-            android:text="23"
-            android:paddingLeft="4dp"
-            android:background="@drawable/map_distance_button"
-            android:layout_gravity="right"
-            android:textColor="@color/text_white"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textStyle="bold"
-            android:onClick="pictureOverlay"
-            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
-
-        <ImageView
-            android:background="@drawable/map_distance_bar"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="19dp"
-            android:onClick="pictureOverlay"/>
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true">
+            <Button
+                android:id="@+id/buttonDistance"
+                android:text="23"
+                android:onClick="pictureOverlay"
+                tools:ignore="HardcodedText"
+                style="@style/distanceButtonStyle" />
+
+            <ImageView
+                android:background="@drawable/map_distance_bar"
+                android:layout_width="match_parent"
+                android:layout_height="19dp"
+                android:onClick="pictureOverlay"/>
+        </LinearLayout>
+
 
         <ImageView
             android:layout_width="match_parent"

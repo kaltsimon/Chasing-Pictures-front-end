@@ -1,11 +1,13 @@
 package de.fu_berlin.cdv.chasingpictures;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.location.Location;
-import android.os.AsyncTask;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -14,25 +16,29 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.location.LocationListener;
-
-import org.springframework.http.ResponseEntity;
+import com.mapbox.mapboxsdk.views.MapView;
 
 import java.io.File;
 import java.util.List;
 
-import de.fu_berlin.cdv.chasingpictures.api.LocationRequest;
+import de.fu_berlin.cdv.chasingpictures.api.LocationTask;
 import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
-import de.fu_berlin.cdv.chasingpictures.api.PlacesApiResult;
+import de.fu_berlin.cdv.chasingpictures.location.EasyLocationListener;
+import de.fu_berlin.cdv.chasingpictures.location.LocationHelper;
 import de.fu_berlin.cdv.chasingpictures.util.Utilities;
+
+import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_DISTANCE;
+import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_TIME;
 
 
 public class PictureSelectionActivity extends Activity {
     private static final String TAG = "PictureSelection";
+    public static final String EXTRA_LOCATION = "de.fu_berlin.cdv.chasingpictures.EXTRA_LOCATION";
     private Location mLastLocation;
     private ImageView mImageView;
     private SwipeDetector mSwipeDetector;
@@ -43,14 +49,14 @@ public class PictureSelectionActivity extends Activity {
     private ProgressBar mImageProgressBar;
     private Button mChasePictureButton;
 
-    private LocationListener placeFinderListener = new LocationListener() {
+    private LocationListener placeFinderListener = new EasyLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             mLastLocation = location;
-            new LocationTask().execute(location);
+            new MyLocationTask().execute(location);
         }
     };
-    private LocationListener distanceCalculatorListener = new LocationListener() {
+    private LocationListener distanceCalculatorListener = new EasyLocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             mLastLocation = location;
@@ -58,24 +64,15 @@ public class PictureSelectionActivity extends Activity {
         }
     };
     private TextView mPlaceDistance;
+    private MapView mapView;
+    private LinearLayout mPlaceDistanceView;
+    private int windowWidth;
+    private int mPlaceDistanceViewHeight;
 
-    private class PictureViewLocationHelper extends LocationHelper {
-        @Override
-        public void onConnected(Bundle connectionHint) {
-            Log.d(TAG, "Connected to Google API services.");
-
-            Location lastLocation = getLastLocation();
-            if (lastLocation != null) {
-                mLastLocation = lastLocation;
-                new LocationTask(false).execute(mLastLocation);
-            }
-
-            // TODO: Find sensible values for location updates, i.e. when do we want to search for new places
-            startLocationUpdates(
-                    makeLocationRequest(),
-                    placeFinderListener
-            );
-        }
+    public static Intent createIntent(Context context, Location location) {
+        Intent intent = new Intent(context, PictureSelectionActivity.class);
+        intent.putExtra(EXTRA_LOCATION, location);
+        return intent;
     }
 
     @Override
@@ -83,19 +80,55 @@ public class PictureSelectionActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_selection);
         mPlaceDistance = (TextView) findViewById(R.id.place_distance);
-
-        mLocationHelper = new PictureViewLocationHelper()
-                .buildGoogleApiClient(getApplicationContext())
-                .connect();
-
-        mSwipeDetector = new SwipeDetector();
+        mapView =  (MapView) findViewById(R.id.mapview);
+        mPlaceDistanceView = (LinearLayout) findViewById(R.id.distanceView);
         mImageView = (ImageView) findViewById(R.id.picture_card_image);
-        mImageView.setOnTouchListener(mSwipeDetector);
-        mImageView.setOnClickListener(new ClickListener());
+        mImageView.setColorFilter(Menu.GRAYSCALE_FILTER);
         mChasePictureButton = (Button) findViewById(R.id.chasePictureButton);
-
         mLocationProgressBar = (ProgressBar) findViewById(R.id.locationProgressBar);
         mImageProgressBar = (ProgressBar) findViewById(R.id.imageProgressBar);
+
+        // Swipe listener
+        mSwipeDetector = new SwipeDetector();
+        mImageView.setOnTouchListener(mSwipeDetector);
+        mImageView.setOnClickListener(new ClickListener());
+
+        // Location listener
+        mLocationHelper = new LocationHelper(this);
+
+        // Initialize map view
+        MapLayoutView mapLayoutView = new MapLayoutView(this, mapView, Maps.mMap, true);
+        mapLayoutView.init().startTracking();
+
+
+        Location lastLocation = mLocationHelper.getLastKnownLocation();
+        if (lastLocation == null) {
+            lastLocation = getIntent().getParcelableExtra(EXTRA_LOCATION);
+            if (lastLocation != null) {
+                mLastLocation = lastLocation;
+                new MyLocationTask(false).execute(lastLocation);
+            }
+        }
+
+        mLocationHelper.startLocationUpdates(placeFinderListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        animateShowButtons();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Menu.MAPS_REQUEST_SEARCH:
+                if (resultCode == RESULT_OK) {
+                    setResult(RESULT_OK);
+                    finish();
+                }
+                break;
+        }
     }
 
     private class MyPictureDownloader extends PictureDownloader {
@@ -106,8 +139,10 @@ public class PictureSelectionActivity extends Activity {
         @Override
         protected void handleProgressUpdate(@NonNull Progress progress) {
             if (progress.getState() == currentPlace) {
-                updatePicture();
-                showDelayedPlaceInfo(currentPlace);
+                File cachedFile = places.get(currentPlace).getFirstPicture().getCachedFile();
+                if (cachedFile != null) {
+                    updatePicture(true);
+                }
             }
         }
 
@@ -118,39 +153,28 @@ public class PictureSelectionActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            updatePicture();
-            showDelayedPlaceInfo(currentPlace);
+            updatePicture(false);
         }
     }
 
-    private class LocationTask extends AsyncTask<Location, Object, List<Place>> {
+    private class MyLocationTask extends LocationTask {
 
         private final boolean exitOnEmptyResult;
 
-        public LocationTask(boolean exitOnEmptyResult) {
+        public MyLocationTask(boolean exitOnEmptyResult) {
+            super(getApplicationContext());
             this.exitOnEmptyResult = exitOnEmptyResult;
         }
 
-        public LocationTask() {
+        public MyLocationTask() {
             this(true);
         }
 
         @Override
-        protected List<Place> doInBackground(Location... params) {
-            if (params.length == 0 || params[0] == null)
-                return null;
-
-            LocationRequest request = new LocationRequest(getApplicationContext(), params[0]);
-            ResponseEntity<PlacesApiResult> result = request.sendRequest();
-            PlacesApiResult body = result == null ? null : result.getBody();
-            return body == null ? null : body.getPlaces();
-        }
-
-        @Override
-        protected void onPostExecute(List<Place> resultPlaces) {
+        protected void onPostExecute(@Nullable List<Place> resultPlaces) {
             if (resultPlaces == null || resultPlaces.isEmpty()) {
                 // TODO: Show better error and do not exit activity
-                Utilities.showError(getApplicationContext(), "No places found nearby");
+                Utilities.showError(getApplicationContext(), R.string.error_location_no_places);
                 if (exitOnEmptyResult) {
                     finish();
                 }
@@ -164,7 +188,7 @@ public class PictureSelectionActivity extends Activity {
             mLocationHelper.stopLocationUpdates(placeFinderListener);
 
             // And register the distance calculator
-            mLocationHelper.startLocationUpdates(LocationHelper.makeLocationRequest(), distanceCalculatorListener);
+            mLocationHelper.startLocationUpdates(distanceCalculatorListener, DEFAULT_MIN_TIME, DEFAULT_MIN_DISTANCE);
 
             // Hide the location progress bar
             mLocationProgressBar.setVisibility(View.GONE);
@@ -182,20 +206,69 @@ public class PictureSelectionActivity extends Activity {
     }
 
 
-    private void updatePicture() {
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (hasFocus) {
+            Point windowSize = new Point();
+            getWindowManager().getDefaultDisplay().getSize(windowSize);
+            windowWidth = windowSize.x;
+            mPlaceDistanceViewHeight = mPlaceDistanceView.getHeight();
+            hideButtons();
+            mPlaceDistanceView.setVisibility(View.VISIBLE);
+            mChasePictureButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideButtons() {
+        // Somehow does not work, i.e. it isn't animated and setAlpha(1) does not work...
+//        mPlaceDistanceView.animate().alpha(0);
+//        mChasePictureButton.animate().alpha(0);
+
+        mPlaceDistanceView.setTranslationY(-mPlaceDistanceViewHeight);
+        mChasePictureButton.setTranslationX(windowWidth);
+    }
+
+    private void animateShowButtons() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mChasePictureButton.animate().translationX(0);
+                mPlaceDistanceView.animate().translationY(0);
+            }
+        }, 500);
+    }
+
+    private void updatePicture(boolean isNewPicture) {
+
         if (checkAndFixIndex()) {
             File cachedFile = places.get(currentPlace).getFirstPicture().getCachedFile();
+            setPlaceInfoText(currentPlace);
             if (cachedFile != null) {
                 Bitmap bitmap = BitmapFactory.decodeFile(cachedFile.getPath());
-                mImageView.setImageBitmap(bitmap);
-                mImageProgressBar.setVisibility(View.GONE);
-                mImageView.setVisibility(View.VISIBLE);
-                mChasePictureButton.setVisibility(View.VISIBLE);
+                if (isNewPicture) {
+                    hideButtons();
+
+                    updateImageBitmap(bitmap);
+
+                    animateShowButtons();
+                } else {
+                    updateImageBitmap(bitmap);
+                    if (mChasePictureButton.getVisibility() != View.VISIBLE)
+                        mChasePictureButton.setVisibility(View.VISIBLE);
+                    if (mPlaceDistanceView.getVisibility() != View.VISIBLE)
+                        mPlaceDistanceView.setVisibility(View.VISIBLE);
+                }
             }
         }
         else {
             Log.e(TAG, "No places available");
         }
+    }
+
+    private void updateImageBitmap(Bitmap bitmap) {
+        mImageProgressBar.setVisibility(View.GONE);
+        mImageView.setImageBitmap(bitmap);
+        mImageView.setVisibility(View.VISIBLE);
     }
 
     private boolean checkAndFixIndex() {
@@ -209,25 +282,22 @@ public class PictureSelectionActivity extends Activity {
         return true;
     }
 
-    private void showDelayedPlaceInfo(final int placeNr) {
+    private void showDelayedPlaceInfo(final int placeNr, boolean hideFirst) {
         if (checkAndFixIndex()) {
-            mPlaceDistance.setVisibility(View.INVISIBLE);
-            new Handler().postDelayed(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            setPlaceInfoText(placeNr);
-                        }
-                    },
-                    1000
-            );
+            if (hideFirst)
+                mPlaceDistanceView.setVisibility(View.GONE);
+
+            setPlaceInfoText(placeNr);
+
+            if (mPlaceDistanceView.getVisibility() == View.GONE) {
+                mPlaceDistanceView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     private void setPlaceInfoText(int placeNr) {
-        String text = String.valueOf(Math.round(getDistanceToPlace(placeNr))) + " m";
+        String text = String.valueOf(Math.round(getDistanceToPlace(placeNr)));
         mPlaceDistance.setText(text);
-        mPlaceDistance.setVisibility(View.VISIBLE);
     }
 
     private float getDistanceToPlace(int placeNr) {
@@ -237,7 +307,7 @@ public class PictureSelectionActivity extends Activity {
     public void startSearch(View view) {
         if (checkAndFixIndex()) {
             Intent intent = Maps.createIntent(this, places.get(currentPlace));
-            startActivity(intent);
+            startActivityForResult(intent, Menu.MAPS_REQUEST_SEARCH);
         }
     }
 
@@ -272,8 +342,7 @@ public class PictureSelectionActivity extends Activity {
                 return false;
         }
 
-        updatePicture();
-        showDelayedPlaceInfo(currentPlace);
+        updatePicture(true);
         return true;
     }
 }

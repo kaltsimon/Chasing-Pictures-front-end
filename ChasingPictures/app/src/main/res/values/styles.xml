@@ -1,27 +1,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="android:Theme.Holo.Light.NoActionBar">
         <!-- Customize your theme here. -->
-    </style>
-
-    <style name="Toolbar">
-        <item name="android:background">@color/main_theme_color</item>
-    </style>
-
-    <style name="Button">
-        <item name="android:background">@color/button_color</item>
-    </style>
-
-    <style name="ButtonInvi">
-        <item name="android:background">@android:color/transparent</item>
-    </style>
-
-    <style name="ToolbarButton">
-        <item name="android:background">@color/button_color</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_width">wrap_content</item>
     </style>
 
     <style name="Vertical">
@@ -38,7 +19,6 @@
     </style>
 
     <style name="Vertical.TextField">
-        <item name="android:ems">@integer/standard_textinput_ems</item>
         <item name="android:layout_gravity">start|left</item>
     </style>
 
@@ -50,7 +30,24 @@
         <item name="android:layout_width">wrap_content</item>
     </style>
 
-    <style name="ButtonLine">
-        <item name="android:background">@color/base_color</item>
+    <style name="menu_preview_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/preview_distance</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:textSize">@dimen/menu.preview.textSize</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="distanceButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:background">@drawable/map_distance_button</item>
+        <item name="android:layout_gravity">right|end</item>
+        <item name="android:textColor">@color/text_white</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

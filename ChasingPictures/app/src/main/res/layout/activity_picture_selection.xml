@@ -1,85 +1,120 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:layout_gravity="center"
-    tools:context="de.fu_berlin.cdv.chasingpictures.PictureSelectionActivity"
-    android:id="@+id/picture_selection_layout"
-    android:animateLayoutChanges="true"
-    >
+    android:background="@drawable/gradient_background"
+    tools:context="de.fu_berlin.cdv.chasingpictures.PictureSelectionActivity">
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="300dp"
-        android:contentDescription="Picture"
-        android:id="@+id/picture_card_image"
-        android:src="@drawable/rathaus"
-        android:scaleType="centerCrop"
-        android:visibility="invisible"
-        tools:visibility="visible"
-        tools:ignore="HardcodedText"
-        />
 
-    <ProgressBar
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/locationProgressBar"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:indeterminate="true"
-        tools:visibility="invisible"
-        />
+        android:layout_below="@+id/pictureSelectionLayout"
+        android:animateLayoutChanges="true"
+        >
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleSmall"
+        <com.mapbox.mapboxsdk.views.MapView
+            android:id="@+id/mapview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            mapbox:accessToken="@string/access_mb" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/distanceView"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            >
+
+            <ImageView
+                android:background="@drawable/map_distance_bar"
+                android:layout_width="match_parent"
+                android:layout_height="19dp"/>
+
+            <Button
+                android:id="@+id/place_distance"
+                android:background="@drawable/map_distance_button_down"
+                android:text="23"
+                tools:ignore="HardcodedText"
+                style="@style/distanceButtonStyle"
+                android:gravity="center_horizontal"
+                android:paddingTop="5dp"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageProgressBar"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="105dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        tools:visibility="visible"
-        />
+        android:id="@+id/pictureSelectionLayout"
+        android:animateLayoutChanges="true">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/place_distance"
-        android:background="@drawable/preview_distance"
-        android:layout_alignBottom="@+id/picture_card_image"
-        android:layout_alignRight="@+id/picture_card_image"
-        android:layout_alignEnd="@+id/picture_card_image"
-        android:textColor="@color/text_white"
-        android:textSize="24sp"
-        android:text="25 m"
-        android:textAllCaps="false"
-        android:visibility="invisible"
-        tools:ignore="HardcodedText"
-        tools:visibility="visible"
-        />
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="300dp"
+            android:contentDescription="Picture"
+            android:id="@+id/picture_card_image"
+            android:src="@drawable/rathaus"
+            android:scaleType="centerCrop"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            tools:ignore="HardcodedText"
+            />
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/overlay_button_background"
-        android:text="@string/chase_picture"
-        android:id="@+id/chasePictureButton"
-        android:textColor="@color/overlay_button_text"
-        android:textStyle="italic"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:gravity="center"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="100dp"
-        android:onClick="startSearch"
-        android:visibility="invisible"
-        tools:visibility="visible"
-        />
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/locationProgressBar"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminate="true"
+            tools:visibility="invisible"
+            />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageProgressBar"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="105dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/overlay_button_background"
+            android:text="@string/chase_picture"
+            android:id="@+id/chasePictureButton"
+            android:textColor="@color/overlay_button_text"
+            android:textStyle="italic"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:gravity="center"
+            android:onClick="startSearch"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignBottom="@id/picture_card_image"
+            />
+
+    </RelativeLayout>
+
+
+
 
 </RelativeLayout>

@@ -13,7 +13,7 @@
     <string name="invalid_email">Die eingegebene E-Mail Adresse ist nicht gültig.</string>
     <string name="login_success">Log-In erfolgreich.</string>
     <string name="login_fail">Log-in fehlgeschlagen.</string>
-    <string name="empty_password">Passwort kann nicht leer sein.</string>
+    <string name="empty_password">Passwort kann nicht leer sein</string>
     <string name="registration_fail">Registrierung fehlgeschlagen.</string>
     <string name="register.invalid_username">Dieser Benutzername ist ungültig.</string>
     <string name="register.error.password_too_short">Passwort ist zu kurz (mindestens 8 Zeichen)</string>
@@ -22,6 +22,7 @@
     <string name="title_activity_camera">Kamera</string>
     <string name="title_activity_maps">Karte</string>
     <string name="title_activity_picture_selection">Bildauswahl</string>
-    <string name="api.error.server_unreachable">Server nicht erreichbar.</string>
     <string name="chase_picture">chase picture</string>
+    <string name="title_activity_menu">Menu</string>
+    <string name="title_activity_slideshow">Slideshow</string>
 </resources>

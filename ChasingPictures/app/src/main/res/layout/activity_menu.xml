@@ -1,84 +1,167 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/neuer_hintergrund"
-    android:paddingBottom="10dip">
+    tools:context="de.fu_berlin.cdv.chasingpictures.Menu">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Images -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/image_new"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/containerLast"
+            android:layout_alignBottom="@+id/buttonNew"
+            android:layout_alignRight="@+id/containerLast"
+            android:layout_alignEnd="@+id/containerLast"
+            android:layout_marginTop="@dimen/menu.button.overlap.negative"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:id="@+id/centerInside"
+            android:paddingLeft="@dimen/menu.button.width"
+            android:paddingStart="@dimen/menu.button.width"
+            tools:ignore="RtlSymmetry" />
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/containerNext"
+            android:layout_alignRight="@+id/containerNext"
+            android:layout_alignEnd="@+id/containerNext"
+            android:layout_alignBottom="@+id/buttonLast"
+            android:paddingBottom="@dimen/menu.button.overlap"
+            android:layout_marginTop="@dimen/menu.button.overlap.negative"
+            android:background="@drawable/shadow"
+            android:id="@+id/containerLast">
 
             <ImageView
-                android:layout_width="75dip"
-                android:layout_height="250dip"
-                android:id="@+id/menuLast"
-                android:background="@drawable/last"
-                android:layout_weight="1"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/rathaus"
                 android:layout_alignParentStart="true"
-                android:layout_marginBottom="120dp" />
-            <ImageView
-                android:layout_width="75dip"
-                android:layout_height="270dip"
-                android:id="@+id/menuNext"
-                android:background="@drawable/next"
-                android:layout_weight="1"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-            <Button
-                android:layout_width="10dip"
-                android:layout_height="150dip"
-                android:id="@+id/menuNew"
-                android:background="@drawable/new_button"
-                android:layout_weight="1"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignRight="@+id/menuLast"
-                android:layout_alignEnd="@+id/menuLast" />
-
-
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:id="@+id/imageLast"
+            />
+            <TextView
+                style="@style/menu_preview_style"
+                android:id="@+id/place_count"
+                android:background="@drawable/preview_count"
+                android:layout_alignBottom="@+id/imageLast"
+                android:layout_alignRight="@+id/imageLast"
+                android:layout_alignEnd="@+id/imageLast"
+                android:text="121"
+                android:gravity="center_vertical|left|start"
+                android:paddingLeft="@dimen/menu.preview_count.paddingLeft"
+                android:paddingTop="@dimen/menu.preview_count.paddingTop"
+                tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry"/>
         </RelativeLayout>
 
 
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBottom="@+id/buttonNext"
+            android:paddingBottom="@dimen/menu.button.overlap"
+            android:background="@drawable/shadow"
+            android:id="@+id/containerNext"
+            >
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="200dip"
-                android:id="@+id/imageLast"
+                android:layout_height="match_parent"
                 android:src="@drawable/rathaus"
-                android:scaleType="center"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:adjustViewBounds="true"
-                android:layout_weight="2"/>
-
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="180dip"
-                android:id="@+id/imageNew"
-                android:src="@drawable/rathaus"
-                android:scaleType="center"
-                android:adjustViewBounds="true" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="120dip"
+                android:scaleType="centerCrop"
                 android:id="@+id/imageNext"
-                android:src="@drawable/new_aktuaisiert_1024"
-                android:scaleType="center"
-                android:adjustViewBounds="true"
-                android:layout_weight="1"/>
+                android:onClick="goToPictureSelection"
+                android:visibility="visible"
+                tools:visibility="visible" />
+            <TextView
+                android:id="@+id/menuPlaceDistance"
+                android:layout_alignBottom="@+id/imageNext"
+                android:layout_alignRight="@+id/imageNext"
+                android:layout_alignEnd="@+id/imageNext"
+                android:text="25 m"
+                tools:ignore="HardcodedText"
+                android:onClick="goToPictureSelection"
+                style="@style/menu_preview_style" />
 
-        </LinearLayout>
+            <ProgressBar
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageNextProgressBar"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
 
 
+        <!-- Bottom bar -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/menu.button.width"
+            android:background="@drawable/menu_bar"
+            android:gravity="end"
+            android:layout_alignParentBottom="true"
+            android:padding="@dimen/menu.bar.padding">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/me_button"
+                android:scaleType="centerInside"
+                />
+        </RelativeLayout>
 
-</LinearLayout>
+        <!-- Menu buttons -->
+
+        <ImageView
+            android:layout_width="@dimen/menu.button.width"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonNew"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:src="@drawable/menu_create"
+            android:layout_below="@+id/buttonLast"
+            android:layout_alignLeft="@+id/buttonLast"
+            android:layout_alignStart="@+id/buttonLast"
+            android:layout_marginTop="@dimen/menu.button.overlap.negative" />
+
+        <ImageView
+            android:layout_width="@dimen/menu.button.width"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonLast"
+            android:layout_below="@+id/buttonNext"
+            android:layout_alignLeft="@+id/buttonNext"
+            android:layout_alignStart="@+id/buttonNext"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="@dimen/menu.button.overlap.negative"
+            android:src="@drawable/menu_view" />
+
+        <ImageView
+            android:layout_width="@dimen/menu.button.width"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonNext"
+            android:scaleType="fitStart"
+            android:adjustViewBounds="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/menu_chase"
+            android:onClick="goToPictureSelection" />
+
+    </RelativeLayout>
+</RelativeLayout>

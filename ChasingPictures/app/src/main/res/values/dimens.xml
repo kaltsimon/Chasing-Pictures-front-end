@@ -6,5 +6,12 @@
     <dimen name="camera.buttons.sizeDifference">14dp</dimen>
     <dimen name="camera.buttons.sizeDifference.2">6dp</dimen>
 
-    <integer name="standard_textinput_ems">12</integer>
+    <!-- Menu dimenions -->
+    <dimen name="menu.button.overlap">16dp</dimen>
+    <dimen name="menu.button.overlap.negative">-16dp</dimen>
+    <dimen name="menu.button.width">40dp</dimen>
+    <dimen name="menu.bar.padding">8dp</dimen>
+    <dimen name="menu.preview_count.paddingTop">2dp</dimen>
+    <dimen name="menu.preview_count.paddingLeft">15dp</dimen>
+    <dimen name="menu.preview.textSize">14sp</dimen>
 </resources>

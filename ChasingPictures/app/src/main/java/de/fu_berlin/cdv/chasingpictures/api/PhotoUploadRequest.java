@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 
 import java.io.File;
 
@@ -63,5 +64,10 @@ public class PhotoUploadRequest extends ApiRequest<Picture> {
                 new HttpEntity<>(formData, headers),
                 Picture.class
         );
+    }
+
+    @Override
+    protected void handleException(RestClientException ex) {
+        checkAccess();
     }
 }

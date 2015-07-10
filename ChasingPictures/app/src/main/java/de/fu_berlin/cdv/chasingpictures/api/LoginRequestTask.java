@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Map;
 
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
@@ -73,7 +72,7 @@ public class LoginRequestTask extends AsyncTask<LoginRequest, Void, ResponseEnti
                         ApiErrors errors = (ApiErrors) responseEntity.getBody().getErrors();
 
                         // Check the error messages and display them in the corresponding fields
-                        String emailErrorKey = activity.getString(R.string.api_error_email);
+                        String emailErrorKey = activity.getString(R.string.api_errorKey_email);
                         List<String> emailErrors = errors.getErrorMessages().get(emailErrorKey);
 
                         if (emailErrors != null && !emailErrors.isEmpty()) {

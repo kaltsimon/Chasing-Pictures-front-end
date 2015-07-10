@@ -1,20 +1,23 @@
 package de.fu_berlin.cdv.chasingpictures.api;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import de.fu_berlin.cdv.chasingpictures.LoginPage;
 import de.fu_berlin.cdv.chasingpictures.R;
-import de.fu_berlin.cdv.chasingpictures.security.Access;
+import xdroid.toaster.Toaster;
 
 /**
  * API request to find places near a given location.
@@ -50,6 +53,11 @@ public class LocationRequest extends ApiRequest<PlacesApiResult> {
                 PlacesApiResult.class,
                 queryParameters
         );
+    }
+
+    @Override
+    protected void handleException(RestClientException ex) {
+        checkAccess();
     }
 
     RestTemplate getRestTemplate() {
