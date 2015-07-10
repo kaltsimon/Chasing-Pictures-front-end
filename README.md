@@ -3,8 +3,7 @@ This is the repository for the *front end* code for the *Chasing Pictures* proje
 
 ## Requirements
 * [Android Developer Tools](developer.android.com/sdk/index.html)
-* An Android Virtual Device running on an Android 4.4.2 (API 19) Google APIs system image (install from Android SDK Manager)
-* Google Play Services (install from Android SDK Manager)
+* An Android Virtual Device running on Android API 15 or higher (or an actual device).
 
 ## License
 See LICENSE.md.
