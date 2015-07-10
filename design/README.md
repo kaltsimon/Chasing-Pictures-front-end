@@ -9,6 +9,7 @@ This folder contains the original image assets output by the design process. If 
 
 ## Script `androidImageAssets.sh`
 This script scales an image file to the appropriate sizes used in Android.
+
 1. Put the images to be scaled in a subfolder (e.g. “original”)
 2. Call `./androidImageAssets.sh`
 3. Enter the name of the subfolder (“original”)
