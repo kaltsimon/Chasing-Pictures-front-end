@@ -5,5 +5,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 /**
  * @author Simon Kalt
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
+JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginApiResult : ApiResult<UserData>()

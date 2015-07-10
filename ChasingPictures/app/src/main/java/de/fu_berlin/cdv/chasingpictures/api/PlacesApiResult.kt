@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
  *
  * @author Simon Kalt
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
+JsonIgnoreProperties(ignoreUnknown = true)
 public class PlacesApiResult : ApiResult<List<Place>>() {
     public fun getPlaces(): List<Place> {
         return data
