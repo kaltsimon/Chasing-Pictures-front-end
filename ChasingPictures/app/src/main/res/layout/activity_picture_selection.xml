@@ -22,6 +22,9 @@
             android:layout_height="match_parent"
             mapbox:accessToken="@string/access_mb" />
 
+        <!-- Technically not necessary, as it would be automatically included in MapLayoutView#displayAttribution() -->
+        <include layout="@layout/mapbox_attribution_layout" />
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
