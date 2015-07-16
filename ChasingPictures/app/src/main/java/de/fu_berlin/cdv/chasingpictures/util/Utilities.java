@@ -75,33 +75,31 @@ public class Utilities {
             }, text.getSpanStart(u), text.getSpanEnd(u), 0);
         }
         return text;
-    } // Nothing
+    }
 
 
     /**
-     * Retrieve the given string resource and parse it as HTML.
+     * Parse the given String as HTML.
      * <p/>
      * The links will be underlined.
      *
-     * @param context   The current context
-     * @param textResId The id of the string resource to retrieve
+     * @param text The text to parse
      */
-    public static Spannable getTextAsHtml(Context context, @StringRes int textResId) {
-        return getTextAsHtml(context, textResId, true);
+    public static Spannable getTextAsHtml(String text) {
+        return getTextAsHtml(text, true);
     }
 
     /**
-     * Retrieve the given string resource and parse it as HTML.
+     * Parse the given String as HTML.
      *
-     * @param context    The current context
-     * @param textResId  The id of the string resource to retrieve
+     * @param text       The text to parse
      * @param underlines Whether or not the links should be underlined
      */
-    public static Spannable getTextAsHtml(Context context, @StringRes int textResId, boolean underlines) {
-        Spannable text = (Spannable) Html.fromHtml(context.getString(textResId));
+    public static Spannable getTextAsHtml(String text, boolean underlines) {
+        Spannable textSpan = (Spannable) Html.fromHtml(text);
         if (!underlines)
-            text = removeURLUnderlines(text);
-        return text;
+            textSpan = removeURLUnderlines(textSpan);
+        return textSpan;
     }
 
     private static void setLinkifiedText(TextView textView, Spannable textWithLinks) {
@@ -111,10 +109,36 @@ public class Utilities {
     }
 
     /**
+     * Set the text for the given {@link TextView} to the given HTML String and turn contained links
+     * (either just URLs or HTML &lt;a&gt elements) into clickable ones.
+     *
+     * @param textView   The text view for which to set the text
+     * @param text       The text to parse
+     * @param underlines Whether or not the links should be underlined
+     */
+    public static void setLinkifiedText(TextView textView, String text, boolean underlines) {
+        Spannable textSpan = getTextAsHtml(text, underlines);
+        setLinkifiedText(textView, textSpan);
+    }
+
+    /**
+     * Set the text for the given {@link TextView} to the given HTML String and turn contained links
+     * (either just URLs or HTML &lt;a&gt elements) into clickable ones.
+     * <p/>
+     * The links will be underlined.
+     *
+     * @param textView The text view for which to set the text
+     * @param text     The text to parse
+     */
+    public static void setLinkifiedText(TextView textView, String text) {
+        setLinkifiedText(textView, text, true);
+    }
+
+    /**
      * Set the text for the given {@link TextView} to the given resource and turn contained links
      * (either just URLs or HTML &lt;a&gt elements) into clickable ones.
      * <p/>
-     * Links will be underlined.
+     * The links will be underlined.
      *
      * @param context   The current context
      * @param textView  The text view for which to set the text
@@ -134,7 +158,6 @@ public class Utilities {
      * @param underlines Whether or not links should be underlined
      */
     public static void setLinkifiedText(Context context, TextView textView, @StringRes int textResId, boolean underlines) {
-        Spannable text = getTextAsHtml(context, textResId, underlines);
-        setLinkifiedText(textView, text);
+        setLinkifiedText(textView, context.getString(textResId), underlines);
     }
 }
