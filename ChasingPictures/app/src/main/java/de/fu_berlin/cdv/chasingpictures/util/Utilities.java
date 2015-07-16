@@ -104,6 +104,14 @@ public class Utilities {
 
     private static void setLinkifiedText(TextView textView, Spannable textWithLinks) {
         textView.setText(textWithLinks);
+        linkifyTextView(textView);
+    }
+
+    /**
+     * Linkify the text inside the given {@link TextView}.
+     * @param textView The {@link TextView} to linkify
+     */
+    public static void linkifyTextView(TextView textView) {
         Linkify.addLinks(textView, Linkify.ALL);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
