@@ -28,4 +28,13 @@
     <string name="chase_picture">chase picture</string>
     <string name="mapbox_attribution_links" translatable="false"><![CDATA[<a href="https://www.mapbox.com/about/maps/">&copy; Mapbox</a> <a href="http://www.openstreetmap.org/about/">&copy; OpenStreetMap</a> <a href="https://www.mapbox.com/map-feedback/"><b>Improve this map</b></a>]]></string>
     <string name="mapbox_logo_desc" translatable="false">Mapbox</string>
+    <string name="title_activity_imprint">Imprint</string>
+    <string name="imprint_text"><![CDATA[
+            <p>The app ChasingPictures was developed by Katharina Stärck, Miriam Wieseke, Jakob Warkotsch and Simon Kalt.</p>
+            <p>
+            All code and design elements are released under the MIT License. The code is available on GitHub for
+            <a href="https://github.com/kaltsimon/Chasing-Pictures-front-end">this app</a> and also the
+            <a href="https://github.com/kaltsimon/Chasing-Pictures-back-end">server backend</a>.
+            </p>
+    ]]></string>
 </resources>
