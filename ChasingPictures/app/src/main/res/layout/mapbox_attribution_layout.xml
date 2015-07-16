@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_gravity="bottom"
+    android:gravity="bottom"
+    android:layout_alignParentBottom="true"
+    android:padding="2dp"
+    android:background="@drawable/mapbox_attribution_background"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/mapbox_logo"
+        android:contentDescription="@string/mapbox_logo_desc"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/mapbox_attribution_links"
+        android:id="@+id/mapbox_attribution"
+        android:textColor="@color/text_90"
+        android:textColorLink="@color/text_90"
+        tools:text="© Mapbox © OpenStreetMap Improve this map"
+        />
+</RelativeLayout>

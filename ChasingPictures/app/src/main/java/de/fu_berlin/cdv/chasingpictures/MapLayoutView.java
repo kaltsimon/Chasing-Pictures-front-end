@@ -1,9 +1,19 @@
 package de.fu_berlin.cdv.chasingpictures;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
+import android.text.util.Linkify;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.geometry.BoundingBox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -19,7 +29,8 @@ import com.mapbox.mapboxsdk.views.MapView;
  */
 public class MapLayoutView {
 
-    private final Context context;
+    @NonNull
+    private final Activity context;
     @NonNull
     private final MapView mapView;
     @NonNull
@@ -31,14 +42,14 @@ public class MapLayoutView {
     private boolean overlayConfigured;
     private boolean trackingStarted;
 
-    public MapLayoutView(Context context, @NonNull MapView mapView, @NonNull String mapId, @Nullable UserLocationOverlay locationOverlay) {
+    public MapLayoutView(@NonNull Activity context, @NonNull MapView mapView, @NonNull String mapId, @Nullable UserLocationOverlay locationOverlay) {
         this.context = context;
         this.mapView = mapView;
         this.mapId = mapId;
         this.locationOverlay = locationOverlay;
     }
 
-    public MapLayoutView(Context context, @NonNull MapView mapView, @NonNull String mapId, boolean useDefaultOverlay) {
+    public MapLayoutView(@NonNull Activity context, @NonNull MapView mapView, @NonNull String mapId, boolean useDefaultOverlay) {
         this.context = context;
         this.mapView = mapView;
         this.mapId = mapId;
@@ -56,6 +67,63 @@ public class MapLayoutView {
         replaceMapView(mapId);
         initDone = true;
         return this;
+    }
+
+    /**
+     * Display Mapbox attribution links.
+     * See the <a href="https://www.mapbox.com/help/attribution/">Mapbox help</a> for details.
+     */
+    private void displayAttribution() {
+        displayAttribution(false);
+    }
+
+    /**
+     * Display Mapbox attribution links.
+     * See the <a href="https://www.mapbox.com/help/attribution/">Mapbox help</a> for details.
+     *
+     * @param attributionViewAdded Whether the view containing the attribution has already been added
+     */
+    private void displayAttribution(boolean attributionViewAdded) {
+        TextView attribution;
+
+        // If the mapbox attribution text exists in the layout, use it
+        attribution = (TextView) context.findViewById(R.id.mapbox_attribution);
+        Spannable text = (Spannable) Html.fromHtml(context.getString(R.string.mapbox_attribution_links));
+        text = removeURLUnderlines(text);
+
+        if (attribution != null) {
+            attribution.setText(text);
+            Linkify.addLinks(attribution, Linkify.ALL);
+            attribution.setMovementMethod(LinkMovementMethod.getInstance());
+        } else { //noinspection StatementWithEmptyBody
+            if (!attributionViewAdded) { // Otherwise, try to add it
+                ViewGroup contentView = (ViewGroup) mapView.getParent();
+                context.getLayoutInflater()
+                        .inflate(R.layout.mapbox_attribution_layout, contentView, true);
+                displayAttribution(true);
+            } else {
+                // Adding of attribution layout failed
+            }
+        }
+    }
+
+    /**
+     * Remove the underlines from the links in a text spannable.
+     *
+     * @param text A spannable containing the text
+     * @return The same spannable, edited in place
+     */
+    private Spannable removeURLUnderlines(Spannable text) {
+        for (URLSpan u : text.getSpans(0, text.length(), URLSpan.class)) {
+            text.setSpan(new UnderlineSpan() {
+                @Override
+                public void updateDrawState(@NonNull TextPaint tp) {
+                    super.updateDrawState(tp);
+                    tp.setUnderlineText(false);
+                }
+            }, text.getSpanStart(u), text.getSpanEnd(u), 0);
+        }
+        return text;
     }
 
     /**
@@ -134,6 +202,7 @@ public class MapLayoutView {
         mapView.setMaxZoomLevel(mapView.getTileProvider().getMaximumZoomLevel());
         mapView.setCenter(new LatLng(Menu.BERLIN));
         mapView.setZoom(10);
+        displayAttribution();
     }
 
     public static class MyUserLocationOverlay extends UserLocationOverlay {
