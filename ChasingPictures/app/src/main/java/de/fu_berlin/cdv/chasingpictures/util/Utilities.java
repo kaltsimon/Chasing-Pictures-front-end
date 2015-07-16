@@ -1,7 +1,16 @@
 package de.fu_berlin.cdv.chasingpictures.util;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
+import android.text.util.Linkify;
+import android.widget.TextView;
 
 import xdroid.toaster.Toaster;
 
@@ -47,5 +56,116 @@ public class Utilities {
         String message = context.getString(resID);
         message = args.length == 0 ? message : String.format(message, args);
         Toaster.toast(message);
+    }
+
+    /**
+     * Remove the underlines from the links in a text spannable.
+     *
+     * @param text A spannable containing the text
+     * @return The same spannable, edited in place
+     */
+    public static Spannable removeURLUnderlines(Spannable text) {
+        for (URLSpan u : text.getSpans(0, text.length(), URLSpan.class)) {
+            text.setSpan(new UnderlineSpan() {
+                @Override
+                public void updateDrawState(@NonNull TextPaint tp) {
+                    super.updateDrawState(tp);
+                    tp.setUnderlineText(false);
+                }
+            }, text.getSpanStart(u), text.getSpanEnd(u), 0);
+        }
+        return text;
+    }
+
+
+    /**
+     * Parse the given String as HTML.
+     * <p/>
+     * The links will be underlined.
+     *
+     * @param text The text to parse
+     */
+    public static Spannable getTextAsHtml(String text) {
+        return getTextAsHtml(text, true);
+    }
+
+    /**
+     * Parse the given String as HTML.
+     *
+     * @param text       The text to parse
+     * @param underlines Whether or not the links should be underlined
+     */
+    public static Spannable getTextAsHtml(String text, boolean underlines) {
+        Spannable textSpan = (Spannable) Html.fromHtml(text);
+        if (!underlines)
+            textSpan = removeURLUnderlines(textSpan);
+        return textSpan;
+    }
+
+    private static void setLinkifiedText(TextView textView, Spannable textWithLinks) {
+        textView.setText(textWithLinks);
+        linkifyTextView(textView);
+    }
+
+    /**
+     * Linkify the text inside the given {@link TextView}.
+     * @param textView The {@link TextView} to linkify
+     */
+    public static void linkifyTextView(TextView textView) {
+        Linkify.addLinks(textView, Linkify.ALL);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    /**
+     * Set the text for the given {@link TextView} to the given HTML String and turn contained links
+     * (either just URLs or HTML &lt;a&gt elements) into clickable ones.
+     *
+     * @param textView   The text view for which to set the text
+     * @param text       The text to parse
+     * @param underlines Whether or not the links should be underlined
+     */
+    public static void setLinkifiedText(TextView textView, String text, boolean underlines) {
+        Spannable textSpan = getTextAsHtml(text, underlines);
+        setLinkifiedText(textView, textSpan);
+    }
+
+    /**
+     * Set the text for the given {@link TextView} to the given HTML String and turn contained links
+     * (either just URLs or HTML &lt;a&gt elements) into clickable ones.
+     * <p/>
+     * The links will be underlined.
+     *
+     * @param textView The text view for which to set the text
+     * @param text     The text to parse
+     */
+    public static void setLinkifiedText(TextView textView, String text) {
+        setLinkifiedText(textView, text, true);
+    }
+
+    /**
+     * Set the text for the given {@link TextView} to the given resource and turn contained links
+     * (either just URLs or HTML &lt;a&gt elements) into clickable ones.
+     * <p/>
+     * The links will be underlined.
+     *
+     * @param context   The current context
+     * @param textView  The text view for which to set the text
+     * @param textResId The id of the string resource to load
+     */
+    public static void setLinkifiedText(Context context, TextView textView, @StringRes int textResId) {
+        setLinkifiedText(context, textView, textResId, true);
+    }
+
+    /**
+     * Set the text for the given {@link TextView} to the given resource and turn contained links
+     * (either just URLs or HTML &lt;a&gt elements) into clickable ones.
+     *
+     * @param context    The current context
+     * @param textView   The text view for which to set the text
+     * @param textResId  The id of the string resource to load
+     * @param underlines Whether or not links should be underlined
+     */
+    public static void setLinkifiedText(Context context, TextView textView, @StringRes int textResId, boolean underlines) {
+        setLinkifiedText(textView, context.getString(textResId), underlines);
     }
 }

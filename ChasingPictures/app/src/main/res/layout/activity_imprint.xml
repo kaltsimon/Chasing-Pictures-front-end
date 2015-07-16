@@ -1,0 +1,37 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="de.fu_berlin.cdv.chasingpictures.Imprint"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical"
+    >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <!-- Intro and license -->
+        <TextView style="@style/Vertical.Heading" android:text="@string/imprint_title" />
+        <TextView style="@style/Vertical.Text" android:id="@+id/imprint.text.start" android:text="@string/imprint_text_start" />
+        <TextView style="@style/Vertical.Heading.H2" android:text="@string/imprint_title_license" />
+        <TextView style="@style/Vertical.Text" android:id="@+id/imprint.text.license" android:text="@string/imprint_text_license" />
+
+        <!-- Info about images/photos and their licenses -->
+        <TextView style="@style/Vertical.Heading.H2" android:text="@string/imprint_title_photos_stadtmuseum" />
+        <TextView style="@style/Vertical.Text" android:id="@+id/imprint.text.photos.stadtmuseum" android:text="@string/imprint_text_photos_stadtmuseum" />
+        <TextView style="@style/Vertical.Heading.H2" android:text="@string/imprint_title_photos_user" />
+        <TextView style="@style/Vertical.Text" android:id="@+id/imprint.text.photos.user" android:text="@string/imprint_text_photos_user" />
+
+        <!-- Info about libraries -->
+        <TextView style="@style/Vertical.Heading.H2" android:text="@string/imprint_title_libraries" />
+        <TextView style="@style/Vertical.Text" android:id="@+id/imprint.text.libraries" android:text="@string/imprint_text_libraries" />
+        <TextView style="@style/Vertical.Text" android:id="@+id/imprint.list.libraries" />
+
+    </LinearLayout>
+</ScrollView>
