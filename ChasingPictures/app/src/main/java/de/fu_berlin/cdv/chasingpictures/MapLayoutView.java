@@ -5,13 +5,6 @@ import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
-import android.text.util.Linkify;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -23,6 +16,8 @@ import com.mapbox.mapboxsdk.tileprovider.tilesource.ITileLayer;
 import com.mapbox.mapboxsdk.tileprovider.tilesource.MapboxTileLayer;
 import com.mapbox.mapboxsdk.tileprovider.tilesource.WebSourceTileLayer;
 import com.mapbox.mapboxsdk.views.MapView;
+
+import de.fu_berlin.cdv.chasingpictures.util.Utilities;
 
 /**
  * @author Simon Kalt
@@ -86,17 +81,15 @@ public class MapLayoutView {
     private void displayAttribution(boolean attributionViewAdded) {
         TextView attribution;
 
-        // If the mapbox attribution text exists in the layout, use it
         attribution = (TextView) context.findViewById(R.id.mapbox_attribution);
-        Spannable text = (Spannable) Html.fromHtml(context.getString(R.string.mapbox_attribution_links));
-        text = removeURLUnderlines(text);
 
+        // If the mapbox attribution text exists in the layout, use it
         if (attribution != null) {
-            attribution.setText(text);
-            Linkify.addLinks(attribution, Linkify.ALL);
-            attribution.setMovementMethod(LinkMovementMethod.getInstance());
-        } else { //noinspection StatementWithEmptyBody
-            if (!attributionViewAdded) { // Otherwise, try to add it
+            Utilities.setLinkifiedText(context, attribution, R.string.mapbox_attribution_links, false);
+        } else {
+            // Otherwise, try to add it
+            //noinspection StatementWithEmptyBody
+            if (!attributionViewAdded) {
                 ViewGroup contentView = (ViewGroup) mapView.getParent();
                 context.getLayoutInflater()
                         .inflate(R.layout.mapbox_attribution_layout, contentView, true);
@@ -105,25 +98,6 @@ public class MapLayoutView {
                 // Adding of attribution layout failed
             }
         }
-    }
-
-    /**
-     * Remove the underlines from the links in a text spannable.
-     *
-     * @param text A spannable containing the text
-     * @return The same spannable, edited in place
-     */
-    private Spannable removeURLUnderlines(Spannable text) {
-        for (URLSpan u : text.getSpans(0, text.length(), URLSpan.class)) {
-            text.setSpan(new UnderlineSpan() {
-                @Override
-                public void updateDrawState(@NonNull TextPaint tp) {
-                    super.updateDrawState(tp);
-                    tp.setUnderlineText(false);
-                }
-            }, text.getSpanStart(u), text.getSpanEnd(u), 0);
-        }
-        return text;
     }
 
     /**
