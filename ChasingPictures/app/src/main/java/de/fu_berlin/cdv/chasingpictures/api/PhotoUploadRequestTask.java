@@ -12,7 +12,7 @@ import java.io.File;
 import de.fu_berlin.cdv.chasingpictures.Menu;
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.activity.Slideshow;
-import de.fu_berlin.cdv.chasingpictures.util.Utilities;
+import de.fu_berlin.cdv.chasingpictures.utilities.UtilitiesPackage;
 
 /**
  * @author Simon Kalt
@@ -44,7 +44,7 @@ public class PhotoUploadRequestTask extends AsyncTask<Void, Void, ResponseEntity
             );
             context.startActivityForResult(intent, Menu.SLIDESHOW_REQUEST_SHOW_ONCE);
         } else {
-            Utilities.showError(context, R.string.error_upload_photo);
+            UtilitiesPackage.showError(context, R.string.error_upload_photo);
         }
     }
 }

@@ -17,7 +17,7 @@ import com.mapbox.mapboxsdk.tileprovider.tilesource.MapboxTileLayer;
 import com.mapbox.mapboxsdk.tileprovider.tilesource.WebSourceTileLayer;
 import com.mapbox.mapboxsdk.views.MapView;
 
-import de.fu_berlin.cdv.chasingpictures.util.Utilities;
+import de.fu_berlin.cdv.chasingpictures.utilities.UtilitiesPackage;
 
 /**
  * @author Simon Kalt
@@ -85,7 +85,7 @@ public class MapLayoutView {
 
         // If the mapbox attribution text exists in the layout, use it
         if (attribution != null) {
-            Utilities.setLinkifiedText(context, attribution, R.string.mapbox_attribution_links, false);
+            UtilitiesPackage.setLinkifiedText(context, attribution, R.string.mapbox_attribution_links, false);
         } else {
             // Otherwise, try to add it
             //noinspection StatementWithEmptyBody

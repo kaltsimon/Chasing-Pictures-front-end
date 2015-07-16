@@ -30,7 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.fu_berlin.cdv.chasingpictures.R;
-import de.fu_berlin.cdv.chasingpictures.util.Utilities;
+import de.fu_berlin.cdv.chasingpictures.utilities.UtilitiesPackage;
 
 
 public class CameraActivity extends Activity {
@@ -206,7 +206,7 @@ public class CameraActivity extends Activity {
             c = Camera.open(); // attempt to get a Camera instance
         }
         catch (Exception e){
-            Utilities.showError(getApplicationContext(), R.string.error_camera_open);
+            UtilitiesPackage.showError(getApplicationContext(), R.string.error_camera_open);
         }
         return c;
     }

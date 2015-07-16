@@ -13,7 +13,7 @@ import java.util.List;
 
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
-import de.fu_berlin.cdv.chasingpictures.util.Utilities;
+import de.fu_berlin.cdv.chasingpictures.utilities.UtilitiesPackage;
 
 /**
  * Task to send a login/registration request to the back end.
@@ -86,7 +86,7 @@ public class LoginRequestTask extends AsyncTask<LoginRequest, Void, ResponseEnti
                     break;
             }
 
-            Utilities.showError(activity, errorResID);
+            UtilitiesPackage.showError(activity, errorResID);
         }
     }
 

@@ -12,7 +12,7 @@ import de.fu_berlin.cdv.chasingpictures.MainActivity;
 import de.fu_berlin.cdv.chasingpictures.Menu;
 import de.fu_berlin.cdv.chasingpictures.R;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
-import de.fu_berlin.cdv.chasingpictures.util.Utilities;
+import de.fu_berlin.cdv.chasingpictures.utilities.UtilitiesPackage;
 
 public class SplashScreen extends Activity {
 
@@ -44,7 +44,7 @@ public class SplashScreen extends Activity {
             Intent intent = new Intent(getApplicationContext(), Menu.class);
             startActivity(intent);
         } else {
-            Utilities.showError(this, R.string.login_fail);
+            UtilitiesPackage.showError(this, R.string.login_fail);
         }
     }
 

@@ -8,7 +8,7 @@ import android.view.View;
 import de.fu_berlin.cdv.chasingpictures.activity.Slideshow;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.security.Access;
-import de.fu_berlin.cdv.chasingpictures.util.Utilities;
+import de.fu_berlin.cdv.chasingpictures.utilities.UtilitiesPackage;
 
 
 public class MainActivity extends Activity {
@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
     public void logOut(View view) {
         Access.revokeAccess(this);
         if (!Access.hasAccess(this)) {
-            Utilities.showToast(this, R.string.logout_success);
+            UtilitiesPackage.showToast(this, R.string.logout_success);
         }
     }
 

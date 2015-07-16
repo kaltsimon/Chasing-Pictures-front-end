@@ -30,7 +30,7 @@ import de.fu_berlin.cdv.chasingpictures.api.Picture;
 import de.fu_berlin.cdv.chasingpictures.api.Place;
 import de.fu_berlin.cdv.chasingpictures.location.EasyLocationListener;
 import de.fu_berlin.cdv.chasingpictures.location.LocationHelper;
-import de.fu_berlin.cdv.chasingpictures.util.Utilities;
+import de.fu_berlin.cdv.chasingpictures.utilities.UtilitiesPackage;
 
 import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_DISTANCE;
 import static de.fu_berlin.cdv.chasingpictures.location.LocationHelper.DEFAULT_MIN_TIME;
@@ -174,7 +174,7 @@ public class PictureSelectionActivity extends Activity {
         protected void onPostExecute(@Nullable List<Place> resultPlaces) {
             if (resultPlaces == null || resultPlaces.isEmpty()) {
                 // TODO: Show better error and do not exit activity
-                Utilities.showError(getApplicationContext(), R.string.error_location_no_places);
+                UtilitiesPackage.showError(getApplicationContext(), R.string.error_location_no_places);
                 if (exitOnEmptyResult) {
                     finish();
                 }

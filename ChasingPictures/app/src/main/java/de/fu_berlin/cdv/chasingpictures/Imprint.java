@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.widget.TextView;
 
-import de.fu_berlin.cdv.chasingpictures.util.Utilities;
+import de.fu_berlin.cdv.chasingpictures.utilities.UtilitiesPackage;
 
 /**
  * Activity that displays the imprint.
@@ -29,7 +29,7 @@ public class Imprint extends Activity {
         TextView text;
         for (@IdRes int textViewResId : textViews) {
             text = (TextView) findViewById(textViewResId);
-            Utilities.setLinkifiedText(text, String.valueOf(text.getText()));
+            UtilitiesPackage.setLinkifiedText(text, String.valueOf(text.getText()));
         }
 
         // Get the list of libraries
@@ -46,7 +46,7 @@ public class Imprint extends Activity {
 
         // Add the resulting list to the imprint
         text = (TextView) findViewById(R.id.imprint_list_libraries);
-        Utilities.setLinkifiedText(text, content.toString());
+        UtilitiesPackage.setLinkifiedText(text, content.toString());
     }
 
 }
