@@ -82,7 +82,7 @@
         </activity>
         <activity
             android:name=".Imprint"
-            android:label="@string/title_activity_imprint"
+            android:label="@string/imprint_title"
             android:parentActivityName=".Menu" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
